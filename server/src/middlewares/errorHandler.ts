@@ -1,4 +1,5 @@
 import { ApiStatus, ApiStatusCode } from "../common/enum/apiStatusCode";
+import { IBaseRespone } from "../common/model/responese";
 
 const errorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || ApiStatusCode.ServerError;
@@ -24,10 +25,13 @@ const errorHandler = (err, req, res, next) => {
           }
       } 
   }
-  res.status(err.statusCode).json({
-      status: ApiStatus.fail,
-      message: err.message
-  })
+  const _res: IBaseRespone = {
+    status: ApiStatus.fail,
+    isSuccess: false,
+    statusCode: err.statusCode,
+    message: err.message
+  }
+  res.status(err.statusCode).json(_res)
 }
 
 export default errorHandler;

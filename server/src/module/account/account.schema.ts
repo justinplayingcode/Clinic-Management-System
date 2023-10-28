@@ -1,21 +1,22 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import bcrypt from 'bcryptjs';
 import { Role } from "../../common/enum/permission";
 import collection from "../../common/constant/collection";
 import message from "../../common/constant/message";
 import Convert from "../../common/utils/convert.utils";
 import Validate from "../../common/utils/validate.utils";
+import { AccountModel } from "./account.model";
 
 const accountSchema = new Schema({
-  username: {
+  phonenumber: {
       type: String, 
       unique: true,
       trim: true,
       validate: {
-          validator: value => Validate.userName(value),
-          message: props => message.invalidUserName(props.value)
+          validator: value => Validate.phoneNumber(value),
+          message: props => message.invalidPhoneNumber(props.value)
       },
-      required: [true, 'username must be required']
+      required: [true, 'phonenumber must be required']
   },
   password: {
       type: String, 
@@ -32,16 +33,11 @@ const accountSchema = new Schema({
           message: "{VALUE} is not supported in role"
       }
   },
-  userId: {
-      type: Schema.Types.ObjectId,
-      ref: collection.user,
-      required: true
-  },
-  refreshToken: {
+  refreshtoken: {
       type: String,
       trim: true
   },
-  isActive: {
+  isactive: {
       type: Boolean,
       default: true
   }
@@ -59,6 +55,6 @@ bcrypt.hash(user.password, 10, (error, hashPassword) => {
 })
 });
 
-const Security = mongoose.model(collection.account, accountSchema);
+const Account: Model<AccountModel> = mongoose.model<AccountModel>(collection.account, accountSchema);
 
-export default Security
+export default Account

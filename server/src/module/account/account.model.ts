@@ -1,14 +1,29 @@
+import { BaseModel } from "../common/common.model";
+
+export interface AccountModel extends BaseModel {
+  phonenumber: string;
+  password: string;
+  role: number;
+  refreshtoken: string;
+  isactive: boolean;
+}
+
+export interface ICreateAcountBasic {
+  phonenumber: string;
+  password: string;
+}
+
 export interface ILoginRequest {
   username: string;
   password: string;
 }
 
 export const LoginFields = {
-  username: "username",
+  phonenumber: "phonenumber",
   password: "password"
 }
 
 export const LoginRequest = [
-  LoginFields.username,
+  LoginFields.phonenumber,
   LoginFields.password
 ]
