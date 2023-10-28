@@ -1,4 +1,4 @@
-import { BaseModel } from "../common/common.model";
+import { BaseModel } from "../../common/model/common";
 
 export interface UserModel extends BaseModel {
   accountid: string;

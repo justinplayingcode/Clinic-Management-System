@@ -1,5 +1,5 @@
 import { ClientSession, Model } from "mongoose";
-import { BaseModel } from "./common.model";
+import { BaseModel } from "../../common/model/common";
 
 export default class BaseRepository<T extends BaseModel> {
   protected model: Model<T>;
