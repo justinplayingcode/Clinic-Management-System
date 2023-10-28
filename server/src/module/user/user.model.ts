@@ -1,11 +1,11 @@
 import { BaseModel } from "../../common/model/common";
 
 export interface UserModel extends BaseModel {
-  accountid: string;
+  accountId: string;
   email: string;
   gender: number;
   avatar: string;
-  fullname: boolean;
+  fullName: boolean;
   address: string;
   dateOfBirth: Date;
 }

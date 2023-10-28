@@ -48,7 +48,7 @@ export default class AccountController {
         return next(err)
       }
       const newAccount = {
-        phonenumber: req.body.phonenumber,
+        phoneNumber: req.body.phoneNumber,
         password: req.body.password
       }
       const _account = await this._accountService.createAccount(newAccount, role, session);

@@ -8,7 +8,7 @@ import Validate from "../../common/utils/validate.utils";
 import { AccountModel } from "./account.model";
 
 const accountSchema = new Schema({
-  phonenumber: {
+  phoneNumber: {
       type: String, 
       unique: true,
       trim: true,
@@ -33,11 +33,11 @@ const accountSchema = new Schema({
           message: "{VALUE} is not supported in role"
       }
   },
-  refreshtoken: {
+  refreshToken: {
       type: String,
       trim: true
   },
-  isactive: {
+  isActive: {
       type: Boolean,
       default: true
   }

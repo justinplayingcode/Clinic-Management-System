@@ -10,10 +10,10 @@ export default class UserService {
     this._userRepository = new UserRepository(User);
   }
 
-  public createUser = async (accountid, session: ClientSession) => {
+  public createUser = async (accountId, session: ClientSession) => {
     try {
       const newUser = {
-        accountid
+        accountId
       }
       return this._userRepository.create(newUser, session);
     } catch (error) {

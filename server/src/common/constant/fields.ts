@@ -1,11 +1,11 @@
 const fields = {
-  phonenumber: "phonenumber",
+  phoneNumber: "phoneNumber",
   password: "password",
   role: "role",
-  userid: "userid",
-  refreshtoken: "refreshtoken",
-  isactive: "isactive",
-  fullname: "fullname"
+  userId: "userId",
+  refreshToken: "refreshToken",
+  isActive: "isActive",
+  fullName: "fullName"
 }
 
 export default fields;

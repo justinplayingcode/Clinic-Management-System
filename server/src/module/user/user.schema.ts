@@ -8,7 +8,7 @@ import { UserModel } from './user.model';
 
 
 const userSchema = new Schema({
-    accountid: {
+    accountId: {
         type: Schema.Types.ObjectId,
         ref: collection.account,
         required: true
@@ -29,7 +29,7 @@ const userSchema = new Schema({
         trim: true,
         default: 'https://res.cloudinary.com/dipiauw0v/image/upload/v1682100699/DATN/unisex_avatar.jpg?fbclid=IwAR0rfobILbtfTZlNoWFiWmHYPH7bPMKFP0ztGnT8CVEXtvgTOEPEBgYtxY8'
     },
-    fullname: {
+    fullName: {
         type: String,
         trim: true,
         validate: {

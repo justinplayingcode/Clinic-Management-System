@@ -17,8 +17,8 @@ export default class AccountService {
       const newAccount: AccountModel = {
         ...basic,
         role,
-        isactive: true,
-        refreshtoken: ""
+        isActive: true,
+        refreshToken: ""
       }
       return this._accountRepository.create(newAccount, session);
     } catch (error) {
