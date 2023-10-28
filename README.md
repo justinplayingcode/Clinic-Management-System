@@ -1,2 +1,2 @@
-##ui: yarn dev
-##server: yarn dev
+## ui: yarn dev
+## server: yarn dev
