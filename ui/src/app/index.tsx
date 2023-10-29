@@ -1,14 +1,26 @@
-import { Route, HashRouter , Routes, Navigate } from 'react-router-dom'
-import "./index.scss";
+import { Provider } from "react-redux"
+import store from "../redux"
+import "./index.scss"
+import Routing from "./Routing"
+import { ConfigProvider } from 'antd'
 
 const App: React.FunctionComponent = () => {
-
   return (
-    <HashRouter basename="/">
-      <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
-      </Routes>
-    </HashRouter>
+      <Provider store={store}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Breadcrumb: {
+                itemColor: "#1E3461",
+                linkColor: "1E3461",
+                linkHoverColor: "#0067A2"
+              },
+            },
+          }}
+        >
+          <Routing/>             
+        </ConfigProvider>
+      </Provider>
   )
 }
 
