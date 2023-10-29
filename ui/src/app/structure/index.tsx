@@ -1,24 +1,43 @@
+// import { useState } from "react";
+import Avatar from "antd/es/avatar";
+import UniformBreadcrumb from "./Breadcrumb";
+import { LoadingLogin } from "./Loading";
+import Sidebar from "./Sidebar";
+import "./index.scss";
+import { UserOutlined } from "@ant-design/icons";
 
-import './index.scss'
-
-interface IUniformLayout {
-  content: JSX.Element
+interface IUniformLayoutProps {
+  page: JSX.Element;
 }
 
-function Layout({ ...props}: IUniformLayout) {
-  return (  
-    <div id="landing-main-wrapper">
-      <div className="landing-main-content">
-        <div className="landing-main-content-header">
-          {/* <Header/> */}
+function UniformLayout({ ...props }: IUniformLayoutProps) {
+  // const [loading, setLoading] = useState<boolean>(true);
+
+
+  const renderContent = () => {
+      const { page } = props;
+      return (
+        <div className="content">
+          <div className="main-header">
+            <UniformBreadcrumb/>
+            <Avatar size={40} icon={<UserOutlined />} />
+          </div>
+          <div className="layout-wrapper">
+            {page}
+          </div>
         </div>
-        <div className="landing-main-content-main">
-          {props.content}
-          {/* <Footer/> */}
-        </div>
-      </div>
-      </div>
-  );
+      )
+  }
+  if(false) {
+        return <LoadingLogin/>
+    } else {
+        return (
+          <div id="main">
+            <Sidebar />
+            {renderContent()}
+          </div>
+        )
+    }
 }
 
-export default Layout;
+export default UniformLayout;
