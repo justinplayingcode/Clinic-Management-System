@@ -1,5 +1,6 @@
 import { ApiStatus, ApiStatusCode } from "../common/enum/apiStatusCode";
 import { IBaseRespone } from "../common/model/responese";
+import logger from "../helper/logger.config";
 
 const errorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || ApiStatusCode.ServerError;
@@ -31,6 +32,7 @@ const errorHandler = (err, req, res, next) => {
     statusCode: err.statusCode,
     message: err.message
   }
+  logger(err?.actionError, err.message)
   res.status(err.statusCode).json(_res)
 }
 

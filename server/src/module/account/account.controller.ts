@@ -3,10 +3,13 @@ import { ApiStatus, ApiStatusCode } from "../../common/enum/apiStatusCode";
 import { Role } from "../../common/enum/permission";
 import { IBaseRespone } from "../../common/model/responese";
 import validateReqBody from "../../common/utils/request.utils";
-import logger from "../../helper/logger.config";
 import { LoginRequest } from "./account.model";
 import AccountService from "./account.service";
 import UserService from "../user/user.service";
+import fields from "../../common/constant/fields";
+import bcrypt from 'bcryptjs';
+import jwToken from "../../helper/jwt.config";
+import ErrorObject from "../../common/model/error";
 
 export default class AccountController {
 
@@ -21,16 +24,36 @@ export default class AccountController {
   // POST 
   public Login = async (req, res, next) => {
     try {
+      let _res: IBaseRespone;
         const verifyReq = validateReqBody(req, LoginRequest);
         if (!verifyReq.pass) {
-          const err: any = new Error(verifyReq.message);
+          const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "Login");
+          return next(err)
+        }
+        const account = this._accountService.findByKey(fields.phoneNumber, req.body.phoneNumber);
+        if (!account) {
+          const err: any = new Error('Số điện thoại không chính xác');
           err.statusCode = ApiStatusCode.BadRequest;
           return next(err)
         }
-        res.status(ApiStatusCode.OK).json({
-          message: "successful"
-        })
-        logger("login", "successful")
+        if (bcrypt.compareSync(req.body.password, account.password)) {
+          const accessToken = jwToken.createAccessToken({ userId: account.userId, role: account.role});
+          _res = {
+            status: ApiStatus.succes,
+            isSuccess: true,
+            statusCode: ApiStatusCode.OK,
+            data: {
+              accessToken, 
+              username: account.phoneNumber,
+              role: account.role
+            }
+          }
+        } else {
+          const err: any = new Error('Mật khẩu không chính xác');
+          err.statusCode = ApiStatusCode.BadRequest;
+          return next(err)
+        }
+        res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
         next(error)
     }
