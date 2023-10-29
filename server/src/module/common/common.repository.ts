@@ -18,7 +18,7 @@ export default class BaseRepository<T extends BaseModel> {
   }
 
   public findByKey = async (key: any, data: Partial<T>): Promise<T | null> => {
-    return this.model.findOne({ [key]: data }).exec();
+    return this.model.findOne({ [key]: data }).lean();
   }
 
   public updateById = async (id: string, update: Partial<T>, session: ClientSession) => {

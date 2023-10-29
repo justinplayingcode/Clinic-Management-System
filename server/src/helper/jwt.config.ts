@@ -1,11 +1,11 @@
 import  jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-// import { Role } from "../utils/enum";
+import { Role } from "../common/enum/permission";
 
 
 export interface IPayLoad {
   userId: mongoose.Types.ObjectId,
-  // role: Role
+  role: Role
 }
 export default class jwToken {
     public static createAccessToken = (payload: IPayLoad) => {

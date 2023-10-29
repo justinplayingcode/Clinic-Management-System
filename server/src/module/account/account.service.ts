@@ -26,4 +26,12 @@ export default class AccountService {
     }
   }
 
+  public findByKey = async (key, data) => {
+    try {
+      return this._accountRepository.findByKey(key, data);
+    } catch (error) {
+      throw error
+    }
+  }
+
 }
