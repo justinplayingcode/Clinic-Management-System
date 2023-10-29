@@ -27,12 +27,12 @@ export default class AccountController {
       let _res: IBaseRespone;
         const verifyReq = validateReqBody(req, LoginRequest);
         if (!verifyReq.pass) {
-          const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "Login");
+          const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "Login verify reqbody");
           return next(err)
         }
-        const account = this._accountService.findByKey(fields.phoneNumber, req.body.phoneNumber);
+        const account = await this._accountService.findByKey(fields.phoneNumber, req.body.phoneNumber);
         if (!account) {
-          const err: any = new Error('Số điện thoại không chính xác');
+          const err: any = new ErrorObject('Số điện thoại không chính xác', ApiStatusCode.BadRequest, "35-account.controller");
           err.statusCode = ApiStatusCode.BadRequest;
           return next(err)
         }

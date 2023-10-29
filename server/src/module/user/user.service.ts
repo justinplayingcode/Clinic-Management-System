@@ -15,7 +15,7 @@ export default class UserService {
       const newUser = {
         accountId
       }
-      return this._userRepository.create(newUser, session);
+      return await this._userRepository.create(newUser, session);
     } catch (error) {
       throw error
     }

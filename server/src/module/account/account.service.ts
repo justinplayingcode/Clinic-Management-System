@@ -3,6 +3,7 @@ import AccountRepository from "./account.repository";
 import Account from "./account.schema";
 import { AccountModel, ICreateAcountBasic } from "./account.model";
 import { Role } from "../../common/enum/permission";
+import logger from "../../helper/logger.config";
 
 export default class AccountService {
   
@@ -20,7 +21,7 @@ export default class AccountService {
         isActive: true,
         refreshToken: ""
       }
-      return this._accountRepository.create(newAccount, session);
+      return await this._accountRepository.create(newAccount, session);
     } catch (error) {
       throw error
     }
@@ -28,8 +29,9 @@ export default class AccountService {
 
   public findByKey = async (key, data) => {
     try {
-      return this._accountRepository.findByKey(key, data);
+      return await this._accountRepository.findByKey(key, data);
     } catch (error) {
+      logger("34-accountservice", error?.message);
       throw error
     }
   }
