@@ -35,7 +35,6 @@ const medicalRecordSchema = new Schema({
     tests: {
         type: String,
         trim: true,
-        required: [true, 'tests must be required']
     }
     
 });
