@@ -4,14 +4,12 @@ import collection from "../../common/constant/collection";
 
 const billSchema = new Schema({
     medicalRecordId: {
-        type: String,
-        unique: true,
-        trim: true,
+        type: Schema.Types.ObjectId,
+        ref: collection.medicalrecord,
         required: [true,'medicalRecordId must be required']
     },
     cost: {
         type: Number,
-        required: [true,'cost must be required']
     }
 })
 

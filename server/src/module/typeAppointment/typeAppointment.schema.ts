@@ -6,11 +6,9 @@ const typeAppointmentSchema = new Schema({
     displayName: {
         type: String,
         trim: true,
-        required: [true, 'displayName must be required']
     },
     cost: {
         type: Number,
-        require: [true,'cost must me required']
     }
 });
 

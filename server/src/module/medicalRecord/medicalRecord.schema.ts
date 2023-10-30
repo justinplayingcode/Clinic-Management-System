@@ -7,25 +7,21 @@ const medicalRecordSchema = new Schema({
     summary: {
         type: String,
         trim: true,
-        required: [true, 'summary must be required']
     },
     // diagnosis: string;
     diagnosis:{
         type: String,
         trim: true,
-        required: [true, 'diagnosis must be required']
     },
     // healthIndicator: string;
     healthIndicator: {
         type: String,
         trim: true,
-        required: [true, 'healthIndicator must be required']
     },
     // prescriptionId: string;
     prescriptionId: {
-        type: String,
-        trim: true,
-        unique: true,
+        type: Schema.Types.ObjectId,
+        ref: collection.prescription,
         required: [true, 'prescriptionId must be required']
     },
     // scheduleId: string;
