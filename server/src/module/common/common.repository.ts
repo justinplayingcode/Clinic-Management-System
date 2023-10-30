@@ -25,7 +25,7 @@ export default class BaseRepository<T extends BaseModel> {
     return await this.model.findByIdAndUpdate(id, update, { new: true, runValidators: true, session})
   }
 
-  public updateByKey = async (id: string, key: any, value: any, session: ClientSession) => {
-    return await this.model.findByIdAndUpdate(id, { [key]: value }, { new: true, runValidators: true, session})
+  public updateByKey = async (conditions: Partial<T>, update: Partial<T>, session: ClientSession) => {
+    return await this.model.findOneAndUpdate(conditions, update, { new: true, runValidators: true, session})
   }
 }

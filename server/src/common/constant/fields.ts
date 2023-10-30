@@ -5,7 +5,8 @@ const fields = {
   userId: "userId",
   refreshToken: "refreshToken",
   isActive: "isActive",
-  fullName: "fullName"
+  fullName: "fullName",
+  accountId: "accountId"
 }
 
 export default fields;

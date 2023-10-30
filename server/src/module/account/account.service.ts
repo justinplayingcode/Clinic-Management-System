@@ -36,4 +36,22 @@ export default class AccountService {
     }
   }
 
+  public findById = async (id) => {
+    try {
+      return await this._accountRepository.findById(id);
+    } catch (error) {
+      logger("40-accountservice", error?.message);
+      throw error
+    }
+  }
+
+  public findByIdAndUpdate = async (id, update, session) => {
+    try {
+      return await this._accountRepository.updateById(id, update, session);
+    } catch (error) {
+      logger("52-accountservice", error?.message);
+      throw error
+    }
+  }
+
 }
