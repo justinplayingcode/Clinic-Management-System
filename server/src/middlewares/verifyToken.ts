@@ -11,7 +11,7 @@ const verifyToken = (req, res, next) => {
       const token = authorization.replace('Bearer ', '');
       try {
           const payload = jwToken.getPayLoadInAccessToken(token);
-          req.user = payload ;
+          req.user = payload;
           next();
       } catch (err) {
           if(err.name === 'TokenExpiredError') {

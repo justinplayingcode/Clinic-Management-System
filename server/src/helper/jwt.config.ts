@@ -4,7 +4,7 @@ import { Role } from "../common/enum/permission";
 
 
 export interface IPayLoad {
-  userId: mongoose.Types.ObjectId,
+  accountId: mongoose.Types.ObjectId,
   role: Role
 }
 export default class jwToken {
