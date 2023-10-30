@@ -49,8 +49,8 @@ export default class AccountController {
             }
           }
         } else {
-          const err: any = new Error('Mật khẩu không chính xác');
-          err.statusCode = ApiStatusCode.BadRequest;
+          const err: any = new ErrorObject('Mật khẩu không chính xác',ApiStatusCode.BadRequest,"52-account-login-controller");
+          
           return next(err)
         }
         res.status(ApiStatusCode.OK).json(_res);
@@ -66,8 +66,7 @@ export default class AccountController {
     try {
       const verifyReq = validateReqBody(req, LoginRequest);
       if (!verifyReq.pass) {
-        const err: any = new Error(verifyReq.message);
-        err.statusCode = ApiStatusCode.BadRequest;
+        const err: any = new ErrorObject(verifyReq.message,ApiStatusCode.BadRequest,"69-createAccount-accountController");
         return next(err)
       }
       const newAccount = {
