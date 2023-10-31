@@ -7,7 +7,7 @@ const typeAppointmentRoute = Router();
 const typeAppointmentController = new TypeAppointmentController();
 
 typeAppointmentRoute.route('/create').post(typeAppointmentController.CreateTypeAppointment)
-typeAppointmentRoute.route('/update/:id').post(typeAppointmentController.UpdateTypeAppointment)
-typeAppointmentRoute.route('/delete/:id').get(typeAppointmentController.DeleteTypeAppointment)
+typeAppointmentRoute.route('/update').post(typeAppointmentController.UpdateTypeAppointment)
+typeAppointmentRoute.route('/delete').put(typeAppointmentController.DeleteTypeAppointment)
 
 export default typeAppointmentRoute;

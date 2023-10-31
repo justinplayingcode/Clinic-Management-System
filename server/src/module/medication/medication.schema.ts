@@ -5,8 +5,9 @@ import collection from "../../common/constant/collection";
 const medicationSchema = new Schema({
     displayName: {
         type: String,
-        trim: true,
-        unique: true
+        unique: true,
+        index: true,
+        trim: true
     },
     designation:{
       type: String,

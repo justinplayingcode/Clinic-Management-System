@@ -7,6 +7,8 @@ const departmentSchema = new Schema({
     type: String,
     trim: true,
     unique: true,
+    //them index do ten ko dc trung nhau
+    index: true,
     required: [true, 'displayName must be required']
   },
   isActive: {

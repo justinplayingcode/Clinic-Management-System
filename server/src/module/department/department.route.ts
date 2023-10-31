@@ -5,7 +5,7 @@ const departmentRouter = Router();
 
 const departmentController = new DepartmentController();
 departmentRouter.route('/create').post(departmentController.CreateDepartment)
-departmentRouter.route('/update/:id').post(departmentController.updateDepartment)
-departmentRouter.route('/delete/:id').get(departmentController.deleteDepartment)
+departmentRouter.route('/update').post(departmentController.updateDepartment)
+departmentRouter.route('/delete').put(departmentController.deleteDepartment)
 
 export default departmentRouter

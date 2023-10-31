@@ -6,7 +6,7 @@ import validateReqBody from '../../common/utils/request.utils';
 import { typeAppointmentRequest } from './typeAppointment.model';
 import ErrorObject from '../../common/model/error';
 import mongoose from 'mongoose';
-// import mongoose from 'mongoose';
+
 
 
 
@@ -50,7 +50,7 @@ export default class TypeAppointmentController {
         }
     }
     public UpdateTypeAppointment =async (req,res,next) => {
-        const Id = req.params.id;
+       
         const session = await mongoose.startSession();
         session.startTransaction();
         try {
@@ -63,6 +63,7 @@ export default class TypeAppointmentController {
                 displayName: req.body.displayName,
                 cost: req.body.cost
             }
+            const Id = req.body._id;
             await this._TypeAppointmentService.updateTypeAppointmentService(Id,newTypeAppointment,session)
             await session.commitTransaction();
             session.endSession();
@@ -83,22 +84,11 @@ export default class TypeAppointmentController {
         }
     }
     public DeleteTypeAppointment = async (req, res, next) => {
-        const Id = req.params.id;
         const session = await mongoose.startSession();
         session.startTransaction();
         try {
-            // const verifyReq = validateReqBody(req,typeAppointmentRequest)
-            // if(!verifyReq){
-            //     const err: any = new ErrorObject(verifyReq.message,ApiStatusCode.BadRequest, "89-deleteMedication- controller");
-            //     return next(err);
-            // }
-            // const newMedication = {
-            //     displayName: req.body.displayName,
-            //     designation: req.body.designation,
-            //     usage: req.body.usage,
-            //     price: req.body.price
-            // }
             
+            const Id = req.body._id;
             await this._TypeAppointmentService.delteteDepartmentService(Id,session)
             await session.commitTransaction();
             session.endSession();

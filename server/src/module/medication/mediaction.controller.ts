@@ -49,7 +49,7 @@ export default class MedicationController {
         }
     }
     public UpdateMedication = async (req, res, next) => {
-        const Id = req.params.id;
+        
         const session = await mongoose.startSession();
         session.startTransaction();
         try {
@@ -66,6 +66,7 @@ export default class MedicationController {
                 isActive: req.body.isActive
 
             }
+            const Id = req.body._id;
             
             await this._MedicationService.updateMedicationService(Id,newMedication, session)
             await session.commitTransaction();
@@ -85,7 +86,7 @@ export default class MedicationController {
         }
     }
     public DeleteMedication = async (req, res, next) => {
-        const Id = req.params.id;
+        
         const session = await mongoose.startSession();
         session.startTransaction();
         try {
@@ -100,7 +101,7 @@ export default class MedicationController {
             //     usage: req.body.usage,
             //     price: req.body.price
             // }
-            
+            const Id = req.body._id;
             await this._MedicationService.delteteMedicationService(Id,session)
             await session.commitTransaction();
             session.endSession();

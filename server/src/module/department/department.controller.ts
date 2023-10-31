@@ -45,7 +45,7 @@ export default class DepartmentController {
         }
     }
     public updateDepartment = async(req, res, next) => {
-        const Id = req.params.id;
+        // const Id = req.params.id;
         const session = await mongoose.startSession();
         session.startTransaction();
         try{
@@ -58,6 +58,7 @@ export default class DepartmentController {
                 displayName: req.body.displayName,
                 isActive: req.body.isActive
             }
+            const Id = req.body._id;
             await this._DepartmentService.updateDepartment(Id,newDepartment,session);
             await session.commitTransaction();
             session.endSession();
@@ -75,22 +76,12 @@ export default class DepartmentController {
         }
     }
     public deleteDepartment = async (req, res, next) => {
-        const Id = req.params.id;
+        
         const session = await mongoose.startSession();
         session.startTransaction();
         try {
-            // const verifyReq = validateReqBody(req,typeAppointmentRequest)
-            // if(!verifyReq){
-            //     const err: any = new ErrorObject(verifyReq.message,ApiStatusCode.BadRequest, "89-deleteMedication- controller");
-            //     return next(err);
-            // }
-            // const newMedication = {
-            //     displayName: req.body.displayName,
-            //     designation: req.body.designation,
-            //     usage: req.body.usage,
-            //     price: req.body.price
-            // }
             
+            const Id = req.body._id;
             await this._DepartmentService.delteteDepartmentService(Id,session)
             await session.commitTransaction();
             session.endSession();
