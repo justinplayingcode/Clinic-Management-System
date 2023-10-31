@@ -6,9 +6,14 @@ const typeAppointmentSchema = new Schema({
     displayName: {
         type: String,
         trim: true,
+        unique: true,
     },
     cost: {
         type: Number,
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     }
 });
 

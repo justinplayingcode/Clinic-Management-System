@@ -6,6 +6,7 @@ const medicationSchema = new Schema({
     displayName: {
         type: String,
         trim: true,
+        unique: true
     },
     designation:{
       type: String,
@@ -18,6 +19,9 @@ const medicationSchema = new Schema({
     price: {
         type: Number,
     },
+    isActive: {
+        type: Boolean
+    }
 });
 
 const Medication: Model<MedicationModel> = mongoose.model<MedicationModel>(collection.medications, medicationSchema)
