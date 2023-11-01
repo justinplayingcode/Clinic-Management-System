@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 import { Role } from "../../common/enum/permission";
 import collection from "../../common/constant/collection";
 import message from "../../common/constant/message";
@@ -9,52 +9,55 @@ import { AccountModel } from "./account.model";
 
 const accountSchema = new Schema({
   phoneNumber: {
-      type: String, 
-      unique: true,
-      trim: true,
-      validate: {
-          validator: value => Validate.phoneNumber(value),
-          message: props => message.invalidPhoneNumber(props.value)
-      },
-      required: [true, 'phonenumber must be required']
+    type: String,
+    unique: true,
+    trim: true,
+    validate: {
+      validator: (value) => Validate.phoneNumber(value),
+      message: (props) => message.invalidPhoneNumber(props.value),
+    },
+    required: [true, "phonenumber must be required"],
   },
   password: {
-      type: String, 
-      trim: true, 
-      required: [true, 'password must be required'], 
-      minlength: [6, 'password must be at least 6 characters']
+    type: String,
+    trim: true,
+    required: [true, "password must be required"],
+    minlength: [6, "password must be at least 6 characters"],
   },
   role: {
-      type: Number,
-      trim: true, 
-      required: [true, 'role must be required'],
-      enum: {
-          values: Convert.enumToArray(Role),
-          message: "{VALUE} is not supported in role"
-      }
+    type: Number,
+    trim: true,
+    required: [true, "role must be required"],
+    enum: {
+      values: Convert.enumToArray(Role),
+      message: "{VALUE} is not supported in role",
+    },
   },
   refreshToken: {
-      type: String,
-      trim: true
+    type: String,
+    trim: true,
   },
   isActive: {
-      type: Boolean,
-      default: true
-  }
-})
-
-accountSchema.pre('save', function(next) {
-let user = this;
-bcrypt.hash(user.password, 10, (error, hashPassword) => {
-    if (error) {
-        return next(error);
-    } else {
-        user.password = hashPassword;
-        next();
-    }
-})
+    type: Boolean,
+    default: true,
+  },
 });
 
-const Account: Model<AccountModel> = mongoose.model<AccountModel>(collection.account, accountSchema);
+accountSchema.pre("save", function (next) {
+  let user = this;
+  bcrypt.hash(user.password, 10, (error, hashPassword) => {
+    if (error) {
+      return next(error);
+    } else {
+      user.password = hashPassword;
+      next();
+    }
+  });
+});
 
-export default Account
+const Account: Model<AccountModel> = mongoose.model<AccountModel>(
+  collection.account,
+  accountSchema
+);
+
+export default Account;
