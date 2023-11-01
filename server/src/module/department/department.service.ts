@@ -28,6 +28,18 @@ export default class departmentService {
     session: ClientSession
   ) => {
     try {
+      const TargetDepartment = (await this._departmentRepository.findById(
+        Id
+      )) as DepartmentModel;
+      //check lai ho toi, chac ko can lam :))
+      if (!TargetDepartment) {
+        const err: any = new ErrorObject(
+          "Không có dữ liệu với ID đã cho",
+          ApiStatusCode.BadRequest,
+          "44-delteteMedicationService- service"
+        );
+        throw err;
+      }
       return await this._departmentRepository.updateById(Id, basic, session);
     } catch (error) {
       throw error;

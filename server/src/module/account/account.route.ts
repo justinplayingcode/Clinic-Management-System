@@ -5,9 +5,7 @@ import middlewares from "../../middlewares";
 const accountRoute = Router();
 const accountController = new AccountController();
 accountRoute.route("/login").post(accountController.Login);
-accountRoute
-  .route("/registeradmin")
-  .post(accountController.CreateAccount(Role.admin));
+accountRoute.route("/registeradmin").post(accountController.CreateAccount(Role.admin));
 accountRoute
   .route("/registerdoctor")
   .post(

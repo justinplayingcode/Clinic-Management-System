@@ -40,6 +40,19 @@ export default class typeAppointmentService {
       const updateAppointment: typeAppointmentModel = {
         ...basic,
       };
+      const TargetTypeAppointment =
+        (await this._typeAppointmentRepository.findById(
+          Id
+        )) as typeAppointmentModel;
+      //check lai ho toi, chac ko can lam :))
+      if (!TargetTypeAppointment) {
+        const err: any = new ErrorObject(
+          "Không có dữ liệu với ID đã cho",
+          ApiStatusCode.BadRequest,
+          "44-delteteMedicationService- service"
+        );
+        throw err;
+      }
       return await this._typeAppointmentRepository.updateById(
         Id,
         updateAppointment,

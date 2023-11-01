@@ -27,6 +27,19 @@ export default class medicationService {
     session: ClientSession
   ) => {
     try {
+      const TargetMedication = (await this._medicationRepository.findById(
+        Id
+      )) as MedicationModel;
+      let UpdatedMedication: MedicationModel = TargetMedication;
+      //check lai ho toi, chac ko can lam :))
+      if (!UpdatedMedication) {
+        const err: any = new ErrorObject(
+          "Không có dữ liệu với ID đã cho",
+          ApiStatusCode.BadRequest,
+          "39-updateMedicationService- service"
+        );
+        throw err;
+      }
       return await this._medicationRepository.updateById(Id, basic, session);
     } catch (error) {
       throw error;
