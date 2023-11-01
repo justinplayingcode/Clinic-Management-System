@@ -23,5 +23,5 @@ export const UpdateInfoRequest = [
   "email",
   "gender",
   "address",
-  "dateOfBirth"
-]
+  "dateOfBirth",
+];

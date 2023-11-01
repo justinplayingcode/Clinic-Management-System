@@ -6,7 +6,6 @@ import { ApiStatus, ApiStatusCode } from "../../common/enum/apiStatusCode";
 import { UpdateInfoRequest, UserModelUpdate } from "./user.model";
 
 export default class UserController {
-  
   private _userService;
 
   constructor() {
@@ -21,8 +20,12 @@ export default class UserController {
     const verifyReq = validateReqBody(req, UpdateInfoRequest);
     let _res;
     if (!verifyReq.pass) {
-      const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest,"24-userController");
-      return next(err)
+      const err: any = new ErrorObject(
+        verifyReq.message,
+        ApiStatusCode.BadRequest,
+        "24-userController"
+      );
+      return next(err);
     }
     try {
       const update: UserModelUpdate = {
@@ -31,7 +34,7 @@ export default class UserController {
         fullName: req.body.fullName,
         address: req.body.address,
         dateOfBirth: new Date(req.body.dateOfBirth),
-      }
+      };
       await this._userService.findOneAndUpdate({ accountId }, update, session);
       await session.commitTransaction();
       session.endSession();
@@ -39,13 +42,13 @@ export default class UserController {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        message: "Cập nhật thông tin thành công"
-      }
+        message: "Cập nhật thông tin thành công",
+      };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
-      next(error)
+      next(error);
     }
-  }
+  };
 }
