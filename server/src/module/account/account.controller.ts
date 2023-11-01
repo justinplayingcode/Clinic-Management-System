@@ -46,13 +46,12 @@ export default class AccountController {
             statusCode: ApiStatusCode.OK,
             data: {
               accessToken, 
-              username: account.phoneNumber,
+              phoneNumber: account.phoneNumber,
               role: account.role
             }
           }
         } else {
           const err: any = new ErrorObject('Mật khẩu không chính xác',ApiStatusCode.BadRequest,"52-account-login-controller");
-          
           return next(err)
         }
         res.status(ApiStatusCode.OK).json(_res);
@@ -76,13 +75,19 @@ export default class AccountController {
         password: req.body.password
       }
       const _account = await this._accountService.createAccount(newAccount, role, session);
+      const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role });
       await this._userService.createUser(_account._id, session);
       await session.commitTransaction();
       session.endSession();
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
         isSuccess: true,
-        statusCode: ApiStatusCode.OK
+        statusCode: ApiStatusCode.OK,
+        data: {
+          accessToken, 
+          phoneNumber: _account.phoneNumber,
+          role: _account.role
+        }
       }
       res.status(ApiStatusCode.OK).json(_res)
     } catch (error) {

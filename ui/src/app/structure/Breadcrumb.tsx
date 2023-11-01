@@ -21,13 +21,6 @@ const UniformBreadcrumb = () => {
     };
   });
 
-  // const breadcrumbItems = [
-  //   {
-  //     title: <Link to="/">Tổng quát</Link>,
-  //     key: 'home',
-  //   },
-  // ].concat(extraBreadcrumbItems);
-
   return (
     <Breadcrumb items={extraBreadcrumbItems} style={{ height: 60, padding: 20, fontSize: 16, color: "#333"}} />
   );
