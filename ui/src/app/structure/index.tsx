@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import Avatar from "antd/es/avatar";
 import UniformBreadcrumb from "./Breadcrumb";
 import { LoadingDot, LoadingInComing } from "./Loading";
 import Sidebar from "./Sidebar";
 import "./index.scss";
-import { UserOutlined } from "@ant-design/icons";
 import { RootState } from "../../redux";
 import { useSelector } from "react-redux";
 import React from "react";
 import { Toast } from "./Toast";
 import { authApi } from "../../api";
+import { ApiStatus, ApiStatusCode } from "../model/enum/apiStatus";
+import { useDispatch } from "react-redux";
+import { setInfoUser } from "../../redux/reducers";
 
 interface IUniformLayoutProps {
   page: JSX.Element;
@@ -20,17 +21,24 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
   const { isLoading } = useSelector((state: RootState) => state.loading);
   const { isShow } = useSelector((state: RootState) => state.toast);
 
+  const dispatch = useDispatch();
+
   
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    authApi.getInfoCurrentUser().then(result => {
-      // if(result !== ApiStatus.succes) {
-      //   localStorage.clear();
-      //   dispatch(userLogout());
-      // }
-      console.log(result)
-
+    authApi.getInfoCurrentUser().then((result: any) => {
+      if (result.status !== ApiStatus.succes) {
+        localStorage.clear();
+        if (result?.statusCode === ApiStatusCode.Forbidden || result?.statusCode === ApiStatusCode.Unauthorized) {
+          // redirect to expired page
+        } else if (result?.statusCode === ApiStatusCode.ServerError) {
+          // redirect to 500 page
+        } else {
+          // redirect to 404 page
+        }
+      }
+      dispatch(setInfoUser(result.data))
     }).catch().finally(() => setLoading(false))
   }, [])
 
@@ -40,7 +48,6 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
         <div className="content">
           <div className="main-header">
             <UniformBreadcrumb/>
-            <Avatar size={40} icon={<UserOutlined />} />
           </div>
           <div className="layout-wrapper">
             {page}

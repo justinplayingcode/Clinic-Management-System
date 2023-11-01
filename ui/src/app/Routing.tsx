@@ -11,7 +11,7 @@ function Routing() {
 
   const navigateHome = () => {
     if(!phonenumber) {
-      return <Navigate to="/" replace/>
+      return <Navigate to="/" replace/> //redirect to expired page
     }
     return <UniformLayout page={<Overview/>}/>
   }
