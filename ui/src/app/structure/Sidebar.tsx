@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { HomeOutlined, FileSearchOutlined, MedicineBoxOutlined, CalendarOutlined } from '@ant-design/icons';
+import { HomeOutlined, FileSearchOutlined, MedicineBoxOutlined, CalendarOutlined, LogoutOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Menu } from 'antd';
+import { Button, Menu } from 'antd';
 import { mappingRouter, routerString } from '../model/router';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LogoSidebar } from '../../asset/images/images';
@@ -46,20 +46,30 @@ const Sidebar: React.FC = () => {
     navigate(e.key);
   };
 
+  const logOut = () => {
+    localStorage.clear();
+    navigate("/"); // rediect to logout page
+  }
+
   return (
     <div id="main-sidebar" key={location.pathname}>
-      <div style={{ height: "60px", backgroundColor: "#001529", color: "#333", display: "flex", alignItems: "center", paddingLeft: "32px"}}>
-        <img alt="" src={LogoSidebar} style={{ width: "100px", height: "44px" }} />
-        </div>
-      <Menu
-        theme={'dark'}
-        onClick={onClick}
-        style={{ width: 240, height: "calc(100% - 60px)" }}
-        defaultOpenKeys={['sub1']}
-        selectedKeys={[current]}
-        mode="inline"
-        items={items}
-      />
+      <div className='sidebar-top'>
+        <div style={{ height: "60px", backgroundColor: "#001529", color: "#333", display: "flex", alignItems: "center", paddingLeft: "32px"}}>
+          <img alt="" src={LogoSidebar} style={{ width: "100px", height: "44px" }} />
+          di</div>
+        <Menu
+          theme={'dark'}
+          onClick={onClick}
+          style={{ width: 240, height: "calc(100% - 60px)" }}
+          defaultOpenKeys={['sub1']}
+          selectedKeys={[current]}
+          mode="inline"
+          items={items}
+        />
+      </div>
+      <div className='sidebar-bottom'>
+        <Button className="button-logout" type="default" icon={<LogoutOutlined />} size="large" onClick={logOut}>Logout</Button>
+      </div>
     </div>
   );
 };
