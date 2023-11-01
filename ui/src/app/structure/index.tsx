@@ -21,8 +21,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
   const { isShow } = useSelector((state: RootState) => state.toast);
 
   
-  const [loading, setLoading] = useState<boolean>(false);
-  // const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     authApi.getInfoCurrentUser().then(result => {
@@ -31,6 +30,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
       //   dispatch(userLogout());
       // }
       console.log(result)
+
     }).catch().finally(() => setLoading(false))
   }, [])
 

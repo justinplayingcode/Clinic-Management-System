@@ -5,14 +5,12 @@ interface CurrentUserState {
     role: Role | null;
     phonenumber: string | null;
     info: any;
-    pending: boolean;
 }
 
 const initialState: CurrentUserState = {
     role: null,
     phonenumber: null,
     info: {},
-    pending: false
 };
 
 export const authSlice = createSlice({

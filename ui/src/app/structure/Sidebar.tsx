@@ -4,6 +4,7 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { mappingRouter, routerString } from '../model/router';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { LogoSidebar } from '../../asset/images/images';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -47,11 +48,11 @@ const Sidebar: React.FC = () => {
 
   return (
     <div id="main-sidebar" key={location.pathname}>
-      <div style={{ height: "60px", backgroundColor: "#fff", color: "#333"}}>
-        icon
-      </div>
+      <div style={{ height: "60px", backgroundColor: "#001529", color: "#333", display: "flex", alignItems: "center", paddingLeft: "32px"}}>
+        <img alt="" src={LogoSidebar} style={{ width: "100px", height: "44px" }} />
+        </div>
       <Menu
-        theme={'light'}
+        theme={'dark'}
         onClick={onClick}
         style={{ width: 240, height: "calc(100% - 60px)" }}
         defaultOpenKeys={['sub1']}
