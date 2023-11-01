@@ -46,7 +46,7 @@ export default class AccountController {
             statusCode: ApiStatusCode.OK,
             data: {
               accessToken, 
-              username: account.phoneNumber,
+              phoneNumber: account.phoneNumber,
               role: account.role
             }
           }

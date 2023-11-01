@@ -17,8 +17,16 @@ import Layout, { Content, Footer, Header } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { HomePic1, HomePic2, Logo } from "../../../asset/images/images";
 import "./index.scss";
+import { useDispatch } from "react-redux";
+import { openLoading, setRole, setPhoneNumber as setPhoneNumberRD, closeLoading } from "../../../redux/reducers";
+import { authApi } from "../../../api";
+import { useNavigate } from "react-router-dom";
+import { routerString } from "../../model/router";
 
 function LandingPage() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
   const [isOpenLogin, setOpenLogin] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>("1");
   const [phoneNumber, setPhoneNumber] = useState<string>();
@@ -127,18 +135,31 @@ function LandingPage() {
 
   const handleLogin = () => {
     if (!phoneNumber || !password) {
+      setError("Vui lòng điền các trường còn trống");
       return;
     }
-    const body = {
+    const reqbody = {
       phoneNumber,
       password,
     };
-    console.log("Đăng nhập", body);
+    dispatch(openLoading());
+    authApi.login(reqbody).then(data => {
+      const {accessToken, role, phoneNumber } = data.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("phoneNumber", phoneNumber);
+      dispatch(setRole(role));
+      dispatch(setPhoneNumberRD(phoneNumber));
+      navigate(`${routerString.home}`);
+    }).catch(err => {
+        const { message } = err.response.data;
+        setError(message)
+    }).finally(() => dispatch(closeLoading()))
   };
 
   const handleSignUp = () => {
     setError("");
     if (!phoneNumber || !password || !reEnterPassWord) {
+      setError("Vui lòng điền các trường còn trống");
       return;
     }
     if (password !== reEnterPassWord) {
