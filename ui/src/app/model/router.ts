@@ -1,4 +1,7 @@
 export const routerString = {
+  Forbidden: "/forbidden",
+  Unauthorized: "/notfound",
+  ServerError: "/servererror",
   login: "/login",
   home: "/home",
   histories: "/histories",

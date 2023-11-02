@@ -33,10 +33,6 @@ const accountSchema = new Schema({
       message: "{VALUE} is not supported in role",
     },
   },
-  refreshToken: {
-    type: String,
-    trim: true,
-  },
   isActive: {
     type: Boolean,
     default: true,
