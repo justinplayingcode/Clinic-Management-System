@@ -4,3 +4,9 @@ export enum toastType {
   info,
   warning
 }
+
+export enum ErrorPageEnum {
+  Unauthorized,
+  Forbidden,
+  ServerError
+}

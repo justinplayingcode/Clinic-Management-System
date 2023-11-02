@@ -11,6 +11,8 @@ import { authApi } from "../../api";
 import { ApiStatus, ApiStatusCode } from "../model/enum/apiStatus";
 import { useDispatch } from "react-redux";
 import { setInfoUser } from "../../redux/reducers";
+import { useNavigate } from "react-router-dom";
+import { routerString } from "../model/router";
 
 interface IUniformLayoutProps {
   page: JSX.Element;
@@ -22,20 +24,24 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
   const { isShow } = useSelector((state: RootState) => state.toast);
 
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    if(!localStorage.getItem('accessToken')) {
+      localStorage.clear();
+      navigate(`${routerString.Forbidden}`)
+    }
     authApi.getInfoCurrentUser().then((result: any) => {
       if (result.status !== ApiStatus.succes) {
         localStorage.clear();
-        if (result?.statusCode === ApiStatusCode.Forbidden || result?.statusCode === ApiStatusCode.Unauthorized) {
-          // redirect to expired page
-        } else if (result?.statusCode === ApiStatusCode.ServerError) {
-          // redirect to 500 page
-        } else {
-          // redirect to 404 page
+        if (result?.statusCode === ApiStatusCode.Forbidden) {
+          navigate(`${routerString.Forbidden}`)
+        } else if (result?.statusCode === ApiStatusCode.Unauthorized) {
+          navigate(`${routerString.Unauthorized}`)
+        }  else {
+          navigate(`${routerString.ServerError}`)
         }
       }
       dispatch(setInfoUser(result.data))
