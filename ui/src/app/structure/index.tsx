@@ -10,16 +10,21 @@ import { Toast } from "./Toast";
 import { authApi } from "../../api";
 import { ApiStatus, ApiStatusCode } from "../model/enum/apiStatus";
 import { useDispatch } from "react-redux";
-import { setInfoUser } from "../../redux/reducers";
-import { useNavigate } from "react-router-dom";
+import { closeLoading, openLoading, setInfoUser, setRole } from "../../redux/reducers";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { routerString } from "../model/router";
+import { Role } from "../model/enum/auth";
+import { Avatar, Dropdown } from "antd";
+import { MdLogout } from "react-icons/md";
+import { UserOutlined } from "@ant-design/icons";
 
 interface IUniformLayoutProps {
   page: JSX.Element;
+  permission?: Role[];
 }
 
 function UniformLayout({ ...props }: IUniformLayoutProps) {
-  const { phonenumber } = useSelector((state: RootState) => state.auth);
+  const { phonenumber, role } = useSelector((state: RootState) => state.auth);
   const { isLoading } = useSelector((state: RootState) => state.loading);
   const { isShow } = useSelector((state: RootState) => state.toast);
 
@@ -45,18 +50,48 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
         }
       }
       dispatch(setInfoUser(result.data))
+      dispatch(setRole(result.data?.role))
     }).catch().finally(() => setLoading(false))
   }, [])
 
+  const logOut = () => {
+    localStorage.clear();
+    dispatch(openLoading());
+    setTimeout(() => {
+      dispatch(closeLoading());
+      navigate("/")
+    }, 1000)
+  }
+
   const renderContent = () => {
-      const { page } = props;
+      const { page, permission } = props;
+      const colorList = ['#FF007F', '#1B4D3E', '#002244'];
+      const userList = ['Doctor', 'User', 'Admin'];
+      const items = [
+        { key: 'accountinformation', label: <Link to={routerString.home}> <UserOutlined /> &nbsp; Thông tin cá nhân</Link> },
+        { key: 'accountlogout', label: <div style={{ display: "flex", alignItems: "center"}} onClick={logOut}><MdLogout/> &ensp; Đăng xuất</div>},
+      ]
+
+      if(permission && permission.includes(role!)) {
+        return <Navigate to={`${routerString.Unauthorized}`} replace/>
+      };
+
       return (
         <div className="content">
           <div className="main-header">
             <UniformBreadcrumb/>
+            <div style={{ paddingRight: "24px"}}>
+              <Dropdown menu={{ items }} placement="bottomLeft" arrow>
+                <Avatar style={{ backgroundColor: `${colorList[role || 0]}`, verticalAlign: 'middle' }} size="large">
+                  {userList[role!]}
+                </Avatar>
+              </Dropdown>
+            </div>
           </div>
           <div className="layout-wrapper">
-            {page}
+            <div className="main-wrapper">
+              {page}
+            </div>
           </div>
         </div>
       )
