@@ -31,7 +31,7 @@ function ErrorPage(props: IErrorPageProps) {
           <Result
             status="404"
             title="404"
-            subTitle="Không tồn tại, vui lòng trở lại trang chủ"
+            subTitle="Không có quyền truy cập, vui lòng trở lại trang chủ"
             extra={<Button type="primary" onClick={() => navigate(`${routerString.home}`)}>Quay về trang chủ</Button>}
           />
         )
