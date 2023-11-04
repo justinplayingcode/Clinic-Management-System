@@ -21,6 +21,7 @@ import { UserOutlined } from "@ant-design/icons";
 interface IUniformLayoutProps {
   page: JSX.Element;
   permission?: Role[];
+  noBackground?: boolean;
 }
 
 function UniformLayout({ ...props }: IUniformLayoutProps) {
@@ -64,7 +65,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
   }
 
   const renderContent = () => {
-      const { page, permission } = props;
+      const { page, permission, noBackground } = props;
       const colorList = ['#FF007F', '#1B4D3E', '#002244'];
       const userList = ['Doctor', 'User', 'Admin'];
       const items = [
@@ -75,6 +76,12 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
       if(permission && permission.includes(role!)) {
         return <Navigate to={`${routerString.Unauthorized}`} replace/>
       };
+
+      const styleMainWrapper = {
+        backgroundColor: "#fff",
+        borderRadius: "8px",
+        boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+      }
 
       return (
         <div className="content">
@@ -89,7 +96,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
             </div>
           </div>
           <div className="layout-wrapper">
-            <div className="main-wrapper">
+            <div className="main-wrapper" style={noBackground ? {} : styleMainWrapper}>
               {page}
             </div>
           </div>

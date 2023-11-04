@@ -8,9 +8,9 @@ import { CommandBar, ICommandBarItemProps, Icon, ShimmeredDetailsList, Stack } f
 import './index.scss';
 import { connect } from 'react-redux';
 import Pagination from '../pagination';
-import { setTableSelectedCount, setTableSelectedItem } from '../../../redux/reducers';
-import { RootState } from '../../../redux';
-import { ApiStatus } from '../../model/enum/apiStatus';
+import { setTableSelectedCount, setTableSelectedItem } from '../../../../redux/reducers';
+import { RootState } from '../../../../redux';
+import { ApiStatus } from '../../../model/enum/apiStatus';
 import { Empty } from 'antd';
 
 const classNames = mergeStyleSets({ controlWrapper: { display: 'flex',flexWrap: 'wrap', paddingLeft: '20px'}});

@@ -19,7 +19,7 @@ function ErrorPage(props: IErrorPageProps) {
     }
     const timeout = setTimeout(() => {
       navigate(url);
-    }, 5000);
+    }, 3000);
     return () => clearTimeout(timeout)
   }, [])
 

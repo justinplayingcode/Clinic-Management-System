@@ -2,10 +2,12 @@ import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
 import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { Utils } from "../../../../../utils";
+import dayjs from "dayjs";
 
 interface IBasicInfoProps {
   dismissForm: () => void;
-  value?: string;
+  value?: any;
 }
 
 type FieldType = {
@@ -44,12 +46,10 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
     label: "",
   };
 
-  const [info, setInfo] = useState<string>(value || "");
-
-  const [city, setCity] = useState<ISelectOption>(defaultSelectOption);
-  const [district, setDistrict] = useState<ISelectOption>(defaultSelectOption);
-  const [commune, setCommune] = useState<ISelectOption>(defaultSelectOption);
-  const [details, setDetails] = useState<string>("");
+  const [city, setCity] = useState<ISelectOption>({ value: "", label: value.city || "" });
+  const [district, setDistrict] = useState<ISelectOption>({ value: "", label: value.district || "" });
+  const [commune, setCommune] = useState<ISelectOption>({ value: "", label: value.commune || "" });
+  const [details, setDetails] = useState<string>(value.address || "");
 
   const [cityList, setCityList] = useState<ISelectOption[]>([]);
   const [districtList, setDistrictList] = useState<ISelectOption[]>([]);
@@ -98,114 +98,71 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
   };
   useEffect(() => {
     callAPI(host);
-    //   if (value) {
-    //     const addressToList = value.split("*");
-    //     if (addressToList.length) {
-    //       setDetails(addressToList[3]);
-    //     }
-    //   }
   }, []);
-
-  //   useEffect(() => {
-  //     if (value && cityList.length > 0) {
-  //       const cityName = value.split("*")[0];
-  //       const currentCity = cityList.find((city) => city.label === cityName);
-  //       if (currentCity) setCity(currentCity);
-  //     }
-  //   }, [cityList]);
 
   useEffect(() => {
     callApiDistrict(`${host}p/${city.value}?depth=2`);
   }, [city]);
 
-  //   useEffect(() => {
-  //     if (value && districtList.length > 0) {
-  //       const districtName = value.split("*")[1];
-  //       const currentDistrict = districtList.find(
-  //         (district) => district.label === districtName
-  //       );
-  //       if (currentDistrict) setDistrict(currentDistrict);
-  //     }
-  //   }, [districtList]);
-
   useEffect(() => {
     callApiWard(`${host}d/${district.value}?depth=2`);
   }, [district]);
 
-  //   useEffect(() => {
-  //     if (value && communeList.length > 0) {
-  //       const communeName = value.split("*")[2];
-  //       const currentCommine = communeList.find(
-  //         (commune) => commune.label === communeName
-  //       );
-  //       if (currentCommine) setCommune(currentCommine);
-  //     }
-  //   }, [communeList]);
-
   const onFinish = (values: any) => {
-    // values["gender"] =
-    //   gender.find((gen) => gen.value === values.gender)?.label || "Nam";
+    console.log(values)
     values["dateOfBirth"] = moment(values.dateOfBirth).format("MM/DD/YYYY");
     values["city"] = values.city.label;
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;
     values["address"] = values.address || "";
-
-    // const addressList = address.split("*");
-    // console.log(addressList);
-    // console.log(addressList.length);
-
-    // switch (addressList.length) {
-    //   case 0:
-    //     setErrorAddress({
-    //       city: "Hãy chọn Tỉnh/Thành Phố",
-    //     });
-    //     return;
-    //   case 1:
-    //     setErrorAddress({
-    //       district: "Hãy chọn Quận/Huyện",
-    //     });
-    //     return;
-    //   case 2:
-    //     setErrorAddress({
-    //       commune: "Hãy chọn Xã/Phường",
-    //     });
-    //     return;
-    //   default:
-    // }
-    // if (addressList.length < 2) {
-    // }
-
-    // values["address"] = address;
     console.log("Success:", values);
     dismissForm();
+
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
 
+  const _initialValues = {
+    ...value,
+    dateOfBirth: dayjs(Utils.convertDDmmyyyTommDDyyyy(value.dateOfBirth)),
+    city: {
+      value: "",
+      label: value.city
+    },
+    district: {
+      value: "",
+      label: value.district
+    },
+    commune: {
+      value: "",
+      label: value.commune
+    }
+  }
+
   return (
-    <div style={{ padding: "0 24px" }}>
+    <div style={{ padding: "16px 64px 0 64px" }}>
       <Form
         form={form}
         name="basic"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         layout={"vertical"}
-        style={{ maxWidth: 600 }}
+        style={{ maxWidth: 800 }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        initialValues={_initialValues}
       >
         <Row style={{ gap: "40px" }}>
           <Col span={12} style={{ flex: 1 }}>
             <Form.Item<FieldType>
               label="Họ và tên"
               name="fullName"
-              rules={[{ required: true, message: "Hãy nhập Họ và tên!" }]}
+              rules={[{ required: true, message: "Hãy nhập họ và tên!" }]}
             >
-              <Input />
+              <Input placeholder="Nhập họ và tên"/>
             </Form.Item>
           </Col>
           <Col span={12} style={{ flex: 1 }}>
@@ -214,7 +171,7 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
               name="gender"
               rules={[{ required: true, message: "Hãy chọn giới tính!" }]}
             >
-              <Select options={gender}></Select>
+              <Select options={gender} placeholder="Chọn giới tính"></Select>
             </Form.Item>
           </Col>
         </Row>
@@ -228,6 +185,7 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
               <DatePicker
                 placeholder="Chọn Ngày sinh"
                 style={{ width: "100%" }}
+                format={"DD/MM/YYYY"}
               />
             </Form.Item>
           </Col>
@@ -237,7 +195,7 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
               name="email"
               rules={[{ type: "email" }]}
             >
-              <Input />
+              <Input placeholder="Nhập email" />
             </Form.Item>
           </Col>
         </Row>
@@ -262,8 +220,6 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
                     value: value.value,
                     label: value.label,
                   });
-
-                  // reset district, commune, details value
                   form.setFieldsValue({
                     district: undefined,
                     commune: undefined,
@@ -285,7 +241,6 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
                 labelInValue
                 style={{
                   ...selectStyle,
-                  // borderColor: errorMessage?.district && "#ff4d4f",
                 }}
                 placeholder="Chọn Quận/Huyện"
                 options={districtList}
@@ -295,7 +250,6 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
                     value: value.value,
                     label: value.label,
                   });
-                  // reset commune, details value
                   form.setFieldsValue({
                     commune: undefined,
                   });
@@ -318,7 +272,6 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
                 labelInValue
                 style={{
                   ...selectStyle,
-                  // borderColor: errorMessage?.commune && "#ff4d4f",
                 }}
                 placeholder="Chọn Phường/Xã"
                 options={communeList}
@@ -336,7 +289,6 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
 
           <Col span={12} style={{ marginBottom: "24px", flex: 1 }}>
             <Form.Item<FieldType> label="Địa chỉ" name="address">
-              {/* <Text style={{ display: "block", width: "83%" }}>Địa chỉ</Text> */}
               <Input
                 value={details}
                 onChange={(e) => setDetails(e.target.value)}
