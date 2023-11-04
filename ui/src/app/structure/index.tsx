@@ -82,7 +82,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
             <UniformBreadcrumb/>
             <div style={{ paddingRight: "24px"}}>
               <Dropdown menu={{ items }} placement="bottomLeft" arrow>
-                <Avatar style={{ backgroundColor: `${colorList[role || 0]}`, verticalAlign: 'middle' }} size="large">
+                <Avatar style={{ backgroundColor: `${colorList[role || 0]}`, verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large">
                   {userList[role!]}
                 </Avatar>
               </Dropdown>

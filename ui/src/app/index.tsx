@@ -3,7 +3,9 @@ import store from "../redux"
 import "./index.scss"
 import Routing from "./Routing"
 import { ConfigProvider } from 'antd'
+import { initializeIcons } from "@fluentui/react"
 
+initializeIcons();
 const App: React.FunctionComponent = () => {
   return (
       <Provider store={store}>
