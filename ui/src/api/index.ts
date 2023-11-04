@@ -6,6 +6,9 @@ const path = {
   getInfoCurrentUser: "/auth",
   changepassword: "/auth/changepassword",
   register: "/auth/register",
+
+
+  manageDepartment: ""
 }
 
 const authApi = {
@@ -13,6 +16,12 @@ const authApi = {
   getInfoCurrentUser: () => api.get(path.getInfoCurrentUser),
   changepassword: (reqbody: any) => api.put(path.changepassword, reqbody),
   register: (reqbody: any) => api.post(path.register, reqbody),
+
+}
+
+const departmentApi = {
+  manageDepartment: (reqbody: any) => api.post(path.register, reqbody),
+
 }
 
 
@@ -20,5 +29,5 @@ const authApi = {
 
 export {
   authApi,
-
+  departmentApi
 };
