@@ -1,10 +1,14 @@
-import { Input, Select } from "antd";
+import { Col, Input, Row, Select } from "antd";
+import Text from "antd/es/typography/Text";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import "./index.scss";
+import { Dictionary } from "@reduxjs/toolkit";
 
 interface IAddressFieldProps {
   value: string;
   onChange: (value: string) => void;
+  errorMessage?: Dictionary<string>;
 }
 
 interface ISelectOption {
@@ -13,7 +17,7 @@ interface ISelectOption {
 }
 
 function AddressField(props: IAddressFieldProps) {
-  const { value, onChange } = props;
+  const { value, onChange, errorMessage } = props;
 
   const defaultSelectOption: ISelectOption = {
     value: "",
@@ -125,60 +129,96 @@ function AddressField(props: IAddressFieldProps) {
 
   return (
     <>
-      <Select
-        labelInValue
-        style={selectStyle}
-        placeholder="Chọn Tỉnh/Thành phố"
-        options={cityList}
-        value={city}
-        onChange={(value: { value: string; label: string }) => {
-          setCity({
-            value: value.value,
-            label: value.label,
-          });
+      <Row style={{ gap: "40px" }}>
+        <Col span={12} style={{ flex: 1 }}>
+          <Text className="require">
+            <span>Tỉnh/Thành phố</span>
+          </Text>
+          <Select
+            labelInValue
+            style={{
+              ...selectStyle,
+              borderColor: errorMessage?.city && "#ff4d4f",
+            }}
+            placeholder="Chọn Tỉnh/Thành phố"
+            options={cityList}
+            value={city}
+            onChange={(value: { value: string; label: string }) => {
+              setCity({
+                value: value.value,
+                label: value.label,
+              });
 
-          // reset district, commune, details value
-          setDistrict(defaultSelectOption);
-          setCommune(defaultSelectOption);
-        }}
-      ></Select>
-      <Select
-        labelInValue
-        style={selectStyle}
-        placeholder="Chọn Quận/Huyện"
-        options={districtList}
-        value={district}
-        onChange={(value: { value: string; label: string }) => {
-          setDistrict({
-            value: value.value,
-            label: value.label,
-          });
+              // reset district, commune, details value
+              setDistrict(defaultSelectOption);
+              setCommune(defaultSelectOption);
+            }}
+          ></Select>
+          <div style={{ height: "24px", color: "" }}>{errorMessage?.city}</div>
+        </Col>
 
-          // reset commune, details value
-          setCommune(defaultSelectOption);
-        }}
-        disabled={!city.label}
-      ></Select>
-      <Select
-        labelInValue
-        style={selectStyle}
-        placeholder="Chọn Phường/Xã"
-        options={communeList}
-        value={commune}
-        onChange={(value: { value: string; label: string }) => {
-          setCommune({
-            value: value.value,
-            label: value.label,
-          });
-        }}
-        disabled={!district.label}
-      ></Select>
-      <Input
-        placeholder="Nhập địa chỉ"
-        value={details}
-        onChange={(e) => setDetails(e.target.value)}
-        disabled={!commune.label}
-      />
+        <Col span={12} style={{ flex: 1 }}>
+          <Text className="require">
+            <span>Quận/Huyện</span>
+          </Text>
+          <Select
+            labelInValue
+            style={{
+              ...selectStyle,
+              borderColor: errorMessage?.district && "#ff4d4f",
+            }}
+            placeholder="Chọn Quận/Huyện"
+            options={districtList}
+            value={district}
+            onChange={(value: { value: string; label: string }) => {
+              setDistrict({
+                value: value.value,
+                label: value.label,
+              });
+
+              // reset commune, details value
+              setCommune(defaultSelectOption);
+            }}
+            disabled={!city.label}
+          ></Select>
+          <div style={{ height: "24px" }}>{errorMessage?.district}</div>
+        </Col>
+      </Row>
+
+      <Row style={{ gap: "40px" }}>
+        <Col span={12} style={{ flex: 1 }}>
+          <Text className="require">
+            <span>Xã/Phường</span>
+          </Text>
+          <Select
+            labelInValue
+            style={{
+              ...selectStyle,
+              borderColor: errorMessage?.commune && "#ff4d4f",
+            }}
+            placeholder="Chọn Phường/Xã"
+            options={communeList}
+            value={commune}
+            onChange={(value: { value: string; label: string }) => {
+              setCommune({
+                value: value.value,
+                label: value.label,
+              });
+            }}
+            disabled={!district.label}
+          ></Select>
+          <div style={{ height: "24px" }}>{errorMessage?.commune}</div>
+        </Col>
+
+        <Col span={12} style={{ marginBottom: "24px", flex: 1 }}>
+          <Text style={{ display: "block", width: "83%" }}>Địa chỉ</Text>
+          <Input
+            value={details}
+            onChange={(e) => setDetails(e.target.value)}
+            disabled={!commune.label}
+          />
+        </Col>
+      </Row>
     </>
   );
 }

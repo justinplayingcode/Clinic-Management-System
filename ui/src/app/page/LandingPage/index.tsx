@@ -18,7 +18,13 @@ import { useEffect, useState } from "react";
 import { HomePic2, Logo } from "../../../asset/images/images";
 import "./index.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { openLoading, setRole, setPhoneNumber as setPhoneNumberRD, closeLoading, showToastMessage } from "../../../redux/reducers";
+import {
+  openLoading,
+  setRole,
+  setPhoneNumber as setPhoneNumberRD,
+  closeLoading,
+  showToastMessage,
+} from "../../../redux/reducers";
 import { authApi } from "../../../api";
 import { useNavigate } from "react-router-dom";
 import { routerString } from "../../model/router";
@@ -29,8 +35,8 @@ import { toastType } from "../../model/enum/common";
 
 function LandingPage() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  const loading = useSelector<RootState>(state => state.loading.isLoading)
+  const navigate = useNavigate();
+  const loading = useSelector<RootState>((state) => state.loading.isLoading);
 
   const [isOpenLogin, setOpenLogin] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>("1");
@@ -150,17 +156,21 @@ function LandingPage() {
       password,
     };
     dispatch(openLoading());
-    authApi.login(reqbody).then(data => {
-      const {accessToken, role, phoneNumber } = data.data?.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("phoneNumber", phoneNumber);
-      dispatch(setRole(role));
-      dispatch(setPhoneNumberRD(phoneNumber));
-      navigate(`${routerString.home}`);
-    }).catch(err => {
+    authApi
+      .login(reqbody)
+      .then((data) => {
+        const { accessToken, role, phoneNumber } = data.data?.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("phoneNumber", phoneNumber);
+        dispatch(setRole(role));
+        dispatch(setPhoneNumberRD(phoneNumber));
+        navigate(`${routerString.home}`);
+      })
+      .catch((err) => {
         const { message } = err.response.data;
-        setError(message)
-    }).finally(() => dispatch(closeLoading()))
+        setError(message);
+      })
+      .finally(() => dispatch(closeLoading()));
   };
 
   const handleSignUp = () => {
@@ -178,18 +188,27 @@ function LandingPage() {
       password,
     };
     dispatch(openLoading());
-    authApi.register(reqbody).then(data => {
-      const {accessToken, role, phoneNumber } = data.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("phoneNumber", phoneNumber);
-      dispatch(setRole(role));
-      dispatch(setPhoneNumberRD(phoneNumber));
-      dispatch(showToastMessage({ message: 'Tạo tài khoản thành công', type: toastType.succes }))
-      navigate(`${routerString.home}`);
-    }).catch(err => {
+    authApi
+      .register(reqbody)
+      .then((data) => {
+        const { accessToken, role, phoneNumber } = data.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("phoneNumber", phoneNumber);
+        dispatch(setRole(role));
+        dispatch(setPhoneNumberRD(phoneNumber));
+        dispatch(
+          showToastMessage({
+            message: "Tạo tài khoản thành công",
+            type: toastType.succes,
+          })
+        );
+        navigate(`${routerString.home}`);
+      })
+      .catch((err) => {
         const { message } = err.response.data;
-        setError(message)
-    }).finally(() => dispatch(closeLoading()))
+        setError(message);
+      })
+      .finally(() => dispatch(closeLoading()));
   };
 
   const onRenderFooter = () => {
@@ -225,57 +244,57 @@ function LandingPage() {
     <>
       {loading ? <LoadingLogin /> : <React.Fragment />}
       <Layout className="landing-page">
-        <Header
-          className="header"
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 1,
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            height: "fit-content",
-          }}
-        >
+        <Header className="header">
           <div className="top-header">
-            <div style={{ color: "#FFFFFF" }}>
-              Giờ làm việc: Thứ Hai - Thứ Sáu: 8:00 - 17:30 - Thứ Bảy: 8:00 -
-              11:30
-            </div>
-            <div style={{ color: "#FFFFFF", display: "flex", gap: "4px" }}>
-              <FacebookOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
-              <GooglePlusOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
-              <YoutubeOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
+            <div className="header-container">
+              <div style={{ color: "#FFFFFF" }}>
+                Giờ làm việc: Thứ Hai - Thứ Sáu: 8:00 - 17:30 - Thứ Bảy: 8:00 -
+                11:30
+              </div>
+              <div style={{ color: "#FFFFFF", display: "flex", gap: "4px" }}>
+                <FacebookOutlined
+                  color="#FFFFFF"
+                  style={{ fontSize: "20px" }}
+                />
+                <GooglePlusOutlined
+                  color="#FFFFFF"
+                  style={{ fontSize: "20px" }}
+                />
+                <YoutubeOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
+              </div>
             </div>
           </div>
           <div className="bottom-header">
-            <img
-              alt=""
-              src={Logo}
-              style={{
-                width: "100px",
-                height: "48px",
-              }}
-            />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "row",
-                gap: "45px",
-              }}
-            >
-              <div style={{ display: "flex", flexDirection: "row", gap: "30px" }}>
-                <div>Trang chủ</div>
-                <div>Về chúng tôi</div>
-                <div>Dịch vụ</div>
-                <div>Đội ngũ</div>
-                <div>Liên hệ</div>
+            <div className="header-container">
+              <img
+                alt=""
+                src={Logo}
+                style={{
+                  width: "100px",
+                  height: "48px",
+                }}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  gap: "45px",
+                }}
+              >
+                <div
+                  style={{ display: "flex", flexDirection: "row", gap: "30px" }}
+                >
+                  <div>Trang chủ</div>
+                  <div>Về chúng tôi</div>
+                  <div>Dịch vụ</div>
+                  <div>Đội ngũ</div>
+                  <div>Liên hệ</div>
+                </div>
+                <Button type="primary" ghost onClick={() => setOpenLogin(true)}>
+                  Đăng nhập
+                </Button>
               </div>
-              <Button type="primary" ghost onClick={() => setOpenLogin(true)}>
-                Đăng nhập
-              </Button>
             </div>
           </div>
           <Modal
@@ -287,7 +306,7 @@ function LandingPage() {
             footer={onRenderFooter}
           >
             <Tabs
-              defaultActiveKey="1"
+              activeKey={activeKey}
               items={loginItems}
               onChange={(activeKey) => handleOnchangeLoginTab(activeKey)}
             />
