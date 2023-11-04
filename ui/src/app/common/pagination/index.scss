@@ -7,10 +7,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: #0074bd;
+		color: #001529;
 		font-size: 14px;
+    margin: 0 2px;
 		&:hover {
-			background-color: #f2f2f2;
+			background-color: #f3f3f3;
+      border-radius: 8px;
 		}
 	}
 	.disabled {
@@ -23,18 +25,19 @@
 		}
 	}
 	.active {
-		color: #ffffff;
+		color: #1677FF;
     cursor: auto;
     pointer-events: none;
-		background-color: #0074bd;
-		&:hover {
-			background-color: #0074bd;
-		}
+    border: 1px solid #1677FF;
+    border-radius: 8px;
 	}
+  .none {
+    cursor: auto;
+    pointer-events: none;
+  }
 }
 .pagination-container.disable {
   pointer-events: none;
-  // visibility: hidden;
 }
 .pagination-container.hidden {
   pointer-events: none;

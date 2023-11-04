@@ -6,7 +6,7 @@ import { Icon } from "@fluentui/react";
 
 interface PagingProps {
 	pageTotal: number;
-	postPerPage: number;
+	postPerPage?: number;
 	callback: any;
   disable?: boolean;
 }
@@ -96,7 +96,7 @@ export default class Pagination extends React.Component<PagingProps, PagingState
 				</div>
 				{arrPage.map((value, index) => (
 					<div
-						className={`pagination-button ${this.state.currentPage === value ? "active" : ""}`}
+						className={`pagination-button ${this.state.currentPage === value ? "active" : ""} ${value === "..." ? "none" : ""}`}
 						key={index}
 						onClick={() => this.handleCurrentPage(value)}>
 						{value}
