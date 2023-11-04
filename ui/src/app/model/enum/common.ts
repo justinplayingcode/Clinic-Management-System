@@ -10,3 +10,8 @@ export enum ErrorPageEnum {
   Forbidden,
   ServerError
 }
+
+export enum Gender {
+  Male = 0,
+  Female = 1,
+}

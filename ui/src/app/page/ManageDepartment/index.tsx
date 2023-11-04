@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios";
-import { UniformTable } from "../../common";
 import { departmentApi } from "../../../api";
-
+import UniformTable from "../components/table"
 function ManageDepartment() {
 
 
