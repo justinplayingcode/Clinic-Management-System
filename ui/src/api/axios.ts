@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
 import { ApiStatusCode } from "../app/model/enum/apiStatus";
+import { routerString } from "../app/model/router";
 
 const api = axios.create({
     baseURL: 'http://localhost:5050/api/'
@@ -15,16 +15,15 @@ api.interceptors.request.use((config) => {
 }, (error) => Promise.reject(error));
 
 api.interceptors.response.use((response) => {
-    if(response.data) {
-      return response.data;
-    }
-    return response
-  }, async (error) => {
-    if (error.response.status === ApiStatusCode.Forbidden) {
-      localStorage.clear();
-      const navigate = useNavigate()
-      navigate("/");
-    }
+  if(response.data) {
+    return response.data;
+  }
+  return response
+}, (error) => {
+    const status = error.response?.status;
+      if (status === ApiStatusCode.Forbidden) {
+        window.open(`/#/${routerString.Forbidden}`, "_self")
+      }
     return Promise.reject(error);
   }
 );

@@ -40,13 +40,20 @@ function LandingPage() {
 
   const [isOpenLogin, setOpenLogin] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>("1");
-  const [phoneNumber, setPhoneNumber] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [reEnterPassWord, setReEnterPassword] = useState<string>();
   const [error, setError] = useState<string>("");
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  // useEffect(() => {
+  //   if(!!localStorage.getItem('accessToken')) {
+  //     navigate(`${routerString.home}`)
+  //     console.log("aaaa")
+  //   }
+  // }, [])
 
   const loginItems: TabsProps["items"] = [
     {
@@ -159,11 +166,8 @@ function LandingPage() {
     authApi
       .login(reqbody)
       .then((data) => {
-        const { accessToken, role, phoneNumber } = data.data?.data;
+        const { accessToken } = data.data?.data;
         localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("phoneNumber", phoneNumber);
-        dispatch(setRole(role));
-        dispatch(setPhoneNumberRD(phoneNumber));
         navigate(`${routerString.home}`);
       })
       .catch((err) => {

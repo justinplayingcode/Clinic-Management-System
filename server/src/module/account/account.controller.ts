@@ -45,9 +45,7 @@ export default class AccountController {
             isSuccess: true,
             statusCode: ApiStatusCode.OK,
             data: {
-              accessToken, 
-              phoneNumber: account.phoneNumber,
-              role: account.role
+              accessToken
             }
           }
         } else {
@@ -145,28 +143,46 @@ export default class AccountController {
   }
 
   // GET
+  public checkCurrentUser = async (req, res, next) => {
+    const { accountId } = req.user;
+    try {
+      const account = await this._accountService.findById(accountId);
+      let _data = { phoneNumber: null, role: null };
+      if(account) {
+        _data = { phoneNumber: account.phoneNumber, role: account.role }
+      }
+      const _res: IBaseRespone = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: _data
+      }
+      res.status(ApiStatusCode.OK).json(_res);
+    } catch (error) {
+      next(error)
+    }
+  }
+  // GET
   public getCurrentInfo = async (req, res, next) => {
-    const { accountId, role, phoneNumber } = req.user;
+    const { accountId } = req.user;
     try {
       const user = await this._userService.findByKey(fields.accountId, accountId);
       let _data;
       if(user) {
-        const _address: string[] = user.address?.split(",");
+        const _address: string[] = user.address ? user.address.split(",") : [];
         _data = { 
-          role,
           fullName: user.fullName,
           email: user.email,
           avatar: user.avatar,
           gender: user.gender,
-          phoneNumber,
           dateOfBirth: user.dateOfBirth ? MomentTimezone.convertDDMMYYY(user.dateOfBirth) : undefined,
-          address: _address[0].trim(),
-          commune: _address[1].trim(),
-          district: _address[2].trim(),
-          city: _address[3].trim(),
+          address: _address.length ? _address[0].trim() : "",
+          commune: _address.length > 1 ? _address[1].trim() : "",
+          district: _address.length > 2 ? _address[2].trim() : "",
+          city: _address.length > 3 ? _address[3].trim(): "",
         }
       } else {
-        _data = { role , fullName: null };
+        _data = null;
       }
       const _res: IBaseRespone = {
         status: ApiStatus.succes,

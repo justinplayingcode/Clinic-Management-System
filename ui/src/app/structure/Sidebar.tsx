@@ -63,7 +63,7 @@ const items = (role: Role): MenuItem[] => {
 
 
 const Sidebar: React.FC = () => {
-  const { info } = useSelector((state: RootState) => state.auth);
+  const { role } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const location = useLocation();
   const arrpath = location.pathname.split('/').filter((i) => i);
@@ -86,13 +86,14 @@ const Sidebar: React.FC = () => {
           <img alt="" src={LogoSidebar} style={{ width: "100px", height: "44px" }} />
         </div>
         <Menu
+          key={role}
           theme={'dark'}
           onClick={onClick}
           style={{ width: 240, height: "calc(100% - 60px)" }}
           defaultOpenKeys={[`/${arrpath[0]}`]}
           selectedKeys={[current]}
           mode="inline"
-          items={items(info?.role!)}
+          items={items(role!)}
           className='sidebar-menu'
         />
       </div>

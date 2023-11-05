@@ -3,27 +3,31 @@
   z-index: 10000000;
   top: 20px;
   right: 20px;
-  min-width: 360px;
-  min-height: 68px;
-  border-radius: 15px;
+  max-width: calc(100vw - 48px);
+  width: 384px;
+  min-height: 72px;
+  margin-bottom: 16px;
+  margin-inline-start: auto;
+  border-radius: 8px;
   padding: 20px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   animation: slide-in 0.3s ease-in-out forwards;
-  transform: translateX(100%);
-  background-color: #fff;
+  background-color: #ffffff;
 
   .toast-icon {
-    height: 26px;
-    width: 26px;
+    height: 22px;
+    width: 22px;
     margin: 0 12px;
   }
 
   .toast-message {
     max-width: 320px;
     min-width: 100px;
+    word-wrap: break-word;
+    font-size: 14px;
   }
 
   .toast-cancel {
