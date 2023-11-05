@@ -19,7 +19,6 @@ export default class AccountService {
         ...basic,
         role,
         isActive: true,
-        refreshToken: ""
       }
       return await this._accountRepository.create(newAccount, session);
     } catch (error) {

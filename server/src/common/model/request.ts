@@ -9,3 +9,10 @@ export interface IStaticReportRequest {
   searchByColumn: string;
   searchKey: string;
 }
+
+export const StaticReportRequestFields = [
+  "page", 
+  "pageSize", 
+  "searchByColumn", 
+  "searchKey"
+]

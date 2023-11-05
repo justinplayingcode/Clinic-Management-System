@@ -9,8 +9,8 @@ export default class BaseRepository<T extends BaseModel> {
   }
 
   public create = async (data: Partial<T>, session: ClientSession): Promise<T> => {
-      const user = new this.model(data);
-      return await user.save({ session });
+      const newcreate = new this.model(data);
+      return await newcreate.save({ session });
   }
 
   public findById = async (id: string): Promise<T | null> => {

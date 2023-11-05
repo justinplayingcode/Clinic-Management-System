@@ -2,6 +2,7 @@ import { ClientSession } from "mongoose";
 import User from "./user.schema";
 import UserRepository from "./user.repository";
 import logger from "../../helper/logger.config";
+import { Role } from "../../common/enum/permission";
 
 export default class UserService {
   private _userRepository;
@@ -60,4 +61,29 @@ export default class UserService {
       throw error;
     }
   };
+
+  public getDataOfStaticReport = async (page: number, pageSize: number, searchByColumn: string, searchKey: string) => {
+    try {
+      const accounts = await this._userRepository.getDataOfStaticReport(
+        page,
+        pageSize,
+        searchByColumn,
+        searchKey
+      )
+      const result: any[] = [];
+      accounts.forEach(e => {
+        if(e.accountId && e.accountId.role !== Role.admin) {
+          result.push({
+            ...e,
+            ...e.accountId,
+            accountId: e.accountId._id
+          })
+        }
+      })
+      return result;
+    } catch (error) {
+      logger("68-userservice", error?.message);
+      throw error;
+    }
+  }
 }
