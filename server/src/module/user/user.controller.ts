@@ -3,7 +3,7 @@ import UserService from "./user.service";
 import validateReqBody from "../../common/utils/request.utils";
 import ErrorObject from "../../common/model/error";
 import { ApiStatus, ApiStatusCode } from "../../common/enum/apiStatusCode";
-import { UpdateInfoRequest, UserModelUpdate } from "./user.model";
+import { UpdateInfoRequest, IUserModelUpdate } from "./user.model";
 
 export default class UserController {
   private _userService;
@@ -28,12 +28,12 @@ export default class UserController {
       return next(err);
     }
     try {
-      const update: UserModelUpdate = {
-        email: req.body.email,
-        gender: req.body.gender,
+      const update: IUserModelUpdate = {
         fullName: req.body.fullName,
-        address: req.body.address,
+        gender: req.body.gender,
+        email: req.body.email,
         dateOfBirth: new Date(req.body.dateOfBirth),
+        address: `${req.body.address}, ${req.body.commune}, ${req.body.district}, ${req.body.city}`
       };
       await this._userService.findOneAndUpdate({ accountId }, update, session);
       await session.commitTransaction();
