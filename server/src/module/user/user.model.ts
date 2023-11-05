@@ -10,12 +10,12 @@ export interface UserModel extends BaseModel {
   dateOfBirth: Date;
 }
 
-export interface UserModelUpdate {
+export interface IUserModelUpdate {
+  fullName: string;
+  gender: boolean;
   email: string;
-  gender: number;
-  fullName: boolean;
-  address: string;
   dateOfBirth: Date;
+  address: string;
 }
 
 export const UpdateInfoRequest = [
@@ -24,4 +24,7 @@ export const UpdateInfoRequest = [
   "gender",
   "address",
   "dateOfBirth",
+  "city",
+  "district",
+  "commune"
 ];

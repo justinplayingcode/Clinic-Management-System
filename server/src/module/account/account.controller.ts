@@ -39,7 +39,7 @@ export default class AccountController {
           return next(err)
         }
         if (bcrypt.compareSync(req.body.password, account.password)) {
-          const accessToken = jwToken.createAccessToken({ accountId: account._id, role: account.role });
+          const accessToken = jwToken.createAccessToken({ accountId: account._id, role: account.role, phoneNumber: req.body.phoneNumber });
           _res = {
             status: ApiStatus.succes,
             isSuccess: true,
@@ -75,7 +75,7 @@ export default class AccountController {
         password: req.body.password
       }
       const _account = await this._accountService.createAccount(newAccount, role, session);
-      const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role });
+      const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role, phoneNumber: _account.phoneNumber });
       await this._userService.createUser(_account._id, session);
       await session.commitTransaction();
       session.endSession();
@@ -146,19 +146,24 @@ export default class AccountController {
 
   // GET
   public getCurrentInfo = async (req, res, next) => {
-    const { accountId, role } = req.user;
+    const { accountId, role, phoneNumber } = req.user;
     try {
       const user = await this._userService.findByKey(fields.accountId, accountId);
       let _data;
       if(user) {
+        const _address: string[] = user.address?.split(",");
         _data = { 
           role,
           fullName: user.fullName,
           email: user.email,
           avatar: user.avatar,
           gender: user.gender,
-          address: user.address,
-          dateOfBirth: user.dateOfBirth ? MomentTimezone.convertDDMMYYY(user.dateOfBirth) : undefined
+          phoneNumber,
+          dateOfBirth: user.dateOfBirth ? MomentTimezone.convertDDMMYYY(user.dateOfBirth) : undefined,
+          address: _address[0].trim(),
+          commune: _address[1].trim(),
+          district: _address[2].trim(),
+          city: _address[3].trim(),
         }
       } else {
         _data = { role , fullName: null };
