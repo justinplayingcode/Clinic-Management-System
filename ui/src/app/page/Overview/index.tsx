@@ -23,26 +23,29 @@ function Overview() {
   const { info, phoneNumber } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    if(!info?.fullName) {
+    if (!info?.fullName) {
       setOpen(true);
       setClosable(false);
     }
-  }, [])
-  
+  }, []);
 
   const renderGenderInfo = (gender: Gender) => {
     switch (gender) {
       case Gender.Male:
         return (
-          <div style={{ fontSize: "16px", color: "#00A2FF",  }}>
-            <ManOutlined style={{ fontSize: "16px", color: "#00A2FF", margin: "0 4px" }} />
+          <div style={{ fontSize: "16px", color: "#00A2FF" }}>
+            <ManOutlined
+              style={{ fontSize: "16px", color: "#00A2FF", margin: "0 4px" }}
+            />
             <span>Nam</span>
           </div>
         );
       case Gender.Female:
         return (
           <div style={{ fontSize: "16px", color: "#00A2FF" }}>
-            <WomanOutlined style={{ fontSize: "16px", color: "#FF4785", margin: "0 4px" }} />
+            <WomanOutlined
+              style={{ fontSize: "16px", color: "#FF4785", margin: "0 4px" }}
+            />
             <span>Nữ</span>
           </div>
         );
@@ -52,23 +55,18 @@ function Overview() {
   };
 
   const getInfoAddress = () => {
-    const list = [
-      info.address,
-      info.commune,
-      info.district,
-      info.city,
-    ];
+    const list = [];
+    if (info.address) list.push(info.address);
+    list.push(info.commune, info.district, info.city);
 
     return list.join(", ");
   };
 
   return (
     <div>
-      <HeaderSection 
-        text="Thông tin cá nhân" 
-        children={
-          <Button onClick={() => setOpen(true)}>Cập nhật</Button>
-        }
+      <HeaderSection
+        text="Thông tin cá nhân"
+        children={<Button onClick={() => setOpen(true)}>Cập nhật</Button>}
       />
       <div>
         <Row className="personalInfo-container">
@@ -85,19 +83,27 @@ function Overview() {
             <Col className="bottom-info">
               <Row className="info-details">
                 <CalendarOutlined />
-                <span className="info-details-info">{`Ngày sinh: ${info.dateOfBirth || "--"}`}</span>
+                <span className="info-details-info">{`Ngày sinh: ${
+                  info.dateOfBirth || "--"
+                }`}</span>
               </Row>
               <Row className="info-details">
                 <PhoneOutlined />
-                <span className="info-details-info">{`Số điện thoại: ${phoneNumber || "--"}`}</span>
+                <span className="info-details-info">{`Số điện thoại: ${
+                  phoneNumber || "--"
+                }`}</span>
               </Row>
               <Row className="info-details">
                 <MailOutlined />
-                <span className="info-details-info">{`Email: ${info?.email || "--"}`}</span>
+                <span className="info-details-info">{`Email: ${
+                  info?.email || "--"
+                }`}</span>
               </Row>
               <Row className="info-details">
                 <HomeOutlined />
-                <span className="info-details-info">{`Địa chỉ: ${getInfoAddress() || "--"}`}</span>
+                <span className="info-details-info">{`Địa chỉ: ${
+                  getInfoAddress() || "--"
+                }`}</span>
               </Row>
             </Col>
           </Col>

@@ -33,6 +33,8 @@ import React from "react";
 import { RootState } from "../../../redux";
 import { toastType } from "../../model/enum/common";
 
+const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
+
 function LandingPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -83,7 +85,15 @@ function LandingPage() {
                 setPassword(e.target.value);
               }}
             />
-            <div style={{ color: "red", height: "16px" }}>{error}</div>
+            <div
+              style={{
+                color: "red",
+                minHeight: "16px",
+                wordBreak: "break-word",
+              }}
+            >
+              {error}
+            </div>
           </div>
         </>
       ),
@@ -134,7 +144,15 @@ function LandingPage() {
               }}
               onBlur={() => {}}
             />
-            <div style={{ color: "red", height: "16px" }}>{error}</div>
+            <div
+              style={{
+                color: "red",
+                minHeight: "16px",
+                wordBreak: "break-word",
+              }}
+            >
+              {error}
+            </div>
           </div>
         </>
       ),
@@ -181,6 +199,10 @@ function LandingPage() {
     setError("");
     if (!phoneNumber || !password || !reEnterPassWord) {
       setError("Vui lòng điền các trường còn trống");
+      return;
+    }
+    if (!passwordRegex.test(password)) {
+      setError("Mật khẩu có độ dài tối thiểu 6 kí tự, chỉ bao gồm số và chữ");
       return;
     }
     if (password !== reEnterPassWord) {
