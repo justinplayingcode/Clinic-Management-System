@@ -4,6 +4,10 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Utils } from "../../../../../utils";
 import dayjs from "dayjs";
+import { useDispatch } from "react-redux";
+import { closeLoading, openLoading, setInfoUser, showToastMessage } from "../../../../../redux/reducers";
+import { toastType } from "../../../../model/enum/common";
+import { userApi } from "../../../../../api";
 
 interface IBasicInfoProps {
   dismissForm: () => void;
@@ -37,15 +41,41 @@ interface ISelectOption {
   label: string;
 }
 
+const _initialValues = (value: any) => {
+  const _value = Utils.deepCopy(value);
+  return {
+    ..._value,
+    dateOfBirth: _value.dateOfBirth ? dayjs(Utils.convertDDmmyyyTommDDyyyy(_value.dateOfBirth)) : undefined,
+    city: _value.city ? {
+      value: "",
+      label: _value.city
+    } : undefined,
+    district: _value.district ? {
+      value: "",
+      label: _value.district
+    }: undefined,
+    commune: _value.commune ? {
+      value: "",
+      label: _value.commune
+    }: undefined
+  }
+}
+
+const defaultSelectOption: ISelectOption = {
+  value: "",
+  label: "",
+};
+const selectStyle = {
+  width: "100%",
+};
+const host = "https://provinces.open-api.vn/api/";
+
 const BasicInfoForm = (props: IBasicInfoProps) => {
   const { dismissForm, value } = props;
   const [form] = Form.useForm();
-
-  const defaultSelectOption: ISelectOption = {
-    value: "",
-    label: "",
-  };
-
+  
+  const dispatch = useDispatch();
+  
   const [city, setCity] = useState<ISelectOption>({ value: "", label: value.city || "" });
   const [district, setDistrict] = useState<ISelectOption>({ value: "", label: value.district || "" });
   const [commune, setCommune] = useState<ISelectOption>({ value: "", label: value.commune || "" });
@@ -54,12 +84,6 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
   const [cityList, setCityList] = useState<ISelectOption[]>([]);
   const [districtList, setDistrictList] = useState<ISelectOption[]>([]);
   const [communeList, setComuneList] = useState<ISelectOption[]>([]);
-
-  const selectStyle = {
-    width: "100%",
-  };
-
-  const host = "https://provinces.open-api.vn/api/";
 
   const callAPI = (api: any) => {
     return axios.get(api).then((response) => {
@@ -109,37 +133,26 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
   }, [district]);
 
   const onFinish = (values: any) => {
-    console.log(values)
     values["dateOfBirth"] = moment(values.dateOfBirth).format("MM/DD/YYYY");
     values["city"] = values.city.label;
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;
     values["address"] = values.address || "";
-    console.log("Success:", values);
-    dismissForm();
-
+    dispatch(openLoading())
+    userApi.updateInfo(values).then(() => {
+      dispatch(showToastMessage({ message: "Cập nhật thông tin thành công", type: toastType.succes}))
+      dispatch(setInfoUser(values))
+      dismissForm();
+    }).catch(() => {
+      dispatch(showToastMessage({ message: "Có lỗi, hãy thử lại", type: toastType.error}))
+    }).finally(() => {
+      dispatch(closeLoading());
+    })
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+  const onFinishFailed = (_: any) => {
+    dispatch(showToastMessage({ message: "Hãy điền các trường còn trống", type: toastType.error }))
   };
-
-  const _initialValues = {
-    ...value,
-    dateOfBirth: dayjs(Utils.convertDDmmyyyTommDDyyyy(value.dateOfBirth)),
-    city: {
-      value: "",
-      label: value.city
-    },
-    district: {
-      value: "",
-      label: value.district
-    },
-    commune: {
-      value: "",
-      label: value.commune
-    }
-  }
 
   return (
     <div style={{ padding: "16px 64px 0 64px" }}>
@@ -153,7 +166,7 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
-        initialValues={_initialValues}
+        initialValues={_initialValues(value)}
       >
         <Row style={{ gap: "40px" }}>
           <Col span={12} style={{ flex: 1 }}>

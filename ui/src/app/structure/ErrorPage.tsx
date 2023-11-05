@@ -2,7 +2,8 @@ import { Button, Result } from "antd";
 import { useNavigate } from "react-router-dom";
 import { routerString } from "../model/router";
 import { ErrorPageEnum } from "../model/enum/common";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { LoadingDot } from "./Loading";
 
 interface IErrorPageProps {
   pageType: ErrorPageEnum;
@@ -11,16 +12,22 @@ interface IErrorPageProps {
 function ErrorPage(props: IErrorPageProps) {
   const navigate = useNavigate();
 
+  const [isLoading, setLoading] = useState(false);
+
   useEffect(() => {
     let url: string = `${routerString.home}`;
     if (props.pageType === ErrorPageEnum.Forbidden) {
-      url = "/";
       localStorage.clear();
+      url = "/";
     }
+    const loading = setTimeout(() => {
+      setLoading(true);
+    }, 3000)
     const timeout = setTimeout(() => {
+      setLoading(false);
       navigate(url);
-    }, 3000);
-    return () => clearTimeout(timeout)
+    }, 5000);
+    return () => {clearTimeout(timeout); clearTimeout(loading)}
   }, [])
 
   const content = () => {
@@ -59,7 +66,7 @@ function ErrorPage(props: IErrorPageProps) {
     }
     return content;
   }
-  return content();
+  return isLoading ? <LoadingDot/> : content();
 }
 
 export default ErrorPage;

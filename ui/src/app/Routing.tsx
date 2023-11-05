@@ -11,7 +11,7 @@ function Routing() {
   return (
     <Router basename="/">
       <Routes>
-        <Route path="/" element={ localStorage.getItem('accessToken') ? <Navigate to={`${routerString.home}`}/> : <LandingPage/>} />
+        <Route path="/" element={<LandingPage/>} />
         <Route path={`${routerString.home}`} element={<UniformLayout page={<Overview/>} noBackground/>}/>
         <Route path={`${routerString.histories}`} element={<UniformLayout page={<Histories/>}/>}/>
         <Route path={`${routerString.appointment}`} element={<UniformLayout page={<Appointment/>}/>}/>
@@ -25,6 +25,7 @@ function Routing() {
         <Route path={`${routerString.Forbidden}`} element={<ErrorPage pageType={ErrorPageEnum.Forbidden}/>}/>
         <Route path={`${routerString.Unauthorized}`} element={<ErrorPage pageType={ErrorPageEnum.Unauthorized}/>}/>
         <Route path={`${routerString.ServerError}`} element={<ErrorPage pageType={ErrorPageEnum.ServerError}/>}/>
+        <Route path="*" element={<Navigate to={`${routerString.Unauthorized}`} replace />} />
       </Routes>
     </Router>
   );

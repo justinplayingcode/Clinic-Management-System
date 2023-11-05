@@ -8,9 +8,8 @@ import { useSelector } from "react-redux";
 import React from "react";
 import { Toast } from "./Toast";
 import { authApi } from "../../api";
-import { ApiStatus, ApiStatusCode } from "../model/enum/apiStatus";
 import { useDispatch } from "react-redux";
-import { closeLoading, openLoading, setInfoUser, setRole } from "../../redux/reducers";
+import { closeLoading, openLoading, setInfoUser, setPhoneNumber, setRole } from "../../redux/reducers";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { routerString } from "../model/router";
 import { Role } from "../model/enum/auth";
@@ -25,7 +24,7 @@ interface IUniformLayoutProps {
 }
 
 function UniformLayout({ ...props }: IUniformLayoutProps) {
-  const { phonenumber, role } = useSelector((state: RootState) => state.auth);
+  const { phoneNumber, role } = useSelector((state: RootState) => state.auth);
   const { isLoading } = useSelector((state: RootState) => state.loading);
   const { isShow } = useSelector((state: RootState) => state.toast);
 
@@ -37,28 +36,22 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
   useEffect(() => {
     if(!localStorage.getItem('accessToken')) {
       localStorage.clear();
-      navigate(`${routerString.Forbidden}`)
+      navigate(`${routerString.Forbidden}`);
+    } else {
+      const auth = authApi.getCheckCurrentUser();
+      const user = authApi.getInfoCurrentUser();
+
+      Promise.all([auth, user]).then((result: any) => {
+        dispatch(setPhoneNumber(result[0].data?.phoneNumber))
+        dispatch(setRole(result[0].data?.role))
+        dispatch(setInfoUser(result[1].data))
+      }).catch().finally(() => setLoading(false))
     }
-    authApi.getInfoCurrentUser().then((result: any) => {
-      if (result.status !== ApiStatus.succes) {
-        localStorage.clear();
-        if (result?.statusCode === ApiStatusCode.Forbidden) {
-          navigate(`${routerString.Forbidden}`)
-        } else if (result?.statusCode === ApiStatusCode.Unauthorized) {
-          navigate(`${routerString.Unauthorized}`)
-        }  else {
-          navigate(`${routerString.ServerError}`)
-        }
-      }
-      dispatch(setInfoUser(result.data))
-      dispatch(setRole(result.data?.role))
-    }).catch().finally(() => setLoading(false))
   }, [])
 
   const logOut = () => {
     dispatch(openLoading());
     setTimeout(() => {
-      localStorage.clear();
       dispatch(closeLoading());
       navigate("/")
     }, 1000)
@@ -107,7 +100,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
         return <LoadingInComing/>
     } else {
         return (
-          <div id="main" key={phonenumber}>
+          <div id="main" key={phoneNumber}>
             {isLoading ? <LoadingDot /> : <React.Fragment />}
             <Sidebar />
             {renderContent()}

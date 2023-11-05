@@ -16,24 +16,11 @@ import { RootState } from "../../../redux";
 import HeaderSection from "../components/headerSection";
 import { Gender } from "../../model/enum/common";
 
-// const fakeInfo = {
-//   fullName: "Nguyễn Trọng Dự",
-//   gender: 0,
-//   dateOfBirth: "11/04/2023",
-//   email: "nguyentrongdupl@gmail.com",
-//   city: "Thành phố Hà Nội",
-//   district: "Quận Ba Đình",
-//   commune: "Phường Quán Thánh",
-//   address: "ưèwè",
-//   phoneNumber: "0979924988",
-//   avatar: undefined,
-// };
-
 function Overview() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [closable, setClosable] = useState<boolean>(true);
 
-  const { info } = useSelector((state: RootState) => state.auth);
+  const { info, phoneNumber } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if(!info?.fullName) {
@@ -63,11 +50,6 @@ function Overview() {
         return <></>;
     }
   };
-
-  // const formatDOBtoDMY = (value: string) => {
-  //   if(!value) return "--"
-  //   return moment(value, "MM/DD/YYYY").format("DD/MM/YYYY");
-  // };
 
   const getInfoAddress = () => {
     const list = [
@@ -103,11 +85,11 @@ function Overview() {
             <Col className="bottom-info">
               <Row className="info-details">
                 <CalendarOutlined />
-                <span className="info-details-info">{`Ngày sinh: ${info.dateOfBirth}`}</span>
+                <span className="info-details-info">{`Ngày sinh: ${info.dateOfBirth || "--"}`}</span>
               </Row>
               <Row className="info-details">
                 <PhoneOutlined />
-                <span className="info-details-info">{`Số điện thoại: ${info.phoneNumber || "--"}`}</span>
+                <span className="info-details-info">{`Số điện thoại: ${phoneNumber || "--"}`}</span>
               </Row>
               <Row className="info-details">
                 <MailOutlined />

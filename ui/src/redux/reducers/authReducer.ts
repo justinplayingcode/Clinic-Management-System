@@ -3,13 +3,13 @@ import { Role } from "../../app/model/enum/auth";
 
 interface CurrentUserState {
     role: Role | null;
-    phonenumber: string | null;
+    phoneNumber: string | null;
     info: any;
 }
 
 const initialState: CurrentUserState = {
     role: null,
-    phonenumber: null,
+    phoneNumber: null,
     info: {},
 };
 
@@ -21,14 +21,15 @@ export const authSlice = createSlice({
             state.role = action.payload
         },
         setPhoneNumber: (state, action) => {
-            state.phonenumber = action.payload
+            state.phoneNumber = action.payload
         },
         setInfoUser: (state, action) => {
-            state.info = action.payload
+            const oldInfo = state.info
+            state.info = { ...oldInfo, ...action.payload}
         },
         userLogout: (state) => {
             state.role = null,
-            state.phonenumber = null,
+            state.phoneNumber = null,
             state.info = null
         }
     }
