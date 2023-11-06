@@ -1,3 +1,4 @@
+import { Role } from "../../common/enum/permission";
 import { BaseModel } from "../../common/model/common";
 
 export interface UserModel extends BaseModel {
@@ -28,3 +29,11 @@ export const UpdateInfoRequest = [
   "district",
   "commune"
 ];
+
+export interface IRequestGetAllOfStaticReport {
+  page: number,
+  pageSize: number,
+  searchByColumn: string,
+  searchKey: string,
+  role: Role
+}

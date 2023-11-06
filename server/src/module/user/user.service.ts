@@ -2,7 +2,7 @@ import { ClientSession } from "mongoose";
 import User from "./user.schema";
 import UserRepository from "./user.repository";
 import logger from "../../helper/logger.config";
-import { Role } from "../../common/enum/permission";
+import { IRequestGetAllOfStaticReport } from "./user.model";
 
 export default class UserService {
   private _userRepository;
@@ -62,17 +62,17 @@ export default class UserService {
     }
   };
 
-  public getDataOfStaticReport = async (page: number, pageSize: number, searchByColumn: string, searchKey: string) => {
+  public getDataOfStaticReport = async (request: IRequestGetAllOfStaticReport) => {
     try {
       const accounts = await this._userRepository.getDataOfStaticReport(
-        page,
-        pageSize,
-        searchByColumn,
-        searchKey
+        request.page,
+        request.pageSize,
+        request.searchByColumn,
+        request.searchKey
       )
       const result: any[] = [];
       accounts.forEach(e => {
-        if(e.accountId && e.accountId.role !== Role.admin) {
+        if(e.accountId && e.accountId.role === request.role) {
           result.push({
             ...e,
             ...e.accountId,

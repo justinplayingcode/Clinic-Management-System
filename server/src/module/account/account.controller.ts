@@ -13,6 +13,7 @@ import ErrorObject from "../../common/model/error";
 import logger from "../../helper/logger.config";
 import MomentTimezone from "../../helper/timezone.config";
 import { StaticReportRequestFields } from "../../common/model/request";
+import { IRequestGetAllOfStaticReport } from "../user/user.model";
 
 export default class AccountController {
 
@@ -198,7 +199,7 @@ export default class AccountController {
   }
 
   //POST
-  public getAllAccount = async (req, res, next) => {
+  public getAllAccount = (role: Role) => async (req, res, next) => {
     const verifyReq = validateReqBody(req, StaticReportRequestFields);
     let _res: IBaseRespone;
     if (!verifyReq.pass) {
@@ -206,12 +207,14 @@ export default class AccountController {
       return next(err)
     }
     try {
-      const result = await this._userService.getDataOfStaticReport(
-        req.body.page,
-        req.body.pageSize,
-        req.body.searchByColumn,
-        req.body.searchKey,
-      )
+      const param: IRequestGetAllOfStaticReport = {
+        page: req.body.page,
+        pageSize: req.body.pageSize,
+        searchByColumn: req.body.searchByColumn,
+        searchKey: req.body.searchKey,
+        role: role
+      }
+      const result = await this._userService.getDataOfStaticReport(param);
       _res = {
         status: ApiStatus.succes,
         isSuccess: true,

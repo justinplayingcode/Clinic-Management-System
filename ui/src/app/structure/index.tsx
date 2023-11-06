@@ -16,6 +16,7 @@ import { Role } from "../model/enum/auth";
 import { Avatar, Dropdown } from "antd";
 import { MdLogout } from "react-icons/md";
 import { UserOutlined } from "@ant-design/icons";
+import { ApiStatusCode } from "../model/enum/apiStatus";
 
 interface IUniformLayoutProps {
   page: JSX.Element;
@@ -45,7 +46,17 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
         dispatch(setPhoneNumber(result[0].data?.phoneNumber))
         dispatch(setRole(result[0].data?.role))
         dispatch(setInfoUser(result[1].data))
-      }).catch().finally(() => setLoading(false))
+      }).catch(err => {
+        if (err.request.status === ApiStatusCode.Forbidden) {
+          localStorage.clear();
+          navigate(`${routerString.Forbidden}`);
+        } else if (err.request.status === ApiStatusCode.Unauthorized) {
+          localStorage.clear();
+          navigate(`${routerString.Unauthorized}`);
+        } else {
+          navigate(`${routerString.ServerError}`);
+        }
+      }).finally(() => setLoading(false))
     }
   }, [])
 
@@ -53,6 +64,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
     dispatch(openLoading());
     setTimeout(() => {
       dispatch(closeLoading());
+      localStorage.clear();
       navigate("/")
     }, 1000)
   }

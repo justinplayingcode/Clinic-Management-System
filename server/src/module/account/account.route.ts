@@ -12,5 +12,6 @@ accountRoute.route("/changepassword").post(middlewares.verifyToken, accountContr
 accountRoute.route("/").get(middlewares.verifyToken, accountController.checkCurrentUser);
 accountRoute.route("/user").get(middlewares.verifyToken, accountController.getCurrentInfo);
 accountRoute.route("/getall").post(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.getAllAccount);
+accountRoute.route("/getalldoctor").post(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.getAllAccount);
 
 export default accountRoute;
