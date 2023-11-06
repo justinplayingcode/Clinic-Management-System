@@ -2,6 +2,7 @@ import { ClientSession } from "mongoose";
 import User from "./user.schema";
 import UserRepository from "./user.repository";
 import logger from "../../helper/logger.config";
+import { IRequestGetAllOfStaticReport } from "./user.model";
 
 export default class UserService {
   private _userRepository;
@@ -60,4 +61,29 @@ export default class UserService {
       throw error;
     }
   };
+
+  public getDataOfStaticReport = async (request: IRequestGetAllOfStaticReport) => {
+    try {
+      const accounts = await this._userRepository.getDataOfStaticReport(
+        request.page,
+        request.pageSize,
+        request.searchByColumn,
+        request.searchKey
+      )
+      const result: any[] = [];
+      accounts.forEach(e => {
+        if(e.accountId && e.accountId.role === request.role) {
+          result.push({
+            ...e,
+            ...e.accountId,
+            accountId: e.accountId._id
+          })
+        }
+      })
+      return result;
+    } catch (error) {
+      logger("68-userservice", error?.message);
+      throw error;
+    }
+  }
 }

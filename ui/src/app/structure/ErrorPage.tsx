@@ -2,8 +2,8 @@ import { Button, Result } from "antd";
 import { useNavigate } from "react-router-dom";
 import { routerString } from "../model/router";
 import { ErrorPageEnum } from "../model/enum/common";
-import { useEffect, useState } from "react";
 import { LoadingDot } from "./Loading";
+import { useEffect, useState } from "react";
 
 interface IErrorPageProps {
   pageType: ErrorPageEnum;
@@ -16,7 +16,7 @@ function ErrorPage(props: IErrorPageProps) {
 
   useEffect(() => {
     let url: string = `${routerString.home}`;
-    if (props.pageType === ErrorPageEnum.Forbidden) {
+    if (props.pageType !== ErrorPageEnum.ServerError) {
       localStorage.clear();
       url = "/";
     }
@@ -39,7 +39,7 @@ function ErrorPage(props: IErrorPageProps) {
             status="404"
             title="404"
             subTitle="Không có quyền truy cập, vui lòng trở lại trang chủ"
-            extra={<Button type="primary" onClick={() => navigate(`${routerString.home}`)}>Quay về trang chủ</Button>}
+            extra={<Button type="primary" onClick={() => navigate("/")}>Quay về trang chủ</Button>}
           />
         )
         break;

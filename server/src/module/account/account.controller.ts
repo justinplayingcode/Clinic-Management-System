@@ -12,6 +12,8 @@ import jwToken from "../../helper/jwt.config";
 import ErrorObject from "../../common/model/error";
 import logger from "../../helper/logger.config";
 import MomentTimezone from "../../helper/timezone.config";
+import { StaticReportRequestFields } from "../../common/model/request";
+import { IRequestGetAllOfStaticReport } from "../user/user.model";
 
 export default class AccountController {
 
@@ -191,6 +193,35 @@ export default class AccountController {
         data: _data
       }
       res.status(ApiStatusCode.OK).json(_res);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  //POST
+  public getAllAccount = (role: Role) => async (req, res, next) => {
+    const verifyReq = validateReqBody(req, StaticReportRequestFields);
+    let _res: IBaseRespone;
+    if (!verifyReq.pass) {
+      const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "getAllAccount verify reqbody");
+      return next(err)
+    }
+    try {
+      const param: IRequestGetAllOfStaticReport = {
+        page: req.body.page,
+        pageSize: req.body.pageSize,
+        searchByColumn: req.body.searchByColumn,
+        searchKey: req.body.searchKey,
+        role: role
+      }
+      const result = await this._userService.getDataOfStaticReport(param);
+      _res = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: result
+      }
+      res.status(ApiStatusCode.OK).json(_res)
     } catch (error) {
       next(error)
     }

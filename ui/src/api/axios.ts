@@ -19,8 +19,8 @@ api.interceptors.response.use((response) => {
     return response.data;
   }
   return response
-}, (error) => {
-    const status = error.response?.status;
+}, async (error) => {
+    const status = await error.response?.status;
       if (status === ApiStatusCode.Forbidden) {
         window.open(`/#/${routerString.Forbidden}`, "_self")
       }

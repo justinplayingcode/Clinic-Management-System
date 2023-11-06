@@ -50,12 +50,11 @@ function LandingPage() {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  // useEffect(() => {
-  //   if(!!localStorage.getItem('accessToken')) {
-  //     navigate(`${routerString.home}`)
-  //     console.log("aaaa")
-  //   }
-  // }, [])
+  useEffect(() => {
+    if(!!localStorage.getItem('accessToken')) {
+      navigate(`${routerString.home}`)
+    }
+  }, [])
 
   const loginItems: TabsProps["items"] = [
     {
