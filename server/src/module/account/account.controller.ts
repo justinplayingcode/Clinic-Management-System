@@ -226,4 +226,38 @@ export default class AccountController {
       next(error)
     }
   }
+
+  //POST
+  public resetPassword = async (req, res, next) => {
+    const verifyReq = validateReqBody(req, ["accountId"]);
+    if (!verifyReq.pass) {
+      const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "resetPassword verify reqbody");
+      return next(err)
+    }
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      bcrypt.hash("1234567", 10, async (err, hashpw) => {
+        if(err) {
+          logger("resetPassword-hashpw-accountController", "Lỗi");
+          return next(err);
+        } else {
+          await this._accountService.findByIdAndUpdate(req.body.accountId, { password: hashpw }, session );
+          await session.commitTransaction();
+          session.endSession();
+          const _res: IBaseRespone = {
+            status: ApiStatus.succes,
+            isSuccess: true,
+            statusCode: ApiStatusCode.OK,
+            message: "Cập nhật mật khẩu thành công"
+          }
+          res.status(ApiStatusCode.OK).json(_res);
+        }
+      })
+    } catch (error) {
+      await session.commitTransaction();
+      session.endSession();
+      next(error)
+    }
+  }
 }

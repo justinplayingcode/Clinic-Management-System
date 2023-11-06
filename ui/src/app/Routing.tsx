@@ -1,10 +1,12 @@
 import { Navigate, Route, HashRouter as Router, Routes } from "react-router-dom";
 import UniformLayout from "./structure";
-import { Appointment, Histories, ManageAccount, ManageDepartment, Medications, Overview, Schedule } from "./page";
+import { Appointment, Histories, ManageDepartment, Medications, Overview, Schedule } from "./page";
 import { routerString } from "./model/router";
 import LandingPage from "./page/LandingPage";
 import ErrorPage from "./structure/ErrorPage";
 import { ErrorPageEnum } from "./model/enum/common";
+import ManageDoctor from "./page/ManageAccount/ManageDoctor";
+import ManageUser from "./page/ManageAccount/ManageUser";
 
 function Routing() {
 
@@ -16,8 +18,8 @@ function Routing() {
         <Route path={`${routerString.histories}`} element={<UniformLayout page={<Histories/>}/>}/>
         <Route path={`${routerString.appointment}`} element={<UniformLayout page={<Appointment/>}/>}/>
         <Route path={`${routerString.manageaccount}`} element={<Navigate to={`${routerString.manageaccountdoctor}`} />}/>
-        <Route path={`${routerString.manageaccountdoctor}`} element={<UniformLayout page={<ManageAccount/>}/>}/>
-        <Route path={`${routerString.manageaccountuser}`} element={<UniformLayout page={<ManageAccount/>}/>}/>
+        <Route path={`${routerString.manageaccountdoctor}`} element={<UniformLayout page={<ManageDoctor/>}/>}/>
+        <Route path={`${routerString.manageaccountuser}`} element={<UniformLayout page={<ManageUser/>}/>}/>
         <Route path={`${routerString.managemedication}`} element={<UniformLayout page={<Medications/>}/>}/>
         <Route path={`${routerString.managedepartment}`} element={<UniformLayout page={<ManageDepartment/>}/>}/>
         <Route path={`${routerString.schedule}`} element={<UniformLayout page={<Schedule/>} noBackground/>}/>
