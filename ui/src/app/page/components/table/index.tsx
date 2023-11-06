@@ -115,8 +115,8 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
       this.props.integrateItems(requestBody).then((data) => {
         if (data.status === ApiStatus.succes) {
           this.setState({
-            items: data.data.values,
-            total: data.data.total
+            items: data.data,
+            total: data.total
           })
         }
       }).catch(() => {

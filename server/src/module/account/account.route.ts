@@ -11,7 +11,6 @@ accountRoute.route("/register").post(accountController.CreateAccount(Role.user))
 accountRoute.route("/changepassword").post(middlewares.verifyToken, accountController.changePassword);
 accountRoute.route("/").get(middlewares.verifyToken, accountController.checkCurrentUser);
 accountRoute.route("/user").get(middlewares.verifyToken, accountController.getCurrentInfo);
-accountRoute.route("/getall").post(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.getAllAccount);
-accountRoute.route("/getalldoctor").post(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.getAllAccount);
+accountRoute.route("/resetpw").post(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.resetPassword);
 
 export default accountRoute;
