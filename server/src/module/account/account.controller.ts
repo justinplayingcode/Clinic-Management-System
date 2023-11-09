@@ -1,3 +1,4 @@
+// import { PositionOfDoctor } from './../../common/enum/common';
 import mongoose from "mongoose";
 import { ApiStatus, ApiStatusCode } from "../../common/enum/apiStatusCode";
 import { Role } from "../../common/enum/permission";
@@ -12,15 +13,18 @@ import jwToken from "../../helper/jwt.config";
 import ErrorObject from "../../common/model/error";
 import logger from "../../helper/logger.config";
 import MomentTimezone from "../../helper/timezone.config";
+import DoctorService from '../doctor/doctor.service';
 
 export default class AccountController {
 
   private _accountService;
   private _userService;
+  private _doctorService;
 
   constructor() {
     this._accountService = new AccountService();
     this._userService = new UserService();
+    this._doctorService = new DoctorService();
   }
 
   // POST 
@@ -77,6 +81,62 @@ export default class AccountController {
       const _account = await this._accountService.createAccount(newAccount, role, session);
       const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role });
       await this._userService.createUser(_account._id, session);
+      await session.commitTransaction();
+      session.endSession();
+      const _res: IBaseRespone = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: {
+          accessToken, 
+          phoneNumber: _account.phoneNumber,
+          role: _account.role
+        }
+      }
+      res.status(ApiStatusCode.OK).json(_res)
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      next(error)
+    }
+  }
+
+  public CreateDoctorAccount = (role: Role) => async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const verifyReq = validateReqBody(req, LoginRequest);
+      if (!verifyReq.pass) {
+        const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest,"106-createDoctorAccount-accountController");
+        return next(err)
+      }
+      const newAccount = {
+        phoneNumber: req.body.phoneNumber,
+        password: req.body.password
+      }
+      
+      const _account = await this._accountService.createAccount(newAccount, role, session);
+      
+      
+      const newUserInformation = {
+        accountId: _account._id,
+        fullName: req.body.fullName,
+        gender: req.body.gender,
+        dateOfBirth: req.body.dateOfBirth,
+        address: req.body.address
+      }
+     
+      const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role });
+      // console.log(newUserInformation);
+      
+      const _doctor = await this._userService.createDoctor(newUserInformation, session);
+       const newDoctorInformation = {
+        userId: _doctor._id,
+        rank: req.body.rank,
+        position: req.body.position,
+        departmentId: req.body.departmentId,
+      } 
+      await this._doctorService.createDoctor(newDoctorInformation, session);
       await session.commitTransaction();
       session.endSession();
       const _res: IBaseRespone = {

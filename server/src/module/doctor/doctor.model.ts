@@ -7,3 +7,16 @@ export interface DoctorModel extends BaseModel {
   position: number;
   isActive: boolean;
 }
+export const doctorField = {
+  departmentId: "departmentId",
+  userId: "userId",
+  rank: "rank",
+  position: "position",
+  isActive: "isActive"
+}
+
+export const doctorRequest = [
+  doctorField.departmentId,
+  doctorField.rank,
+  doctorField.position,
+]

@@ -11,7 +11,7 @@ accountRoute
   .post(
     middlewares.verifyToken,
     middlewares.permission([Role.admin]),
-    accountController.CreateAccount(Role.doctor)
+    accountController.CreateDoctorAccount(Role.doctor)
   );
 accountRoute
   .route("/register")

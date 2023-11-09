@@ -27,3 +27,11 @@ export const LoginRequest = [
   LoginFields.phoneNumber,
   LoginFields.password
 ]
+export const AccountField = {
+  id: "_id",
+  phoneNumber: "phoneNumber",
+  password: "password",
+  role: "role",
+  refreshToken: "refreshToken",
+  isActive: "isActive",
+}

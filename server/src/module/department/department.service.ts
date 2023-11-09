@@ -31,7 +31,6 @@ export default class departmentService {
       const TargetDepartment = (await this._departmentRepository.findById(
         Id
       )) as DepartmentModel;
-      //check lai ho toi, chac ko can lam :))
       if (!TargetDepartment) {
         const err: any = new ErrorObject(
           "Không có dữ liệu với ID đã cho",
