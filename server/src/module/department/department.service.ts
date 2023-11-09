@@ -84,4 +84,12 @@ export default class departmentService {
       throw error;
     }
   };
+
+  public getAll = async () => {
+    try {
+      return await this._departmentRepository.getAllDepartment();
+    } catch (error) {
+      throw error
+    }
+  }
 }

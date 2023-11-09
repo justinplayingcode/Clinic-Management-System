@@ -30,8 +30,8 @@ function ManageDoctor() {
       },
     },
     {
-      key: "email",
-      name: "Enail",
+      key: 'email',
+      name: 'Email',
       minWidth: 100,
       maxWidth: 200,
       isResizable: true,
