@@ -129,7 +129,8 @@ export default class AccountController {
         address: req.body.address
       }
      
-      const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role });
+      const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role, phoneNumber: _account.phoneNumber });
+
       // console.log(newUserInformation);
       
       const _doctor = await this._userService.createDoctor(newUserInformation, session);

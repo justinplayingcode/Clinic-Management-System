@@ -105,8 +105,8 @@ export default class UserService {
       );
     } catch(error){
       logger ("delete doctor- userservice",error?.message);
-      }
-
+    }
+  }
 
   public getDataOfStaticReport = async (request: IRequestGetAllOfStaticReport) => {
     try {
