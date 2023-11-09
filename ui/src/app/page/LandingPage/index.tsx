@@ -18,7 +18,13 @@ import { useEffect, useState } from "react";
 import { HomePic2, Logo } from "../../../asset/images/images";
 import "./index.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { openLoading, setRole, setPhoneNumber as setPhoneNumberRD, closeLoading, showToastMessage } from "../../../redux/reducers";
+import {
+  openLoading,
+  setRole,
+  setPhoneNumber as setPhoneNumberRD,
+  closeLoading,
+  showToastMessage,
+} from "../../../redux/reducers";
 import { authApi } from "../../../api";
 import { useNavigate } from "react-router-dom";
 import { routerString } from "../../model/router";
@@ -27,20 +33,28 @@ import React from "react";
 import { RootState } from "../../../redux";
 import { toastType } from "../../model/enum/common";
 
+const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
+
 function LandingPage() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  const loading = useSelector<RootState>(state => state.loading.isLoading)
+  const navigate = useNavigate();
+  const loading = useSelector<RootState>((state) => state.loading.isLoading);
 
   const [isOpenLogin, setOpenLogin] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>("1");
-  const [phoneNumber, setPhoneNumber] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [reEnterPassWord, setReEnterPassword] = useState<string>();
   const [error, setError] = useState<string>("");
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  useEffect(() => {
+    if(!!localStorage.getItem('accessToken')) {
+      navigate(`${routerString.home}`)
+    }
+  }, [])
 
   const loginItems: TabsProps["items"] = [
     {
@@ -51,6 +65,7 @@ function LandingPage() {
           <div className="phoneNumber">
             <Label required>Số điện thoại</Label>
             <Input
+              autoComplete="new-password"
               placeholder="Hãy nhập số điện thoại"
               value={phoneNumber}
               onChange={(e) => {
@@ -61,6 +76,7 @@ function LandingPage() {
           <div className="password">
             <Label required>Mật Khẩu</Label>
             <Input.Password
+              autoComplete="new-password"
               placeholder="Nhập mật khẩu"
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -70,7 +86,15 @@ function LandingPage() {
                 setPassword(e.target.value);
               }}
             />
-            <div style={{ color: "red", height: "16px" }}>{error}</div>
+            <div
+              style={{
+                color: "red",
+                minHeight: "16px",
+                wordBreak: "break-word",
+              }}
+            >
+              {error}
+            </div>
           </div>
         </>
       ),
@@ -83,6 +107,7 @@ function LandingPage() {
           <div className="phoneNumber">
             <Label required>Số điện thoại</Label>
             <Input
+              autoComplete="new-password"
               placeholder="Hãy nhập số điện thoại"
               value={phoneNumber}
               onChange={(e) => {
@@ -93,6 +118,7 @@ function LandingPage() {
           <div className="password">
             <Label required>Mật Khẩu</Label>
             <Input.Password
+              autoComplete="new-password"
               placeholder="Nhập mật khẩu"
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -106,6 +132,7 @@ function LandingPage() {
           <div className="confirm-password">
             <Label required>Nhập lại mật Khẩu</Label>
             <Input.Password
+              autoComplete="new-password"
               placeholder="Nhập lại mật khẩu"
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -121,7 +148,15 @@ function LandingPage() {
               }}
               onBlur={() => {}}
             />
-            <div style={{ color: "red", height: "16px" }}>{error}</div>
+            <div
+              style={{
+                color: "red",
+                minHeight: "16px",
+                wordBreak: "break-word",
+              }}
+            >
+              {error}
+            </div>
           </div>
         </>
       ),
@@ -150,23 +185,28 @@ function LandingPage() {
       password,
     };
     dispatch(openLoading());
-    authApi.login(reqbody).then(data => {
-      const {accessToken, role, phoneNumber } = data.data?.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("phoneNumber", phoneNumber);
-      dispatch(setRole(role));
-      dispatch(setPhoneNumberRD(phoneNumber));
-      navigate(`${routerString.home}`);
-    }).catch(err => {
+    authApi
+      .login(reqbody)
+      .then((data) => {
+        const { accessToken } = data.data?.data;
+        localStorage.setItem("accessToken", accessToken);
+        navigate(`${routerString.home}`);
+      })
+      .catch((err) => {
         const { message } = err.response.data;
-        setError(message)
-    }).finally(() => dispatch(closeLoading()))
+        setError(message);
+      })
+      .finally(() => dispatch(closeLoading()));
   };
 
   const handleSignUp = () => {
     setError("");
     if (!phoneNumber || !password || !reEnterPassWord) {
       setError("Vui lòng điền các trường còn trống");
+      return;
+    }
+    if (!passwordRegex.test(password)) {
+      setError("Mật khẩu có độ dài tối thiểu 6 kí tự, chỉ bao gồm số và chữ");
       return;
     }
     if (password !== reEnterPassWord) {
@@ -178,18 +218,27 @@ function LandingPage() {
       password,
     };
     dispatch(openLoading());
-    authApi.register(reqbody).then(data => {
-      const {accessToken, role, phoneNumber } = data.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("phoneNumber", phoneNumber);
-      dispatch(setRole(role));
-      dispatch(setPhoneNumberRD(phoneNumber));
-      dispatch(showToastMessage({ message: 'Tạo tài khoản thành công', type: toastType.succes }))
-      navigate(`${routerString.home}`);
-    }).catch(err => {
+    authApi
+      .register(reqbody)
+      .then((data) => {
+        const { accessToken, role, phoneNumber } = data.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("phoneNumber", phoneNumber);
+        dispatch(setRole(role));
+        dispatch(setPhoneNumberRD(phoneNumber));
+        dispatch(
+          showToastMessage({
+            message: "Tạo tài khoản thành công",
+            type: toastType.succes,
+          })
+        );
+        navigate(`${routerString.home}`);
+      })
+      .catch((err) => {
         const { message } = err.response.data;
-        setError(message)
-    }).finally(() => dispatch(closeLoading()))
+        setError(message);
+      })
+      .finally(() => dispatch(closeLoading()));
   };
 
   const onRenderFooter = () => {
@@ -225,57 +274,57 @@ function LandingPage() {
     <>
       {loading ? <LoadingLogin /> : <React.Fragment />}
       <Layout className="landing-page">
-        <Header
-          className="header"
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 1,
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            height: "fit-content",
-          }}
-        >
+        <Header className="header">
           <div className="top-header">
-            <div style={{ color: "#FFFFFF" }}>
-              Giờ làm việc: Thứ Hai - Thứ Sáu: 8:00 - 17:30 - Thứ Bảy: 8:00 -
-              11:30
-            </div>
-            <div style={{ color: "#FFFFFF", display: "flex", gap: "4px" }}>
-              <FacebookOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
-              <GooglePlusOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
-              <YoutubeOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
+            <div className="header-container">
+              <div style={{ color: "#FFFFFF" }}>
+                Giờ làm việc: Thứ Hai - Thứ Sáu: 8:00 - 17:30 - Thứ Bảy: 8:00 -
+                11:30
+              </div>
+              <div style={{ color: "#FFFFFF", display: "flex", gap: "4px" }}>
+                <FacebookOutlined
+                  color="#FFFFFF"
+                  style={{ fontSize: "20px" }}
+                />
+                <GooglePlusOutlined
+                  color="#FFFFFF"
+                  style={{ fontSize: "20px" }}
+                />
+                <YoutubeOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
+              </div>
             </div>
           </div>
           <div className="bottom-header">
-            <img
-              alt=""
-              src={Logo}
-              style={{
-                width: "100px",
-                height: "48px",
-              }}
-            />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "row",
-                gap: "45px",
-              }}
-            >
-              <div style={{ display: "flex", flexDirection: "row", gap: "30px" }}>
-                <div>Trang chủ</div>
-                <div>Về chúng tôi</div>
-                <div>Dịch vụ</div>
-                <div>Đội ngũ</div>
-                <div>Liên hệ</div>
+            <div className="header-container">
+              <img
+                alt=""
+                src={Logo}
+                style={{
+                  width: "100px",
+                  height: "48px",
+                }}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  gap: "45px",
+                }}
+              >
+                <div
+                  style={{ display: "flex", flexDirection: "row", gap: "30px" }}
+                >
+                  <div>Trang chủ</div>
+                  <div>Về chúng tôi</div>
+                  <div>Dịch vụ</div>
+                  <div>Đội ngũ</div>
+                  <div>Liên hệ</div>
+                </div>
+                <Button type="primary" ghost onClick={() => setOpenLogin(true)}>
+                  Đăng nhập
+                </Button>
               </div>
-              <Button type="primary" ghost onClick={() => setOpenLogin(true)}>
-                Đăng nhập
-              </Button>
             </div>
           </div>
           <Modal
@@ -287,7 +336,7 @@ function LandingPage() {
             footer={onRenderFooter}
           >
             <Tabs
-              defaultActiveKey="1"
+              activeKey={activeKey}
               items={loginItems}
               onChange={(activeKey) => handleOnchangeLoginTab(activeKey)}
             />

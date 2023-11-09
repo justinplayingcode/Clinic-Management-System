@@ -2,10 +2,14 @@ import { ClientSession } from "mongoose";
 import User from "./user.schema";
 import UserRepository from "./user.repository";
 import logger from "../../helper/logger.config";
+
 import { UserModel } from "./user.model";
 import ErrorObject from "../../common/model/error";
 import { ApiStatusCode } from "../../common/enum/apiStatusCode";
 // import Convert from "../../common/utils/convert.utils";
+
+import { IRequestGetAllOfStaticReport } from "./user.model";
+
 
 export default class UserService {
   private _userRepository;
@@ -76,6 +80,7 @@ export default class UserService {
       throw error;
     }
   };
+
   public deleteDoctor = async (doctorId, session: ClientSession) => {
     try {
       // cho nay Thang cho toi cach fix nha chu 2ruoi sang lu lam roi :))
@@ -100,6 +105,31 @@ export default class UserService {
       );
     } catch(error){
       logger ("delete doctor- userservice",error?.message);
+      }
+
+
+  public getDataOfStaticReport = async (request: IRequestGetAllOfStaticReport) => {
+    try {
+      const accounts = await this._userRepository.getDataOfStaticReport(
+        request.page,
+        request.pageSize,
+        request.searchByColumn,
+        request.searchKey
+      )
+      const result: any[] = [];
+      accounts.forEach(e => {
+        if(e.accountId && e.accountId.role === request.role) {
+          result.push({
+            ...e,
+            ...e.accountId,
+            accountId: e.accountId._id
+          })
+        }
+      })
+      return result;
+    } catch (error) {
+      logger("68-userservice", error?.message);
+
       throw error;
     }
   }

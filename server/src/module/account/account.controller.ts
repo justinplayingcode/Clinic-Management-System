@@ -13,7 +13,12 @@ import jwToken from "../../helper/jwt.config";
 import ErrorObject from "../../common/model/error";
 import logger from "../../helper/logger.config";
 import MomentTimezone from "../../helper/timezone.config";
+
 import DoctorService from '../doctor/doctor.service';
+
+import { StaticReportRequestFields } from "../../common/model/request";
+import { IRequestGetAllOfStaticReport } from "../user/user.model";
+
 
 export default class AccountController {
 
@@ -43,15 +48,13 @@ export default class AccountController {
           return next(err)
         }
         if (bcrypt.compareSync(req.body.password, account.password)) {
-          const accessToken = jwToken.createAccessToken({ accountId: account._id, role: account.role });
+          const accessToken = jwToken.createAccessToken({ accountId: account._id, role: account.role, phoneNumber: req.body.phoneNumber });
           _res = {
             status: ApiStatus.succes,
             isSuccess: true,
             statusCode: ApiStatusCode.OK,
             data: {
-              accessToken, 
-              phoneNumber: account.phoneNumber,
-              role: account.role
+              accessToken
             }
           }
         } else {
@@ -79,7 +82,7 @@ export default class AccountController {
         password: req.body.password
       }
       const _account = await this._accountService.createAccount(newAccount, role, session);
-      const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role });
+      const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role, phoneNumber: _account.phoneNumber });
       await this._userService.createUser(_account._id, session);
       await session.commitTransaction();
       session.endSession();
@@ -205,23 +208,13 @@ export default class AccountController {
   }
 
   // GET
-  public getCurrentInfo = async (req, res, next) => {
-    const { accountId, role } = req.user;
+  public checkCurrentUser = async (req, res, next) => {
+    const { accountId } = req.user;
     try {
-      const user = await this._userService.findByKey(fields.accountId, accountId);
-      let _data;
-      if(user) {
-        _data = { 
-          role,
-          fullName: user.fullName,
-          email: user.email,
-          avatar: user.avatar,
-          gender: user.gender,
-          address: user.address,
-          dateOfBirth: user.dateOfBirth ? MomentTimezone.convertDDMMYYY(user.dateOfBirth) : undefined
-        }
-      } else {
-        _data = { role , fullName: null };
+      const account = await this._accountService.findById(accountId);
+      let _data = { phoneNumber: null, role: null };
+      if(account) {
+        _data = { phoneNumber: account.phoneNumber, role: account.role }
       }
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
@@ -231,6 +224,102 @@ export default class AccountController {
       }
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
+      next(error)
+    }
+  }
+  // GET
+  public getCurrentInfo = async (req, res, next) => {
+    const { accountId } = req.user;
+    try {
+      const user = await this._userService.findByKey(fields.accountId, accountId);
+      let _data;
+      if(user) {
+        const _address: string[] = user.address ? user.address.split(",") : [];
+        _data = { 
+          fullName: user.fullName,
+          email: user.email,
+          avatar: user.avatar,
+          gender: user.gender,
+          dateOfBirth: user.dateOfBirth ? MomentTimezone.convertDDMMYYY(user.dateOfBirth) : undefined,
+          address: _address.length ? _address[0].trim() : "",
+          commune: _address.length > 1 ? _address[1].trim() : "",
+          district: _address.length > 2 ? _address[2].trim() : "",
+          city: _address.length > 3 ? _address[3].trim(): "",
+        }
+      } else {
+        _data = null;
+      }
+      const _res: IBaseRespone = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: _data
+      }
+      res.status(ApiStatusCode.OK).json(_res);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  //POST
+  public getAllAccount = (role: Role) => async (req, res, next) => {
+    const verifyReq = validateReqBody(req, StaticReportRequestFields);
+    let _res: IBaseRespone;
+    if (!verifyReq.pass) {
+      const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "getAllAccount verify reqbody");
+      return next(err)
+    }
+    try {
+      const param: IRequestGetAllOfStaticReport = {
+        page: req.body.page,
+        pageSize: req.body.pageSize,
+        searchByColumn: req.body.searchByColumn,
+        searchKey: req.body.searchKey,
+        role: role
+      }
+      const result = await this._userService.getDataOfStaticReport(param);
+      _res = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: result
+      }
+      res.status(ApiStatusCode.OK).json(_res)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  //POST
+  public resetPassword = async (req, res, next) => {
+    const verifyReq = validateReqBody(req, ["accountId"]);
+    if (!verifyReq.pass) {
+      const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "resetPassword verify reqbody");
+      return next(err)
+    }
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      bcrypt.hash("1234567", 10, async (err, hashpw) => {
+        if(err) {
+          logger("resetPassword-hashpw-accountController", "Lỗi");
+          return next(err);
+        } else {
+          await this._accountService.findByIdAndUpdate(req.body.accountId, { password: hashpw }, session );
+          await session.commitTransaction();
+          session.endSession();
+          const _res: IBaseRespone = {
+            status: ApiStatus.succes,
+            isSuccess: true,
+            statusCode: ApiStatusCode.OK,
+            message: "Cập nhật mật khẩu thành công"
+          }
+          res.status(ApiStatusCode.OK).json(_res);
+        }
+      })
+    } catch (error) {
+      await session.commitTransaction();
+      session.endSession();
       next(error)
     }
   }

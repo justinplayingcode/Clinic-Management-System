@@ -36,13 +36,13 @@ const toastTypes = {
 export const Toast = () => {
   const { message, type } = useSelector((state: RootState) => state.toast);
   const dispatch = useDispatch();
-  const { icon, backgroundColor } = toastTypes[type];
+  const { icon } = toastTypes[type];
 
   const timerID = useRef<number | null>(null);
   const handleDismiss = useCallback(() => dispatch(closeToastMessage()), [dispatch]);
 
   useEffect(() => {
-    timerID.current = window.setTimeout(() => handleDismiss(), 4000);
+    timerID.current = window.setTimeout(() => handleDismiss(), 5000);
     return () => {
       if (timerID.current) {
         clearTimeout(timerID.current);
@@ -51,7 +51,7 @@ export const Toast = () => {
   }, [handleDismiss]);
 
   return (
-    <div className="toast" style={{backgroundColor: backgroundColor }}>
+    <div className="toast">
       <img alt='' src={icon} className='toast-icon' />
       <p className="toast-message">{message}</p>
       <CloseOutlined onClick={handleDismiss} className="toast-cancel"  />

@@ -104,4 +104,19 @@ export default class DepartmentController {
       next(error);
     }
   };
+
+  public getAll = async (req, res, next) => {
+    try {
+      const data = await this._DepartmentService.getAll();
+      const _res: IBaseRespone = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: data
+      };
+      res.status(ApiStatusCode.OK).json(_res);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

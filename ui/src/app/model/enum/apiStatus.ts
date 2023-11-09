@@ -1,8 +1,3 @@
-export enum Gender {
-  male, 
-  female
-}
-
 export enum ApiStatus {
   fail = 0,
   succes = 1,

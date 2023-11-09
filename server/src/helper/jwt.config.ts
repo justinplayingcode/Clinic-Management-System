@@ -5,7 +5,8 @@ import { Role } from "../common/enum/permission";
 
 export interface IPayLoad {
   accountId: mongoose.Types.ObjectId,
-  role: Role
+  role: Role,
+  phoneNumber: string
 }
 export default class jwToken {
     public static createAccessToken = (payload: IPayLoad) => {

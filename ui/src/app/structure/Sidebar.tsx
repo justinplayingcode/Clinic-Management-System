@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { HomeOutlined, FileSearchOutlined, MedicineBoxOutlined, CalendarOutlined, LogoutOutlined } from '@ant-design/icons';
+import { HomeOutlined, FileSearchOutlined, MedicineBoxOutlined, CalendarOutlined, TeamOutlined, ApartmentOutlined, ScheduleOutlined, PlusSquareOutlined, SolutionOutlined } from '@ant-design/icons';
+import { FaUserDoctor } from "react-icons/fa6";
 import type { MenuProps } from 'antd';
-import { Button, Menu } from 'antd';
+import { Menu } from 'antd';
 import { mappingRouter, routerString } from '../model/router';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { LogoSidebar } from '../../asset/images/images';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux';
+import { Role } from '../model/enum/auth';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -24,16 +28,45 @@ function getItem(
   } as MenuItem;
 }
 
-const items: MenuItem[] = [
-    getItem(mappingRouter[routerString.home], `${routerString.home}`, <HomeOutlined />),
-    getItem(mappingRouter[routerString.schedule], `${routerString.schedule}`, <CalendarOutlined />),
-    getItem(mappingRouter[routerString.appointment], `${routerString.appointment}`, <MedicineBoxOutlined />),
-    getItem(mappingRouter[routerString.histories], `${routerString.histories}`, <FileSearchOutlined />),
-];
+const items = (role: Role): MenuItem[] => {
+  switch(role) {
+    case Role.admin:
+      return [
+        getItem(mappingRouter[routerString.home], `${routerString.home}`, <HomeOutlined />),
+        getItem(mappingRouter[routerString.manageaccount], `${routerString.manageaccount}`, <SolutionOutlined />, [
+          getItem(mappingRouter[routerString.manageaccountdoctor], `${routerString.manageaccountdoctor}`, <FaUserDoctor/>),
+          getItem(mappingRouter[routerString.manageaccountuser], `${routerString.manageaccountuser}`, <TeamOutlined />),
+        ]),
+        getItem("Quản lý lịch hẹn", `${routerString.schedule}`, <ScheduleOutlined />),
+        getItem(mappingRouter[routerString.managedepartment], `${routerString.managedepartment}`, <ApartmentOutlined />),
+        getItem(mappingRouter[routerString.managemedication], `${routerString.managemedication}`, <PlusSquareOutlined />),
+
+      ]
+    case Role.doctor:
+      return [
+        getItem(mappingRouter[routerString.home], `${routerString.home}`, <HomeOutlined />),
+        getItem("Quản lý lịch hẹn", `${routerString.schedule}`, <ScheduleOutlined />),
+        getItem(mappingRouter[routerString.managemedication], `${routerString.managemedication}`, <PlusSquareOutlined />),
+        getItem(mappingRouter[routerString.appointment], `${routerString.appointment}`, <MedicineBoxOutlined />),
+        getItem(mappingRouter[routerString.histories], `${routerString.histories}`, <FileSearchOutlined />),
+      ]
+    default:
+      return [
+        getItem(mappingRouter[routerString.home], `${routerString.home}`, <HomeOutlined />),
+        getItem(mappingRouter[routerString.schedule], `${routerString.schedule}`, <CalendarOutlined />),
+        getItem(mappingRouter[routerString.appointment], `${routerString.appointment}`, <MedicineBoxOutlined />),
+        getItem(mappingRouter[routerString.histories], `${routerString.histories}`, <FileSearchOutlined />),
+      ]
+  }
+}
+
+
 
 const Sidebar: React.FC = () => {
+  const { role } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const location = useLocation();
+  const arrpath = location.pathname.split('/').filter((i) => i);
 
   const [current, setCurrent] = useState<string>(location.pathname);
 
@@ -46,29 +79,23 @@ const Sidebar: React.FC = () => {
     navigate(e.key);
   };
 
-  const logOut = () => {
-    localStorage.clear();
-    navigate("/"); // rediect to logout page
-  }
-
   return (
     <div id="main-sidebar" key={location.pathname}>
       <div className='sidebar-top'>
-        <div style={{ height: "60px", backgroundColor: "#001529", color: "#333", display: "flex", alignItems: "center", paddingLeft: "32px"}}>
+        <div style={{ height: "60px", backgroundColor: "#001529", color: "#333", display: "flex", alignItems: "end", paddingLeft: "32px"}}>
           <img alt="" src={LogoSidebar} style={{ width: "100px", height: "44px" }} />
-          di</div>
+        </div>
         <Menu
+          key={role}
           theme={'dark'}
           onClick={onClick}
           style={{ width: 240, height: "calc(100% - 60px)" }}
-          defaultOpenKeys={['sub1']}
+          defaultOpenKeys={[`/${arrpath[0]}`]}
           selectedKeys={[current]}
           mode="inline"
-          items={items}
+          items={items(role!)}
+          className='sidebar-menu'
         />
-      </div>
-      <div className='sidebar-bottom'>
-        <Button className="button-logout" type="default" icon={<LogoutOutlined />} size="large" onClick={logOut}>Logout</Button>
       </div>
     </div>
   );

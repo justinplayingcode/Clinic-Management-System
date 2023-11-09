@@ -4,7 +4,6 @@ export interface AccountModel extends BaseModel {
   phoneNumber: string;
   password: string;
   role: number;
-  refreshToken: string;
   isActive: boolean;
 }
 
