@@ -81,15 +81,15 @@ function Schedule() {
   const renderAppointmentStatus = (status: AppointmentStatus) => {
     switch (status) {
       case AppointmentStatus.Checking:
-        return <>Chờ duyệt</>;
+        return <Text style={{ color: "#FFDE00" }}>Chờ duyệt</Text>;
       case AppointmentStatus.CheckedAndWaitConfirm:
-        return <>Đã duyệt, chờ xác nhận</>;
+        return <Text style={{ color: "#EE7D21" }}>Đã duyệt, chờ xác nhận</Text>;
       case AppointmentStatus.Confirmed:
-        return <>Đã xác nhận</>;
+        return <Text style={{ color: "#00794E" }}>Đã xác nhận</Text>;
       case AppointmentStatus.Cancel:
-        return <>Bị hủy</>;
+        return <Text style={{ color: "#ED1C2E" }}>Bị hủy</Text>;
       case AppointmentStatus.Complete:
-        return <>Hoàn thành</>;
+        return <Text style={{ color: "#005AA9" }}>Hoàn thành</Text>;
       default:
         return <></>;
     }

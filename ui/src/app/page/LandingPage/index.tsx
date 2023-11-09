@@ -65,6 +65,7 @@ function LandingPage() {
           <div className="phoneNumber">
             <Label required>Số điện thoại</Label>
             <Input
+              autoComplete="new-password"
               placeholder="Hãy nhập số điện thoại"
               value={phoneNumber}
               onChange={(e) => {
@@ -75,6 +76,7 @@ function LandingPage() {
           <div className="password">
             <Label required>Mật Khẩu</Label>
             <Input.Password
+              autoComplete="new-password"
               placeholder="Nhập mật khẩu"
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -105,6 +107,7 @@ function LandingPage() {
           <div className="phoneNumber">
             <Label required>Số điện thoại</Label>
             <Input
+              autoComplete="new-password"
               placeholder="Hãy nhập số điện thoại"
               value={phoneNumber}
               onChange={(e) => {
@@ -115,6 +118,7 @@ function LandingPage() {
           <div className="password">
             <Label required>Mật Khẩu</Label>
             <Input.Password
+              autoComplete="new-password"
               placeholder="Nhập mật khẩu"
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -128,6 +132,7 @@ function LandingPage() {
           <div className="confirm-password">
             <Label required>Nhập lại mật Khẩu</Label>
             <Input.Password
+              autoComplete="new-password"
               placeholder="Nhập lại mật khẩu"
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
