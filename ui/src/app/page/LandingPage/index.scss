@@ -28,6 +28,7 @@ $max-width-container: 1400px;
         align-items: center;
         justify-content: space-between;
         max-width: $max-width-container;
+        padding: 0 20px;
         height: 45px;
         width: 100%;
       }
@@ -45,6 +46,7 @@ $max-width-container: 1400px;
         align-items: center;
         justify-content: space-between;
         max-width: $max-width-container;
+        padding: 0 20px;
 
         img {
           color: #1e3461;
