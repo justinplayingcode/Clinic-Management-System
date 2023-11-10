@@ -2,11 +2,12 @@ import { Role } from "../../common/enum/permission";
 import { BaseModel } from "../../common/model/common";
 
 export interface UserModel extends BaseModel {
+  isActive: any;
   accountId: string;
   email: string;
   gender: number;
   avatar: string;
-  fullName: boolean;
+  fullName: string;
   address: string;
   dateOfBirth: Date;
 }

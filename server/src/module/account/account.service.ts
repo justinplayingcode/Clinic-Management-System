@@ -5,6 +5,7 @@ import { AccountModel, ICreateAcountBasic } from "./account.model";
 import { Role } from "../../common/enum/permission";
 import logger from "../../helper/logger.config";
 
+
 export default class AccountService {
   
   private _accountRepository;
@@ -44,7 +45,7 @@ export default class AccountService {
     }
   }
 
-  public findByIdAndUpdate = async (id, update, session) => {
+  public findByIdAndUpdate = async (id, update, session: ClientSession) => {
     try {
       return await this._accountRepository.updateById(id, update, session);
     } catch (error) {
@@ -52,5 +53,16 @@ export default class AccountService {
       throw error
     }
   }
+  public deleteDoctorService = async (id: any, session: ClientSession) => {
+    try {
+      const targetAccount = await this._accountRepository.findById(id,session);
+      targetAccount.isActive = false;
+      return await targetAccount.save({session});
 
+    }
+    catch(error){
+      logger("64- account service", error?.message);
+      throw error;
+    }
+  }
 }

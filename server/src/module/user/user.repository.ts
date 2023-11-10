@@ -3,6 +3,7 @@ import BaseRepository from "../common/common.repository";
 import { UserModel } from "./user.model";
 
 export default class UserRepository extends BaseRepository<UserModel> {
+
   public getDataOfStaticReport = async (page: number, pageSize: number, searchByColumn: string, searchKey: string, conditions: Partial<UserModel> = {}) => {
     return await this.model.find(conditions)
       .skip((page - 1) * pageSize)
@@ -18,4 +19,5 @@ export default class UserRepository extends BaseRepository<UserModel> {
       }
       ).lean();
   }
+
 }

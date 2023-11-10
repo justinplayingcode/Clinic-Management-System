@@ -32,10 +32,10 @@ const userSchema = new Schema({
   fullName: {
     type: String,
     trim: true,
-    validate: {
-      validator: (value) => Validate.fullName(value),
-      message: (props) => message.invalidFullname(props.value),
-    },
+    // validate: {
+    //   validator: (value) => Validate.fullName(value),
+    //   message: (props) => message.invalidFullname(props.value),
+    // },
   },
   gender: {
     type: Number,

@@ -78,6 +78,8 @@ export default class DepartmentController {
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
       next(error);
     }
   };
