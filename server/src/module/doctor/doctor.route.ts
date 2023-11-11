@@ -10,5 +10,6 @@ doctorRoute.route("/register").post(middlewares.verifyToken, middlewares.permiss
 doctorRoute.route("/update").post(middlewares.verifyToken, middlewares.permission([Role.admin]),doctorController.UpdateDoctor)
 doctorRoute.route("/delete").put(middlewares.verifyToken, middlewares.permission([Role.admin]),doctorController.deleteDoctor);
 doctorRoute.route("/").post(middlewares.verifyToken, middlewares.permission([Role.admin]),doctorController.getAllForReport);
+doctorRoute.route("/detail").get(middlewares.verifyToken, middlewares.permission([Role.admin]),doctorController.getInfoById);
 
 export default doctorRoute;
