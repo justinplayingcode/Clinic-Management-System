@@ -22,4 +22,17 @@ export default class DoctorRepository extends BaseRepository<DoctorModel> {
       })
       .lean();
   }
+
+  public getInfoByDoctorId = async (id) => {
+    return await this.model.findById(id)
+      .populate({
+        path: fields.userId,
+        select: `-__v`
+      })
+      .populate({
+        path: fields.departmentId,
+        select: `${fields.displayName}`,
+      })
+      .lean();
+  }
 }

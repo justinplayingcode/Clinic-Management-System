@@ -100,7 +100,31 @@ export default class DoctorService {
       })
       return result
     } catch (error) {
-      logger("83-doctorservice", error?.message);
+      logger("getAll-doctorservice", error?.message);
+      throw error;
+    }
+  }
+
+  public getInfoById = async (id) => {
+    try {
+      const doctor = await this._doctorRepository.getInfoByDoctorId(id);
+      const { accountId, _id: userId, email, avatar, fullName, gender, address, dateOfBirth, phoneNumber  } = doctor.userId;
+      return {
+        rank: doctor.rank,
+        position: doctor.position,
+        departmentName: doctor.departmentId.displayName,
+        accountId,
+        userId,
+        email,
+        avatar,
+        fullName,
+        gender,
+        address,
+        dateOfBirth: MomentTimezone.convertDDMMYYY(dateOfBirth),
+        phoneNumber
+      }
+    } catch (error) {
+      logger("getInfoById-doctorservice", error?.message);
       throw error;
     }
   }

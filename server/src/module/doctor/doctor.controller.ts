@@ -178,4 +178,20 @@ export default class DoctorController {
       next(error)
     }
   }
+
+  //GET
+  public getInfoById = async (req, res, next) => {
+    try {
+      const data = await this._doctorService.getInfoById(req.query.id);
+      const _res = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data,
+      }
+      res.status(ApiStatusCode.OK).json(_res)
+    } catch (error) {
+      next(error)
+    }
+  }
 }

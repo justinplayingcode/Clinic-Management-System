@@ -6,10 +6,10 @@ import { useDispatch } from "react-redux";
 import {
   closeLoading,
   openLoading,
-  setInfoUser,
   showToastMessage,
+  tableRefresh,
 } from "../../../../redux/reducers";
-import { departmentApi, userApi } from "../../../../api";
+import { authApi, departmentApi } from "../../../../api";
 import {
   PositionDoctorList,
   RankDoctorList,
@@ -37,24 +37,9 @@ type FieldType = {
   address?: string;
   phoneNumber?: string;
   rank?: string;
-  department?: string;
+  departmentId?: string;
   position?: string;
 };
-
-const apartmentList = [
-  {
-    value: 1,
-    label: "sản khoa",
-  },
-  {
-    value: 2,
-    label: "nội khoa",
-  },
-  {
-    value: 3,
-    label: "ngoại khoa",
-  },
-];
 
 interface ISelectOption {
   value: string;
@@ -100,7 +85,6 @@ const host = "https://provinces.open-api.vn/api/";
 
 const CreateDoctor = (props: ICreateDoctorProps) => {
   const { isOpen, dismissForm, value } = props;
-  const [closable, setClosable] = useState<boolean>(true);
 
   const [form] = Form.useForm();
 
@@ -191,32 +175,33 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;
     values["address"] = values.address || "";
+    values["email"] = values.email || "";
 
     console.log(values);
-    // dispatch(openLoading());
-    // userApi
-    //   .updateInfo(values)
-    //   .then(() => {
-    //     dispatch(
-    //       showToastMessage({
-    //         message: "Cập nhật thông tin thành công",
-    //         type: toastType.succes,
-    //       })
-    //     );
-    //     dispatch(setInfoUser(values));
-    //     dismissForm();
-    //   })
-    //   .catch(() => {
-    //     dispatch(
-    //       showToastMessage({
-    //         message: "Có lỗi, hãy thử lại",
-    //         type: toastType.error,
-    //       })
-    //     );
-    //   })
-    //   .finally(() => {
-    //     dispatch(closeLoading());
-    //   });
+    dispatch(openLoading());
+    authApi
+      .registerDoctor(values)
+      .then(() => {
+        dispatch(
+          showToastMessage({
+            message: "Tạo tài khoản thành công",
+            type: toastType.succes,
+          })
+        );
+        dismissForm();
+        dispatch(tableRefresh())
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
   };
 
   const onFinishFailed = (_: any) => {
@@ -235,7 +220,7 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
       open={isOpen}
       onOk={() => dismissForm()}
       onCancel={() => dismissForm()}
-      closable={closable}
+      closable={true}
       keyboard={false}
       maskClosable={false}
       footer={() => <></>}
@@ -332,7 +317,7 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
             <Col span={12} style={{ flex: 1 }}>
               <Form.Item<FieldType>
                 label="Khoa"
-                name="department"
+                name="departmentId"
                 rules={[{ required: true, message: "Hãy chọn khoa!" }]}
               >
                 <Select

@@ -22,7 +22,7 @@ api.interceptors.response.use((response) => {
 }, async (error) => {
     const status = await error.response?.status;
       if (status === ApiStatusCode.Forbidden) {
-        window.open(`/#/${routerString.Forbidden}`, "_self")
+        window.open(`/#${routerString.Forbidden}`, "_self")
       }
     return Promise.reject(error);
   }

@@ -7,6 +7,7 @@ const path = {
   getInfoCurrentUser: "/auth/user",
   changepassword: "/auth/changepassword",
   register: "/auth/register",
+  registerDoctor: "/doctor/register",
 
   updateInfo: "/user/update", 
   getAllDoctor: "/doctor",
@@ -22,7 +23,7 @@ const authApi = {
   getInfoCurrentUser: () => api.get(path.getInfoCurrentUser),
   changepassword: (reqbody: any) => api.put(path.changepassword, reqbody),
   register: (reqbody: any) => api.post(path.register, reqbody),
-
+  registerDoctor: (reqbody: any) => api.post(path.registerDoctor, reqbody),
 }
 
 const userApi = {
