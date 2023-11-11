@@ -23,6 +23,7 @@ export interface IUniformTableOwnProps {
     commandBarItems: ICommandBarItemProps[];
     integrateItems: (requestBody: any) => Promise<any>;
     searchByColumn: string;
+    searchPlaceholder: string;
 }
 
 export interface  IUniformTablePropsFromState {
@@ -40,7 +41,6 @@ export interface IUniformTableState {
     items: any[];
     columns: IColumn[];
     isLoading: boolean;
-
     page: number;
     total: number;
     pageSize: number;
@@ -182,7 +182,7 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
                         </div>
                         <div className={`${classNames.controlWrapper} details-list-sub-header-item`}>
                             <TextField 
-                              placeholder='Tìm kiếm' 
+                              placeholder={`Tìm kiếm theo ${this.props.searchPlaceholder}`} 
                               onChange={this._onChangeText as any} 
                               styles={controlStyles} 
                               disabled={isLoading}

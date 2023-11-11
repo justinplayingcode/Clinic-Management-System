@@ -1,12 +1,17 @@
 import { AxiosResponse } from "axios";
 import UniformTable from "../components/table";
 import { userApi } from "../../../api";
-import { Button } from "antd";
 import CreateDoctor from "./components/CreateDoctor";
 import { useState } from "react";
+import { tooltipPlainText } from "../../../utils/basicRender";
+import { Utils } from "../../../utils";
+import { ICommandBarItemProps } from "@fluentui/react";
+import { RootState } from "../../../redux";
+import { useSelector } from "react-redux";
 
 function ManageDoctor() {
   const [isOpen, setOpen] = useState<boolean>(false);
+  const { tableSelectedCount, tableSelectedItem } = useSelector((state: RootState) => state.currentSeleted);
 
   const departmentColumn = [
     {
@@ -16,27 +21,17 @@ function ManageDoctor() {
       maxWidth: 180,
       isResizable: true,
       onRender: (item: any) => {
-        return <span>{item.fullName}</span>;
+        return <span>{tooltipPlainText(item.fullName)}</span>;
       },
     },
     {
-      key: "phoneNumber",
-      name: "Số điện thoại",
+      key: "departmentName",
+      name: "Khoa",
       minWidth: 80,
       maxWidth: 150,
       isResizable: true,
       onRender: (item: any) => {
-        return <span>{item.phoneNumber}</span>;
-      },
-    },
-    {
-      key: 'email',
-      name: 'Email',
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{item.email}</span>;
+        return <span>{tooltipPlainText(item.departmentName)}</span>;
       },
     },
     {
@@ -46,7 +41,7 @@ function ManageDoctor() {
       maxWidth: 90,
       isResizable: true,
       onRender: (item: any) => {
-        return <span>{item.rank}</span>;
+        return <span>{Utils.getDoctorRankText(item.rank)}</span>;
       },
     },
     {
@@ -56,7 +51,47 @@ function ManageDoctor() {
       maxWidth: 90,
       isResizable: true,
       onRender: (item: any) => {
-        return <span>{item.position}</span>;
+        return <span>{Utils.getDoctorPositionText(item.position)}</span>;
+      },
+    },
+    {
+      key: "phoneNumber",
+      name: "Số điện thoại",
+      minWidth: 80,
+      maxWidth: 150,
+      isResizable: true,
+      onRender: (item: any) => {
+        return <span>{tooltipPlainText(item.phoneNumber)}</span>;
+      },
+    },
+    {
+      key: 'email',
+      name: 'Email',
+      minWidth: 100,
+      maxWidth: 160,
+      isResizable: true,
+      onRender: (item: any) => {
+        return <span>{tooltipPlainText(item.email)}</span>;
+      },
+    },
+    {
+      key: "gender",
+      name: "Giới tính",
+      minWidth: 80,
+      maxWidth: 150,
+      isResizable: true,
+      onRender: (item: any) => {
+        return <span>{Utils.getGenderText(item.gender)}</span>;
+      },
+    },
+    {
+      key: "dob",
+      name: "Ngày sinh",
+      minWidth: 80,
+      maxWidth: 150,
+      isResizable: true,
+      onRender: (item: any) => {
+        return <span>{tooltipPlainText(item.dateOfBirth)}</span>;
       },
     },
     {
@@ -66,7 +101,7 @@ function ManageDoctor() {
       maxWidth: 90,
       isResizable: true,
       onRender: (item: any) => {
-        return <span>{item.address}</span>;
+        return <span>{tooltipPlainText(item.address)}</span>;
       },
     },
   ];
@@ -78,14 +113,40 @@ function ManageDoctor() {
     return userApi.manageDoctor(body);
   };
 
+  const commandBar = () => {
+    const command: ICommandBarItemProps[] = [];
+    command.push({
+      key: 'newItem',
+      text: 'Thêm mới tài khoản',
+      iconProps: { iconName: 'Add' },
+      onClick: () => setOpen(true),
+    });
+    if(tableSelectedCount === 1){
+      command.push({
+          key: 'edit',
+          text: 'Thông tin bác sĩ',
+          iconProps: { iconName: 'ContactInfo' },
+          // onClick: () => { navigate(`/doctor-management/doctor-details/${tableSelectedItem[0]?.userId}`) },
+          onClick: () => alert("redirect to detail page")
+      })
+    };
+    command.push({
+      key: "export",
+      text: "Xuất file",
+      iconProps: { iconName: 'Installation' },
+      onClick: () => alert("Xuất file excel")
+    })
+    return command;
+  }
+
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Click</Button>
       <UniformTable
         columns={departmentColumn}
-        commandBarItems={[]}
+        commandBarItems={commandBar()}
         integrateItems={integrateItems}
-        searchByColumn={"phoneNumber"}
+        searchByColumn={"fullName"}
+        searchPlaceholder={"tên"}
       />
       <CreateDoctor isOpen={isOpen} dismissForm={() => setOpen(false)} />
     </>

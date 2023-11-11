@@ -39,7 +39,7 @@ const items = (role: Role): MenuItem[] => {
         ]),
         getItem("Quản lý lịch hẹn", `${routerString.schedule}`, <ScheduleOutlined />),
         getItem(mappingRouter[routerString.managedepartment], `${routerString.managedepartment}`, <ApartmentOutlined />),
-        getItem(mappingRouter[routerString.managemedication], `${routerString.managemedication}`, <PlusSquareOutlined />),
+        // getItem(mappingRouter[routerString.managemedication], `${routerString.managemedication}`, <PlusSquareOutlined />),
 
       ]
     case Role.doctor:

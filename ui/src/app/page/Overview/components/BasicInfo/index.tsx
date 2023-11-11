@@ -30,17 +30,6 @@ type FieldType = {
   address?: string;
 };
 
-const gender = [
-  {
-    value: 0,
-    label: "Nam",
-  },
-  {
-    value: 1,
-    label: "Nữ",
-  },
-];
-
 interface ISelectOption {
   value: string;
   label: string;
@@ -160,6 +149,7 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;
     values["address"] = values.address || "";
+    values["email"] = values.email || "";
     dispatch(openLoading());
     userApi
       .updateInfo(values)

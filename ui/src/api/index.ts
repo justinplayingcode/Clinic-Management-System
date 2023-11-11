@@ -9,7 +9,7 @@ const path = {
   register: "/auth/register",
 
   updateInfo: "/user/update", 
-  getAllDoctor: "/user/getalldoctor",
+  getAllDoctor: "/doctor",
   getAllUser: "/user/getall",
 
   manageDepartment: "",
