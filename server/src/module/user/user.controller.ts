@@ -4,6 +4,7 @@ import validateReqBody from "../../common/utils/request.utils";
 import ErrorObject from "../../common/model/error";
 import { ApiStatus, ApiStatusCode } from "../../common/enum/apiStatusCode";
 import { UpdateInfoRequest, IUserModelUpdate } from "./user.model";
+import Validate from "../../common/utils/validate.utils";
 
 export default class UserController {
   private _userService;
@@ -24,6 +25,14 @@ export default class UserController {
         verifyReq.message,
         ApiStatusCode.BadRequest,
         "24-userController"
+      );
+      return next(err);
+    }
+    if (!Validate.fullName(req.body.fullName)) {
+      const err: any = new ErrorObject(
+        "Tên chưa đúng định dạng",
+        ApiStatusCode.BadRequest,
+        "35-userController"
       );
       return next(err);
     }

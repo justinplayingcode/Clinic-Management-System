@@ -91,4 +91,12 @@ export default class departmentService {
       throw error
     }
   }
+
+  public findById = async (id) => {
+    try {
+      return await this._departmentRepository.findById(id)
+    } catch (error) {
+      throw error;
+    }
+  }
 }

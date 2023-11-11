@@ -9,7 +9,6 @@ const userController = new UserController();
 const accountController = new AccountController();
 
 userRoute.route("/update").post(middlewares.verifyToken, userController.updateInfo);
-userRoute.route("/getall").post(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.getAllAccount(Role.user));
-userRoute.route("/getalldoctor").post(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.getAllAccount(Role.doctor));
+userRoute.route("/getall").post(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.getAllUser);
 
 export default userRoute;
