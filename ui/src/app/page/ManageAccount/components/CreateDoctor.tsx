@@ -170,7 +170,7 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
   }, [district]);
 
   const onFinish = (values: any) => {
-    values["dateOfBirth"] = moment(values.dateOfBirth).format("MM/DD/YYYY");
+    values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
     values["city"] = values.city.label;
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;

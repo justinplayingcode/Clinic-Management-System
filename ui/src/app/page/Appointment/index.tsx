@@ -147,14 +147,9 @@ function Appointment() {
   }, [district]);
 
   const onFinish = (values: any) => {
-    console.log("0", values);
-    values["dateOfBirth"] = moment(values.dateOfBirth).format("MM/DD/YYYY");
-    console.log("1", values);
+    values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
 
-    values["appointmentDate"] = moment(values.appointmentDate).format(
-      "MM/DD/YYYY"
-    );
-    console.log("2", values);
+    values.appointmentDate = values["appointmentDate"].format("MM/DD/YYYY");
 
     values["city"] = values.city.label;
     values["district"] = values.district.label;
