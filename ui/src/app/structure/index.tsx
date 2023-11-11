@@ -63,10 +63,10 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
   const logOut = () => {
     dispatch(openLoading());
     setTimeout(() => {
-      dispatch(closeLoading());
-      dispatch(userLogout())
-      localStorage.clear();
+      dispatch(userLogout());
       navigate("/")
+      localStorage.clear();
+      dispatch(closeLoading());
     }, 1000)
   }
 
