@@ -9,7 +9,7 @@ import {
   setInfoUser,
   showToastMessage,
 } from "../../../../redux/reducers";
-import { userApi } from "../../../../api";
+import { departmentApi, userApi } from "../../../../api";
 import {
   PositionDoctorList,
   RankDoctorList,
@@ -106,6 +106,7 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
 
   const dispatch = useDispatch();
 
+  const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
   const [city, setCity] = useState<ISelectOption>({
     value: "",
     label: value?.city || "",
@@ -150,7 +151,7 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
 
   const callApiWard = (api: any) => {
     return axios.get(api).then((response) => {
-      const result = response.data.wards?.map((item: any) => {
+      const result = response?.data.wards?.map((item: any) => {
         return {
           value: item.code,
           label: item.name,
@@ -159,8 +160,21 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
       setComuneList(result || []);
     });
   };
+
+  const callApiDepartment = () => {
+    return departmentApi.getDepartmentList().then((response) => {
+      const result = response?.data?.map((item: any) => {
+        return {
+          value: item?._id,
+          label: item?.displayName,
+        };
+      });
+      setDepartmentList(result);
+    });
+  };
   useEffect(() => {
     callAPI(host);
+    callApiDepartment();
   }, []);
 
   useEffect(() => {
@@ -323,7 +337,7 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
               >
                 <Select
                   placeholder="Chọn khoa"
-                  options={apartmentList}
+                  options={departmentList}
                 ></Select>
               </Form.Item>
             </Col>

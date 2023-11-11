@@ -1,5 +1,7 @@
 import { Utils } from "../../../utils";
 
+export const host = "https://provinces.open-api.vn/api/";
+
 export enum toastType {
   succes,
   error,
@@ -79,4 +81,30 @@ export const PositionDoctorList = [
     value: PositionOfDoctor.none,
     label: Utils.getDoctorPositionText(PositionOfDoctor.none)
   },  
+]
+
+export enum patientRelationship{
+  wifeHusband,
+  parentChild,
+  grandParentChild,
+  other
+}
+
+export const patientRelationshipList = [
+  {
+    value: patientRelationship.wifeHusband,
+    label: Utils.getPatientRelationshipText(patientRelationship.wifeHusband)
+  },
+  {
+    value: patientRelationship.parentChild,
+    label: Utils.getPatientRelationshipText(patientRelationship.parentChild)
+  },
+  {
+    value: patientRelationship.grandParentChild,
+    label: Utils.getPatientRelationshipText(patientRelationship.grandParentChild)
+  },  
+  {
+    value: patientRelationship.other,
+    label: Utils.getPatientRelationshipText(patientRelationship.other)
+  }
 ]

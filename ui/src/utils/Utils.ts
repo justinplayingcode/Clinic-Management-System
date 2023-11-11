@@ -1,4 +1,4 @@
-import { Gender, PositionOfDoctor, RankOfDoctor } from "../app/model/enum/common";
+import { Gender, PositionOfDoctor, RankOfDoctor, patientRelationship } from "../app/model/enum/common";
 
 export default class Utils {
   public static convertDDmmyyyTommDDyyyy = (value: string): string => {
@@ -51,6 +51,21 @@ export default class Utils {
         return "Phó khoa";
         case PositionOfDoctor.none:
         return "Không";
+      default:
+        return "";
+    }
+  }
+
+  public static getPatientRelationshipText = (relationship: patientRelationship) => {
+    switch (relationship) {
+      case patientRelationship.wifeHusband:
+        return "Vợ - Chồng";
+      case patientRelationship.parentChild:
+        return "Cha/Mẹ - Con";
+      case patientRelationship.grandParentChild:
+        return "Ông/Bà - Cháu";
+      case patientRelationship.other:
+        return "Khác";
       default:
         return "";
     }

@@ -3,7 +3,9 @@ import { AppointmentStatus, Gender, TimeFrame } from "../utils";
 import {
   InfoCircleFilled,
   RightOutlined,
+  SwapOutlined,
   UserOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
 import Title from "antd/es/typography/Title";
@@ -32,6 +34,8 @@ interface IAppointmentInfo {
   status: AppointmentStatus;
   appointmentCode: string;
 }
+
+// const appointmentList: IAppointmentInfo[] = [];
 
 const appointmentList: IAppointmentInfo[] = [
   {
@@ -71,9 +75,7 @@ const appointmentList: IAppointmentInfo[] = [
 ];
 
 function Schedule() {
-  const [selectItem, setSelectItem] = useState<IAppointmentInfo>(
-    appointmentList[0]
-  );
+  const [selectItem, setSelectItem] = useState<IAppointmentInfo>();
   const [cancelReason, setCancelReason] = useState<string>("");
 
   const { role } = useSelector((state: RootState) => state.auth);
@@ -98,7 +100,9 @@ function Schedule() {
   const appointmentItem = (item: IAppointmentInfo, index: number) => {
     return (
       <Row
-        className={`preview-container ${selectItem.id === item.id && "active"}`}
+        className={`preview-container ${
+          selectItem?.id === item.id && "active"
+        }`}
         onClick={() => setSelectItem(item)}
       >
         <Col className="preview-avatar">
@@ -117,7 +121,7 @@ function Schedule() {
             </Row>
           </Col>
 
-          {selectItem.id === item.id && (
+          {selectItem?.id === item.id && (
             <RightOutlined style={{ color: "#00A2FF" }} />
           )}
         </Row>
@@ -211,7 +215,7 @@ function Schedule() {
 
   const renderButtonAcordRole = (
     role: Role | null,
-    status: AppointmentStatus
+    status: AppointmentStatus | undefined
   ) => {
     if (
       (status === AppointmentStatus.Checking && role === Role.admin) ||
@@ -269,27 +273,59 @@ function Schedule() {
             vào <Text strong>Đặt khám mới</Text> để tạo lịch hẹn mới.
           </Paragraph>
           <Col className="list-container">
-            {appointmentList.map((item, index) => appointmentItem(item, index))}
+            {appointmentList.length > 0 ? (
+              appointmentList.map((item, index) => appointmentItem(item, index))
+            ) : (
+              <Row style={{ justifyContent: "center", marginTop: "80px" }}>
+                <Col style={{ flexDirection: "column" }}>
+                  <WarningOutlined
+                    style={{
+                      display: "block",
+                      fontSize: "128px",
+                    }}
+                  />
+                  <Text>Không tìm thấy lịch hẹn nào.</Text>
+                </Col>
+              </Row>
+            )}
           </Col>
         </Col>
         <Col className="details-section">
           <Col className="top-details">
             <Title level={4}>Chi tiết lịch hẹn</Title>
-            {renderAppointmentDetails(selectItem)}
+            {!selectItem ? (
+              <Row style={{ justifyContent: "center", marginTop: "80px" }}>
+                <Col style={{ flexDirection: "column" }}>
+                  <SwapOutlined
+                    style={{
+                      display: "block",
+                      fontSize: "72px",
+                      transform: "rotate(90deg)",
+                    }}
+                  />
+                  <Text>Vui lòng chọn một lịch hẹn để xem chi tiết.</Text>
+                </Col>
+              </Row>
+            ) : (
+              renderAppointmentDetails(selectItem)
+            )}
           </Col>
-          {renderButtonAcordRole(role, selectItem.status)}
+          {renderButtonAcordRole(role, selectItem?.status)}
           <Col className="bottom-details">
-            <Row style={{ alignItems: "start", gap: "4px" }}>
-              <InfoCircleFilled
-                style={{ marginTop: "4px", color: "#FFA95A" }}
-              />
-              <Paragraph style={{ flex: 1 }}>
-                Lịch khám của bạn đã được gửi đi. Vui lòng đợi{" "}
-                <Text strong>Riordan Clinic</Text> xác nhận. Mọi yêu cầu về{" "}
-                <Text strong>Hủy lịch/ Đổi lịch</Text> vui lòng gọi Hotline{" "}
-                <Text strong>19001234</Text> để được hỗ trợ. Trân trọng cảm ơn!
-              </Paragraph>
-            </Row>
+            {selectItem && (
+              <Row style={{ alignItems: "start", gap: "4px" }}>
+                <InfoCircleFilled
+                  style={{ marginTop: "4px", color: "#FFA95A" }}
+                />
+                <Paragraph style={{ flex: 1 }}>
+                  Lịch khám của bạn đã được gửi đi. Vui lòng đợi{" "}
+                  <Text strong>Riordan Clinic</Text> xác nhận. Mọi yêu cầu về{" "}
+                  <Text strong>Hủy lịch/ Đổi lịch</Text> vui lòng gọi Hotline{" "}
+                  <Text strong>19001234</Text> để được hỗ trợ. Trân trọng cảm
+                  ơn!
+                </Paragraph>
+              </Row>
+            )}
           </Col>
         </Col>
       </Row>

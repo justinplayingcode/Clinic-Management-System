@@ -5,8 +5,13 @@ import { useEffect, useState } from "react";
 import { Utils } from "../../../../../utils";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
-import { closeLoading, openLoading, setInfoUser, showToastMessage } from "../../../../../redux/reducers";
-import { toastType } from "../../../../model/enum/common";
+import {
+  closeLoading,
+  openLoading,
+  setInfoUser,
+  showToastMessage,
+} from "../../../../../redux/reducers";
+import { genderList, toastType } from "../../../../model/enum/common";
 import { userApi } from "../../../../../api";
 
 interface IBasicInfoProps {
@@ -45,21 +50,29 @@ const _initialValues = (value: any) => {
   const _value = Utils.deepCopy(value);
   return {
     ..._value,
-    dateOfBirth: _value.dateOfBirth ? dayjs(Utils.convertDDmmyyyTommDDyyyy(_value.dateOfBirth)) : undefined,
-    city: _value.city ? {
-      value: "",
-      label: _value.city
-    } : undefined,
-    district: _value.district ? {
-      value: "",
-      label: _value.district
-    }: undefined,
-    commune: _value.commune ? {
-      value: "",
-      label: _value.commune
-    }: undefined
-  }
-}
+    dateOfBirth: _value.dateOfBirth
+      ? dayjs(Utils.convertDDmmyyyTommDDyyyy(_value.dateOfBirth))
+      : undefined,
+    city: _value.city
+      ? {
+          value: "",
+          label: _value.city,
+        }
+      : undefined,
+    district: _value.district
+      ? {
+          value: "",
+          label: _value.district,
+        }
+      : undefined,
+    commune: _value.commune
+      ? {
+          value: "",
+          label: _value.commune,
+        }
+      : undefined,
+  };
+};
 
 const defaultSelectOption: ISelectOption = {
   value: "",
@@ -73,12 +86,21 @@ const host = "https://provinces.open-api.vn/api/";
 const BasicInfoForm = (props: IBasicInfoProps) => {
   const { dismissForm, value } = props;
   const [form] = Form.useForm();
-  
+
   const dispatch = useDispatch();
-  
-  const [city, setCity] = useState<ISelectOption>({ value: "", label: value.city || "" });
-  const [district, setDistrict] = useState<ISelectOption>({ value: "", label: value.district || "" });
-  const [commune, setCommune] = useState<ISelectOption>({ value: "", label: value.commune || "" });
+
+  const [city, setCity] = useState<ISelectOption>({
+    value: "",
+    label: value.city || "",
+  });
+  const [district, setDistrict] = useState<ISelectOption>({
+    value: "",
+    label: value.district || "",
+  });
+  const [commune, setCommune] = useState<ISelectOption>({
+    value: "",
+    label: value.commune || "",
+  });
   const [details, setDetails] = useState<string>(value.address || "");
 
   const [cityList, setCityList] = useState<ISelectOption[]>([]);
@@ -138,20 +160,39 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;
     values["address"] = values.address || "";
-    dispatch(openLoading())
-    userApi.updateInfo(values).then(() => {
-      dispatch(showToastMessage({ message: "Cập nhật thông tin thành công", type: toastType.succes}))
-      dispatch(setInfoUser(values))
-      dismissForm();
-    }).catch(() => {
-      dispatch(showToastMessage({ message: "Có lỗi, hãy thử lại", type: toastType.error}))
-    }).finally(() => {
-      dispatch(closeLoading());
-    })
+    dispatch(openLoading());
+    userApi
+      .updateInfo(values)
+      .then(() => {
+        dispatch(
+          showToastMessage({
+            message: "Cập nhật thông tin thành công",
+            type: toastType.succes,
+          })
+        );
+        dispatch(setInfoUser(values));
+        dismissForm();
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
   };
 
   const onFinishFailed = (_: any) => {
-    dispatch(showToastMessage({ message: "Hãy điền các trường còn trống", type: toastType.error }))
+    dispatch(
+      showToastMessage({
+        message: "Hãy điền các trường còn trống",
+        type: toastType.error,
+      })
+    );
   };
 
   return (
@@ -175,7 +216,7 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
               name="fullName"
               rules={[{ required: true, message: "Hãy nhập họ và tên!" }]}
             >
-              <Input placeholder="Nhập họ và tên"/>
+              <Input placeholder="Nhập họ và tên" />
             </Form.Item>
           </Col>
           <Col span={12} style={{ flex: 1 }}>
@@ -184,7 +225,10 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
               name="gender"
               rules={[{ required: true, message: "Hãy chọn giới tính!" }]}
             >
-              <Select options={gender} placeholder="Chọn giới tính"></Select>
+              <Select
+                options={genderList}
+                placeholder="Chọn giới tính"
+              ></Select>
             </Form.Item>
           </Col>
         </Row>
