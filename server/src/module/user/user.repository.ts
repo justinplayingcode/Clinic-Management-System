@@ -4,20 +4,16 @@ import { UserModel } from "./user.model";
 
 export default class UserRepository extends BaseRepository<UserModel> {
 
-  public getDataOfStaticReport = async (page: number, pageSize: number, searchByColumn: string, searchKey: string, conditions: Partial<UserModel> = {}) => {
-    return await this.model.find(conditions)
+  public getDataOfStaticReport = async (page: number, pageSize: number, searchByColumn: string, searchKey: string) => {
+    return await this.model.find({ [searchByColumn]: { $regex: new RegExp(searchKey, 'i') } })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .select(`-__v`)
-      .populate(
-        {
+      .populate({
         path: fields.accountId,
-        select: `-__v -${fields.password} -${fields.isActive}`,
-        match: {
-          [searchByColumn]: { $regex: new RegExp(searchKey, 'i') }
-        }
-      }
-      ).lean();
+        select: `_id role`,
+      })
+      .lean();
   }
 
 }

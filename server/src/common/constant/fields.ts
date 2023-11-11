@@ -1,4 +1,5 @@
 const fields = {
+  id: "id",
   phoneNumber: "phoneNumber",
   password: "password",
   role: "role",
@@ -6,7 +7,16 @@ const fields = {
   refreshToken: "refreshToken",
   isActive: "isActive",
   fullName: "fullName",
-  accountId: "accountId"
+  accountId: "accountId",
+  email: "email",
+  gender: "gender",
+  address: "address",
+  dateOfBirth: "dateOfBirth",
+  commune: "commune",
+  district: "district",
+  city: "city",
+  departmentId: "departmentId",
+  displayName: "displayName"
 }
 
 export default fields;

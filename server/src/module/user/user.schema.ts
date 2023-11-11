@@ -37,6 +37,15 @@ const userSchema = new Schema({
     //   message: (props) => message.invalidFullname(props.value),
     // },
   },
+  phoneNumber: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: (value) => Validate.phoneNumber(value),
+      message: (props) => message.invalidPhoneNumber(props.value),
+    },
+    required: [true, "phonenumber must be required"],
+  },
   gender: {
     type: Number,
     enum: {
@@ -50,7 +59,7 @@ const userSchema = new Schema({
   },
   dateOfBirth: {
     type: Date,
-  },
+  }
 });
 
 const User: Model<UserModel> = mongoose.model<UserModel>(

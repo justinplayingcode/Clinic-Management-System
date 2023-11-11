@@ -1,3 +1,4 @@
+import fields from "../../common/constant/fields";
 import { BaseModel } from "../../common/model/common";
 
 export interface DoctorModel extends BaseModel {
@@ -16,7 +17,31 @@ export const doctorField = {
 }
 
 export const doctorRequest = [
+  fields.id,
   doctorField.departmentId,
   doctorField.rank,
   doctorField.position,
 ]
+
+export const createDoctorRequest = [
+  fields.phoneNumber,
+  fields.fullName,
+  fields.email,
+  fields.gender,
+  fields.address,
+  fields.commune,
+  fields.district,
+  fields.city,
+  fields.dateOfBirth,
+  doctorField.departmentId,
+  doctorField.rank,
+  doctorField.position,
+]
+
+export interface IParamForGetAll {
+  page: number, 
+  pageSize: number, 
+  searchByColumn: string, 
+  searchKey: string, 
+  conditions?: Partial<DoctorModel>
+}

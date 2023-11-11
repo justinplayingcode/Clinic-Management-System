@@ -2,7 +2,6 @@ import { Role } from "../../common/enum/permission";
 import { BaseModel } from "../../common/model/common";
 
 export interface UserModel extends BaseModel {
-  isActive: any;
   accountId: string;
   email: string;
   gender: number;
@@ -36,5 +35,5 @@ export interface IRequestGetAllOfStaticReport {
   pageSize: number,
   searchByColumn: string,
   searchKey: string,
-  role: Role
+  role?: Role
 }

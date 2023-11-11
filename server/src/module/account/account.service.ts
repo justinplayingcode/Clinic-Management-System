@@ -58,7 +58,6 @@ export default class AccountService {
       const targetAccount = await this._accountRepository.findById(id,session);
       targetAccount.isActive = false;
       return await targetAccount.save({session});
-
     }
     catch(error){
       logger("64- account service", error?.message);
