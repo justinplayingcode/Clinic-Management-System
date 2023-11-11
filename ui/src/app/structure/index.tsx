@@ -9,7 +9,7 @@ import React from "react";
 import { Toast } from "./Toast";
 import { authApi } from "../../api";
 import { useDispatch } from "react-redux";
-import { closeLoading, openLoading, setInfoUser, setPhoneNumber, setRole } from "../../redux/reducers";
+import { closeLoading, openLoading, setInfoUser, setPhoneNumber, setRole, userLogout } from "../../redux/reducers";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { routerString } from "../model/router";
 import { Role } from "../model/enum/auth";
@@ -64,6 +64,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
     dispatch(openLoading());
     setTimeout(() => {
       dispatch(closeLoading());
+      dispatch(userLogout())
       localStorage.clear();
       navigate("/")
     }, 1000)

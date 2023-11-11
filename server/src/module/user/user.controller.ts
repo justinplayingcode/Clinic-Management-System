@@ -37,12 +37,18 @@ export default class UserController {
       return next(err);
     }
     try {
+      const addressArr: string[] = [];
+      if(req.body.address) addressArr.push(req.body.address);
+      if(req.body.commune) addressArr.push(req.body.commune);
+      if(req.body.district) addressArr.push(req.body.district);
+      if(req.body.city) addressArr.push(req.body.city);
+
       const update: IUserModelUpdate = {
         fullName: req.body.fullName,
         gender: req.body.gender,
         email: req.body.email,
         dateOfBirth: new Date(req.body.dateOfBirth),
-        address: `${req.body.address}, ${req.body.commune}, ${req.body.district}, ${req.body.city}`
+        address: addressArr.join(", ")
       };
       await this._userService.findOneAndUpdate({ accountId }, update, session);
       await session.commitTransaction();

@@ -7,6 +7,7 @@ import { UserModel } from "./user.model";
 import ErrorObject from "../../common/model/error";
 import { ApiStatusCode } from "../../common/enum/apiStatusCode";
 import { IRequestGetAllOfStaticReport } from "./user.model";
+import MomentTimezone from "../../helper/timezone.config";
 
 export default class UserService {
   private _userRepository;
@@ -112,6 +113,7 @@ export default class UserService {
       users.forEach(user => {
         result.push({
           ...user,
+          dateOfBirth: MomentTimezone.convertDDMMYYY(user.dateOfBirth),
           role: user.accountId.role,
           accountId: user.accountId._id,
         })

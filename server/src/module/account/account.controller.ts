@@ -173,16 +173,20 @@ export default class AccountController {
       let _data;
       if(user) {
         const _address: string[] = user.address ? user.address.split(",") : [];
+        const city = _address.pop();
+        const district = _address.pop();
+        const commune = _address.pop();
+        const address = _address.pop();
         _data = { 
           fullName: user.fullName,
           email: user.email,
           avatar: user.avatar,
           gender: user.gender,
           dateOfBirth: user.dateOfBirth ? MomentTimezone.convertDDMMYYY(user.dateOfBirth) : undefined,
-          address: _address.length ? _address[0].trim() : "",
-          commune: _address.length > 1 ? _address[1].trim() : "",
-          district: _address.length > 2 ? _address[2].trim() : "",
-          city: _address.length > 3 ? _address[3].trim(): "",
+          address,
+          commune,
+          district,
+          city,
         }
       } else {
         _data = null;
