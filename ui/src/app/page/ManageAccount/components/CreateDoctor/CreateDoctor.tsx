@@ -1,24 +1,23 @@
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from "antd";
+import Title from "antd/es/typography/Title";
 import axios from "axios";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { authApi, departmentApi } from "../../../../../api";
 import {
   closeLoading,
   openLoading,
   showToastMessage,
   tableRefresh,
-} from "../../../../redux/reducers";
-import { authApi, departmentApi } from "../../../../api";
+} from "../../../../../redux/reducers";
+import { Utils } from "../../../../../utils";
 import {
   PositionDoctorList,
   RankDoctorList,
   genderList,
   toastType,
-} from "../../../model/enum/common";
-import dayjs from "dayjs";
-import { Utils } from "../../../../utils";
-import Title from "antd/es/typography/Title";
+} from "../../../../model/enum/common";
 
 interface ICreateDoctorProps {
   isOpen: boolean;
@@ -177,7 +176,6 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
     values["address"] = values.address || "";
     values["email"] = values.email || "";
 
-    console.log(values);
     dispatch(openLoading());
     authApi
       .registerDoctor(values)
@@ -189,7 +187,7 @@ const CreateDoctor = (props: ICreateDoctorProps) => {
           })
         );
         dismissForm();
-        dispatch(tableRefresh())
+        dispatch(tableRefresh());
       })
       .catch(() => {
         dispatch(

@@ -8,22 +8,21 @@ import {
   Select,
   Typography,
 } from "antd";
-
-const { Title, Paragraph, Text } = Typography;
-import "./index.scss";
-import { TimeFrame } from "./utils";
+import { RangePickerProps } from "antd/es/date-picker";
 import TextArea from "antd/es/input/TextArea";
+import axios from "axios";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   genderList,
   host,
   patientRelationshipList,
 } from "../../model/enum/common";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import moment from "moment";
-import { RangePickerProps } from "antd/es/date-picker";
-import dayjs from "dayjs";
+import "./index.scss";
+import { TimeFrame } from "./utils";
+
+const { Text } = Typography;
 interface ISelectOption {
   value: string;
   label: string;

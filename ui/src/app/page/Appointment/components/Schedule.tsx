@@ -1,21 +1,19 @@
-import { Avatar, Button, Col, Input, Popconfirm, Row } from "antd";
-import { AppointmentStatus, Gender, TimeFrame } from "../utils";
 import {
   InfoCircleFilled,
   RightOutlined,
-  SwapOutlined,
   UserOutlined,
-  WarningOutlined,
 } from "@ant-design/icons";
-import moment from "moment";
-import Title from "antd/es/typography/Title";
+import { Avatar, Button, Col, Empty, Input, Popconfirm, Row } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Text from "antd/es/typography/Text";
-import "./Schedule.scss";
+import Title from "antd/es/typography/Title";
+import moment from "moment";
 import { useState } from "react";
-import { Role } from "../../../model/enum/auth";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux";
+import { Role } from "../../../model/enum/auth";
+import { AppointmentStatus, Gender, TimeFrame } from "../utils";
+import "./Schedule.scss";
 
 interface IAppointmentInfo {
   id: string;
@@ -100,6 +98,7 @@ function Schedule() {
   const appointmentItem = (item: IAppointmentInfo, index: number) => {
     return (
       <Row
+        key={`preview-container-${index}`}
         className={`preview-container ${
           selectItem?.id === item.id && "active"
         }`}
@@ -278,13 +277,9 @@ function Schedule() {
             ) : (
               <Row style={{ justifyContent: "center", marginTop: "80px" }}>
                 <Col style={{ flexDirection: "column" }}>
-                  <WarningOutlined
-                    style={{
-                      display: "block",
-                      fontSize: "128px",
-                    }}
+                  <Empty
+                    description={<Text>Không tìm thấy lịch hẹn nào.</Text>}
                   />
-                  <Text>Không tìm thấy lịch hẹn nào.</Text>
                 </Col>
               </Row>
             )}
@@ -296,14 +291,11 @@ function Schedule() {
             {!selectItem ? (
               <Row style={{ justifyContent: "center", marginTop: "80px" }}>
                 <Col style={{ flexDirection: "column" }}>
-                  <SwapOutlined
-                    style={{
-                      display: "block",
-                      fontSize: "72px",
-                      transform: "rotate(90deg)",
-                    }}
+                  <Empty
+                    description={
+                      <Text>Vui lòng chọn một lịch hẹn để xem chi tiết.</Text>
+                    }
                   />
-                  <Text>Vui lòng chọn một lịch hẹn để xem chi tiết.</Text>
                 </Col>
               </Row>
             ) : (

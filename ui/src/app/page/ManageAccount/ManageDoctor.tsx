@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import UniformTable from "../components/table";
 import { userApi } from "../../../api";
-import CreateDoctor from "./components/CreateDoctor";
+import CreateDoctor from "./components/CreateDoctor/CreateDoctor";
 import { useState } from "react";
 import { tooltipPlainText } from "../../../utils/basicRender";
 import { Utils } from "../../../utils";
@@ -11,7 +11,9 @@ import { useSelector } from "react-redux";
 
 function ManageDoctor() {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const { tableSelectedCount, tableSelectedItem } = useSelector((state: RootState) => state.currentSeleted);
+  const { tableSelectedCount, tableSelectedItem } = useSelector(
+    (state: RootState) => state.currentSeleted
+  );
 
   const departmentColumn = [
     {
@@ -65,8 +67,8 @@ function ManageDoctor() {
       },
     },
     {
-      key: 'email',
-      name: 'Email',
+      key: "email",
+      name: "Email",
       minWidth: 100,
       maxWidth: 160,
       isResizable: true,
@@ -116,28 +118,28 @@ function ManageDoctor() {
   const commandBar = () => {
     const command: ICommandBarItemProps[] = [];
     command.push({
-      key: 'newItem',
-      text: 'Thêm mới tài khoản',
-      iconProps: { iconName: 'Add' },
+      key: "newItem",
+      text: "Thêm mới tài khoản",
+      iconProps: { iconName: "Add" },
       onClick: () => setOpen(true),
     });
-    if(tableSelectedCount === 1){
+    if (tableSelectedCount === 1) {
       command.push({
-          key: 'edit',
-          text: 'Thông tin bác sĩ',
-          iconProps: { iconName: 'ContactInfo' },
-          // onClick: () => { navigate(`/doctor-management/doctor-details/${tableSelectedItem[0]?.userId}`) },
-          onClick: () => alert("redirect to detail page")
-      })
-    };
+        key: "edit",
+        text: "Thông tin bác sĩ",
+        iconProps: { iconName: "ContactInfo" },
+        // onClick: () => { navigate(`/doctor-management/doctor-details/${tableSelectedItem[0]?.userId}`) },
+        onClick: () => alert("redirect to detail page"),
+      });
+    }
     command.push({
       key: "export",
       text: "Xuất file",
-      iconProps: { iconName: 'Installation' },
-      onClick: () => alert("Xuất file excel")
-    })
+      iconProps: { iconName: "Installation" },
+      onClick: () => alert("Xuất file excel"),
+    });
     return command;
-  }
+  };
 
   return (
     <>

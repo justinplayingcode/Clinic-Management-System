@@ -10,7 +10,6 @@ export default class Utils {
   public static convertmmDDyyyyToDDmmyyyy = (value: string) => {
     if (!value) return "";
     const datearray = value.split("/");
-    console.log(datearray);
     const newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
     return newdate
   }

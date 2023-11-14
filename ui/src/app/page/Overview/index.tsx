@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
 import HeaderSection from "../components/headerSection";
 import { Gender } from "../../model/enum/common";
-import { Utils } from "../../../utils";
 
 function Overview() {
   const [isOpen, setOpen] = useState<boolean>(false);
