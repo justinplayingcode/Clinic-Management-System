@@ -24,3 +24,9 @@ export const typeMedicationRequest = [
   MedicationField.price,
   MedicationField.isActive,
 ];
+export interface IRequestGetAllOfStaticReport {
+  page: number,
+  pageSize: number,
+  searchByColumn: string,
+  searchKey: string,
+}
