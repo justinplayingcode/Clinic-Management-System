@@ -1,46 +1,11 @@
-import { AxiosResponse } from "axios";
-import { departmentApi } from "../../../api";
-import UniformTable from "../components/table"
+import AccountDetails from "../ManageAccount/components/AccountDetails/AccountDetails";
+import Department from "./components/Department";
 function ManageDepartment() {
-
-
-  const departmentColumn = [
-    {
-        key: 'name',
-        name: 'Name',
-        minWidth: 210,
-        maxWidth: 350,
-        isResizable: true,
-        onRender: (item: any) => {
-            return <span>{item.name}</span>;
-        },
-    },
-    {
-        key: 'code',
-        name: 'Code',
-        minWidth: 70,
-        maxWidth: 90,
-        isResizable: true,
-        onRender: (item: any) => {
-            return <span>{item.code}</span>;
-        },
-    },
-  ];
-
-  const integrateItems = (reqbody: any): Promise<AxiosResponse<any, any>> => {
-    const body = {
-      ...reqbody,
-    };
-    return departmentApi.manageDepartment(body);
-  }
-
-  return (  
-    <UniformTable 
-      columns={departmentColumn} 
-      commandBarItems={[]} 
-      integrateItems={integrateItems}
-      searchByColumn={"displayName"}      
-    />
+  return (
+    <>
+      <AccountDetails />
+      {/* <Department /> */}
+    </>
   );
 }
 

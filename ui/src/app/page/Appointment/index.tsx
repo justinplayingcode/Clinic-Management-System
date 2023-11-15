@@ -8,22 +8,21 @@ import {
   Select,
   Typography,
 } from "antd";
-
-const { Title, Paragraph, Text } = Typography;
-import "./index.scss";
-import { TimeFrame } from "./utils";
+import { RangePickerProps } from "antd/es/date-picker";
 import TextArea from "antd/es/input/TextArea";
+import axios from "axios";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   genderList,
   host,
   patientRelationshipList,
 } from "../../model/enum/common";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import moment from "moment";
-import { RangePickerProps } from "antd/es/date-picker";
-import dayjs from "dayjs";
+import "./index.scss";
+import { TimeFrame } from "./utils";
+
+const { Text } = Typography;
 interface ISelectOption {
   value: string;
   label: string;
@@ -147,14 +146,9 @@ function Appointment() {
   }, [district]);
 
   const onFinish = (values: any) => {
-    console.log("0", values);
-    values["dateOfBirth"] = moment(values.dateOfBirth).format("MM/DD/YYYY");
-    console.log("1", values);
+    values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
 
-    values["appointmentDate"] = moment(values.appointmentDate).format(
-      "MM/DD/YYYY"
-    );
-    console.log("2", values);
+    values.appointmentDate = values["appointmentDate"].format("MM/DD/YYYY");
 
     values["city"] = values.city.label;
     values["district"] = values.district.label;

@@ -7,6 +7,13 @@ export default class Utils {
     return `${arr[1]}/${arr[0]}/${arr[2]}`
   }
 
+  public static convertmmDDyyyyToDDmmyyyy = (value: string) => {
+    if (!value) return "";
+    const datearray = value.split("/");
+    const newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+    return newdate
+  }
+
   public static deepCopy = (object: any) => {
     try {
       return Object.assign({}, object)

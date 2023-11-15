@@ -144,7 +144,7 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
   }, [district]);
 
   const onFinish = (values: any) => {
-    values["dateOfBirth"] = moment(values.dateOfBirth).format("MM/DD/YYYY");
+    values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
     values["city"] = values.city.label;
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;
@@ -160,7 +160,14 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
             type: toastType.succes,
           })
         );
-        dispatch(setInfoUser(values));
+        dispatch(
+          setInfoUser({
+            ...values,
+            dateOfBirth: Utils.convertmmDDyyyyToDDmmyyyy(
+              values?.dateOfBirth ?? "--"
+            ),
+          })
+        );
         dismissForm();
       })
       .catch(() => {
