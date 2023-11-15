@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { departmentApi } from "../../../../../api";
 import { RootState } from "../../../../../redux";
 import {
+  AccountType,
   PositionDoctorList,
   RankDoctorList,
 } from "../../../../model/enum/common";
@@ -45,7 +46,11 @@ interface ISelectOption {
   label: string;
 }
 
-const AccountDetails = () => {
+interface IAccountDetails {
+  type: AccountType;
+}
+
+const AccountDetails = ({ ...props }: IAccountDetails) => {
   const { info, phoneNumber, role } = useSelector(
     (state: RootState) => state.auth
   );
@@ -191,8 +196,7 @@ const AccountDetails = () => {
               <Descriptions.Item label="Địa chỉ" span={24}>
                 {getInfoAddress() || "--"}
               </Descriptions.Item>
-              {/* {role === Role.doctor && ( */}
-              <>
+              {props.type === AccountType.doctor && <>
                 <Descriptions.Item label="Khoa">
                   No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
                 </Descriptions.Item>
@@ -202,19 +206,16 @@ const AccountDetails = () => {
                 <Descriptions.Item label="Học vấn">
                   No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
                 </Descriptions.Item>
-              </>
-              {/* )} */}
+              </>}
             </Descriptions>
-            <Row style={{ justifyContent: "center", marginTop: "20px" }}>
+            {props.type === AccountType.doctor && <Row style={{ justifyContent: "center", marginTop: "20px" }}>
               <Button type="primary" onClick={() => setOpen(true)}>
                 Chỉnh sửa thông tin
               </Button>
-            </Row>
+            </Row>}
           </Col>
         </Col>
-        {/* {role === Role.doctor && ( */}
-        {/* )} */}
-        <Modal
+        {props.type === AccountType.doctor && <Modal
           centered
           width={400}
           open={isOpen}
@@ -282,7 +283,7 @@ const AccountDetails = () => {
               </div>
             </Form.Item>
           </Form>
-        </Modal>
+        </Modal>}
       </Col>
     </>
   );

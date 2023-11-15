@@ -113,3 +113,8 @@ export enum TypeService {
   basic,
   other
 }
+
+export enum AccountType {
+  account,
+  doctor
+}

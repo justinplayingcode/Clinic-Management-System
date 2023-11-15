@@ -8,12 +8,14 @@ import { Utils } from "../../../utils";
 import { ICommandBarItemProps } from "@fluentui/react";
 import { RootState } from "../../../redux";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function ManageDoctor() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const { tableSelectedCount, tableSelectedItem } = useSelector(
     (state: RootState) => state.currentSeleted
   );
+  const navigate = useNavigate();
 
   const departmentColumn = [
     {
@@ -128,8 +130,7 @@ function ManageDoctor() {
         key: "edit",
         text: "Thông tin bác sĩ",
         iconProps: { iconName: "ContactInfo" },
-        // onClick: () => { navigate(`/doctor-management/doctor-details/${tableSelectedItem[0]?.userId}`) },
-        onClick: () => alert("redirect to detail page"),
+        onClick: () => { navigate(`/manageaccount/doctor/detail/${tableSelectedItem[0]?.userId}`) },
       });
     }
     command.push({

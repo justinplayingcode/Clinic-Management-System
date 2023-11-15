@@ -6,9 +6,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
 import { tooltipPlainText } from "../../../utils/basicRender";
 import { Utils } from "../../../utils";
+import { useNavigate } from "react-router-dom";
 
 function ManageUser() {
   const { tableSelectedCount, tableSelectedItem } = useSelector((state: RootState) => state.currentSeleted);
+  const navigate = useNavigate();
 
   const column = [
     {
@@ -80,8 +82,7 @@ function ManageUser() {
           key: 'edit',
           text: 'Thông tin tài khoản',
           iconProps: { iconName: 'ContactInfo' },
-          // onClick: () => { navigate(`/doctor-management/doctor-details/${tableSelectedItem[0]?.userId}`) },
-          onClick: () => alert("redirect to detail page")
+          onClick: () => { navigate(`/manageaccount/user/detail/${tableSelectedItem[0]?.userId}`) },
       })
     };
     command.push({

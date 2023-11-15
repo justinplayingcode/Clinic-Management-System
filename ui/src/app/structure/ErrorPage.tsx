@@ -16,7 +16,7 @@ function ErrorPage(props: IErrorPageProps) {
 
   useEffect(() => {
     let url: string = `${routerString.home}`;
-    if (props.pageType !== ErrorPageEnum.ServerError) {
+    if (props.pageType === ErrorPageEnum.Forbidden) {
       localStorage.clear();
       url = "/";
     }
