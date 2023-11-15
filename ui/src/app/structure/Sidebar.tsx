@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { HomeOutlined, FileSearchOutlined, MedicineBoxOutlined, CalendarOutlined, TeamOutlined, ApartmentOutlined, ScheduleOutlined, PlusSquareOutlined, SolutionOutlined } from '@ant-design/icons';
 import { FaUserDoctor } from "react-icons/fa6";
+import { MdOutlineMedication, MdOutlineMedicalServices } from "react-icons/md";
+import { VscServerProcess } from "react-icons/vsc";
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { mappingRouter, routerString } from '../model/router';
@@ -38,8 +40,11 @@ const items = (role: Role): MenuItem[] => {
           getItem(mappingRouter[routerString.manageaccountuser], `${routerString.manageaccountuser}`, <TeamOutlined />),
         ]),
         getItem("Quản lý lịch hẹn", `${routerString.schedule}`, <ScheduleOutlined />),
-        getItem(mappingRouter[routerString.managedepartment], `${routerString.managedepartment}`, <ApartmentOutlined />),
-        // getItem(mappingRouter[routerString.managemedication], `${routerString.managemedication}`, <PlusSquareOutlined />),
+        getItem("Quản lý chung", `${routerString.manage}`, <VscServerProcess />, [
+          getItem("Khoa", `${routerString.managedepartments}`, <ApartmentOutlined/>),
+          getItem("Dịch vụ", `${routerString.manageservice}`, <MdOutlineMedicalServices />),
+          getItem("Thuốc", `${routerString.managemedication}`, <MdOutlineMedication />),
+        ]),
 
       ]
     case Role.doctor:

@@ -1,58 +1,57 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { ScheduleModel } from "./schedule.model";
+import { ScheduleModel, StatusAppointment, TimeFrame } from "./schedule.model";
 import collection from "../../common/constant/collection";
+import Convert from "../../common/utils/convert.utils";
 
 const scheduleSchema = new Schema({
-  // doctorId: string;
   doctorId: {
     type: Schema.Types.ObjectId,
     ref: collection.doctor,
     required: [true, "doctorId must be required"],
   },
-  // patientId: string;
   patientId: {
     type: Schema.Types.ObjectId,
     ref: collection.patient,
     required: [true, "patientId must be required"],
   },
-  // departmentId: string;
   departmentId: {
     type: Schema.Types.ObjectId,
     ref: collection.department,
     required: [true, "departmentId must be required"],
   },
-  // appointmentDate: Date;
+  accountId: {
+    type: Schema.Types.ObjectId,
+    ref: collection.account,
+    required: [true, "accountId must be required"],
+  },
   appointmentDate: {
     type: Date,
     trim: true,
   },
-  // appointmentHour: string;
   appointmentHour: {
-    type: String,
-    trim: true,
-  },
-  // approve: number;
-  approve: {
     type: Number,
-    trim: true,
+    enum: {
+      values: Convert.enumToArray(TimeFrame),
+      message: "{VALUE} is not supported in appointmentHour",
+    }
   },
-  // initialSymptom: string;
   initialSymptom: {
     type: String,
     trim: true,
   },
-  // statusAppointment: number;
-  statusAppointment: {
+  status: {
     type: Number,
-    trim: true,
+    enum: {
+      values: Convert.enumToArray(StatusAppointment),
+      message: "{VALUE} is not supported in appointmentHour",
+    }
   },
-  // typeAppointmentId: string;
+  // array of typeAppoinment id
   typeAppointmentId: {
-    type: Schema.Types.ObjectId,
-    ref: collection.typeappointment,
+    type: String,
+    trim: true,
     require: [true, "typeAppointmentId must be required"],
   },
-  // statusUpadteTime: Date;
   statusUpadteTime: {
     type: Date,
     trim: true,

@@ -1,6 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { typeAppointmentModel } from "./typeAppointment.model";
+import { TypeService, typeAppointmentModel } from "./typeAppointment.model";
 import collection from "../../common/constant/collection";
+import Convert from "../../common/utils/convert.utils";
 
 const typeAppointmentSchema = new Schema({
   displayName: {
@@ -11,6 +12,13 @@ const typeAppointmentSchema = new Schema({
   },
   cost: {
     type: Number,
+  },
+  type: {
+    type: Number,
+    enum: {
+      values: Convert.enumToArray(TypeService),
+      message: "{VALUE} is not supported in type",
+    },
   },
   isActive: {
     type: Boolean,

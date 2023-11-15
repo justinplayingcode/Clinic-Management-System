@@ -34,7 +34,7 @@ function Department() {
     callApiDepartment();
   }, []);
 
-  const departmentItem = (item: ISelectOption, index: number) => {
+  const departmentItem = (item: ISelectOption, _: number) => {
     return (
       <Row
         className={`preview-container ${
@@ -99,7 +99,7 @@ function Department() {
           commandBarItems={[]}
           integrateItems={integrateItems}
           searchByColumn={"displayName"}
-          searchPlaceholder={""}
+          searchPlaceholder={"tên"}
         />
       </>
     );
@@ -127,7 +127,7 @@ function Department() {
         </Col>
         <Col className="details-section">
           <Col className="top-details">
-            <Title level={4}>Chi tiết khoa</Title>
+            <Title level={4}>Danh sách bác sĩ của khoa</Title>
             {!selectItem ? (
               <Row style={{ justifyContent: "center", marginTop: "80px" }}>
                 <Col style={{ flexDirection: "column" }}>

@@ -8,6 +8,10 @@ const precriptionSchema = new Schema({
     trim: true,
     required: [true, "medicationId must be required"],
   },
+  cost: {
+    type: Number,
+    required: true,
+  },
   note: {
     type: String,
     trim: true,
