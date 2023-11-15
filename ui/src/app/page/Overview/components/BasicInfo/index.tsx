@@ -1,6 +1,5 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
 import axios from "axios";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { Utils } from "../../../../../utils";
 import dayjs from "dayjs";
@@ -17,6 +16,7 @@ import { userApi } from "../../../../../api";
 interface IBasicInfoProps {
   dismissForm: () => void;
   value?: any;
+  form: any;
 }
 
 type FieldType = {
@@ -73,8 +73,8 @@ const selectStyle = {
 const host = "https://provinces.open-api.vn/api/";
 
 const BasicInfoForm = (props: IBasicInfoProps) => {
-  const { dismissForm, value } = props;
-  const [form] = Form.useForm();
+  const { dismissForm, value, form } = props;
+  // const [form] = Form.useForm();
 
   const dispatch = useDispatch();
 

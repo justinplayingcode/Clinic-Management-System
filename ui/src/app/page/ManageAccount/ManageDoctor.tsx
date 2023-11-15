@@ -130,7 +130,7 @@ function ManageDoctor() {
         key: "edit",
         text: "Thông tin bác sĩ",
         iconProps: { iconName: "ContactInfo" },
-        onClick: () => { navigate(`/manageaccount/doctor/detail/${tableSelectedItem[0]?.userId}`) },
+        onClick: () => { navigate(`/manageaccount/doctor/detail/${tableSelectedItem[0]?.doctorId}`) },
       });
     }
     command.push({

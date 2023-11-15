@@ -82,7 +82,7 @@ function ManageUser() {
           key: 'edit',
           text: 'Thông tin tài khoản',
           iconProps: { iconName: 'ContactInfo' },
-          onClick: () => { navigate(`/manageaccount/user/detail/${tableSelectedItem[0]?.userId}`) },
+          onClick: () => { navigate(`/manageaccount/user/detail/${tableSelectedItem[0]?.accountId}`) },
       })
     };
     command.push({

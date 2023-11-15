@@ -1,4 +1,3 @@
-import { ManOutlined, WomanOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
@@ -8,23 +7,23 @@ import {
   Modal,
   Row,
   Select,
-  Typography,
 } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { departmentApi } from "../../../../../api";
-import { RootState } from "../../../../../redux";
+import { departmentApi, userApi } from "../../../../../api";
 import {
   AccountType,
   PositionDoctorList,
   RankDoctorList,
+  toastType,
 } from "../../../../model/enum/common";
-import { Gender } from "../../../Appointment/utils";
 import "./AccountDetails.scss";
+import { Utils } from "../../../../../utils";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { closeLoading, openLoading, showToastMessage } from "../../../../../redux/reducers";
+import { RootState } from "../../../../../redux";
 import { Role } from "../../../../model/enum/auth";
-
-const { Text } = Typography;
 
 type FieldType = {
   fullName?: string;
@@ -51,58 +50,40 @@ interface IAccountDetails {
 }
 
 const AccountDetails = ({ ...props }: IAccountDetails) => {
-  const { info, phoneNumber, role } = useSelector(
+  const { role } = useSelector(
     (state: RootState) => state.auth
   );
   const [isOpen, setOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
+  const [currentAccount, setCurrentAccount] = useState<any>({});
 
-  const renderAccountRole = (role: Role | null) => {
-    switch (role) {
-      case Role.admin:
-        return "Quản trị viên";
-      case Role.doctor:
-        return "Bác sĩ";
-      case Role.user:
-        return "Người dùng";
-      default:
-        return "--";
+  const { id: param } = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let api = userApi.doctorInfo;
+    if (props.type === AccountType.account) {
+      api = userApi.accoutInfo
     }
-  };
-
-  const renderGenderInfo = (gender: Gender) => {
-    switch (gender) {
-      case Gender.Male:
-        return (
-          <div style={{ fontSize: "16px", color: "#00A2FF" }}>
-            <ManOutlined
-              style={{ fontSize: "16px", color: "#00A2FF", margin: "0 4px" }}
-            />
-            <span>Nam</span>
-          </div>
+    dispatch(openLoading());
+    callApiDepartment();
+    api(param as string)
+      .then((result) => {
+        setCurrentAccount(result?.data)
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
         );
-      case Gender.Female:
-        return (
-          <div style={{ fontSize: "16px", color: "#00A2FF" }}>
-            <WomanOutlined
-              style={{ fontSize: "16px", color: "#FF4785", margin: "0 4px" }}
-            />
-            <span>Nữ</span>
-          </div>
-        );
-      default:
-        return <></>;
-    }
-  };
-
-  const getInfoAddress = () => {
-    const list = [];
-    if (info.address) list.push(info.address);
-    list.push(info.commune, info.district, info.city);
-
-    return list.join(", ");
-  };
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
+  }, [])
 
   const callApiDepartment = () => {
     return departmentApi.getDepartmentList().then((response) => {
@@ -115,9 +96,6 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
       setDepartmentList(result);
     });
   };
-  useEffect(() => {
-    callApiDepartment();
-  }, []);
 
   const onFinish = (values: any) => {
     values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
@@ -162,52 +140,69 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
     // );
   };
 
+  const onRenderRole = () => {
+    if (props.type === AccountType.doctor) {
+      return "Bác sĩ"
+    } else {
+      if (role === Role.admin) {
+        return "Quản trị viên"
+      } else {
+        return "Người dùng"
+      }
+    }
+  }
+
+  const onCloseModel = () => {
+    setOpen(false);
+    form.resetFields();
+  }
+
   return (
     <>
       <Col>
         <Col className="accountInfo-container">
           <Col className="avatar-container">
-            <Avatar shape="square" size={132} src={info.avatar} />
+            <Avatar shape="square" size={132} src={currentAccount.avatar} />
             <Col className="top-info">
-              <Row style={{ justifyContent: "center" }}>
-                <Text style={{ fontSize: "20px", fontWeight: 700 }}>
-                  {renderAccountRole(role)}
-                </Text>
-              </Row>
-              <Row style={{ justifyContent: "center" }}>
-                <span style={{ fontSize: "20px", fontWeight: 700 }}>
-                  {info.fullName || "--"}
-                </span>
-                {renderGenderInfo(info.gender)}
-              </Row>
+              <Descriptions>
+                <Descriptions.Item label="Họ và tên" span={12}>
+                  {currentAccount.fullName || "--"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Giới tính">
+                  {Utils.getGenderText(currentAccount.gender)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Vai trò">
+                  {onRenderRole()}
+                </Descriptions.Item>
+              </Descriptions>
             </Col>
           </Col>
           <Col className="info-container">
-            <Descriptions bordered title="Thông tin tài khoản">
+            <Descriptions bordered title="Thông tin cá nhân">
               <Descriptions.Item label="Ngày sinh">
-                {info.dateOfBirth || "--"}
+                {currentAccount .dateOfBirth || "--"}
               </Descriptions.Item>
               <Descriptions.Item label="Số điện thoại">
-                {phoneNumber || "--"}
+                {currentAccount.phoneNumber || "--"}
               </Descriptions.Item>
               <Descriptions.Item label="Email">
-                {info?.email || "--"}
+                {currentAccount?.email || "--"}
               </Descriptions.Item>
               <Descriptions.Item label="Địa chỉ" span={24}>
-                {getInfoAddress() || "--"}
+                {currentAccount.address || "--"}
               </Descriptions.Item>
-              {props.type === AccountType.doctor && <>
+            </Descriptions>
+              {props.type === AccountType.doctor && <Descriptions bordered title="Thông tin bác sĩ">
                 <Descriptions.Item label="Khoa">
-                  No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+                  {currentAccount.departmentName}
                 </Descriptions.Item>
                 <Descriptions.Item label="Chức vụ">
-                  No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+                {Utils.getDoctorPositionText(currentAccount.position)}
                 </Descriptions.Item>
                 <Descriptions.Item label="Học vấn">
-                  No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+                  {Utils.getDoctorRankText(currentAccount.rank)}
                 </Descriptions.Item>
-              </>}
-            </Descriptions>
+              </Descriptions>}
             {props.type === AccountType.doctor && <Row style={{ justifyContent: "center", marginTop: "20px" }}>
               <Button type="primary" onClick={() => setOpen(true)}>
                 Chỉnh sửa thông tin
@@ -219,8 +214,8 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
           centered
           width={400}
           open={isOpen}
-          onOk={() => setOpen(false)}
-          onCancel={() => setOpen(false)}
+          onOk={onCloseModel}
+          onCancel={onCloseModel}
           closable={true}
           keyboard={false}
           maskClosable={false}
@@ -239,7 +234,11 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
-            // initialValues={_initialValues(value)}
+            initialValues={{
+              departmentId: currentAccount?.departmentName,
+              position: currentAccount?.position,
+              rank: currentAccount?.rank
+            }}
           >
             <Form.Item<FieldType>
               label="Khoa"
