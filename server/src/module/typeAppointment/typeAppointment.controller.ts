@@ -17,7 +17,6 @@ export default class TypeAppointmentController {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      // de quyen admin co the sua
       const verifyReq = validateReqBody(req, typeAppointmentRequest);
       if (!verifyReq.pass) {
         const err: any = new ErrorObject(
@@ -37,12 +36,10 @@ export default class TypeAppointmentController {
       );
       await session.commitTransaction();
       session.endSession();
-
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
@@ -55,7 +52,7 @@ export default class TypeAppointmentController {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const verifyReq = validateReqBody(req, typeAppointmentRequest);
+      const verifyReq = validateReqBody(req, ['id', 'displayName', 'cost']);
       if (!verifyReq) {
         const err: any = new ErrorObject(
           verifyReq.message,
@@ -68,7 +65,7 @@ export default class TypeAppointmentController {
         displayName: req.body.displayName,
         cost: req.body.cost,
       };
-      const Id = req.body._id;
+      const Id = req.body.id;
       await this._TypeAppointmentService.updateTypeAppointmentService(
         Id,
         newTypeAppointment,
@@ -80,7 +77,6 @@ export default class TypeAppointmentController {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {

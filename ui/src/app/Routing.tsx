@@ -7,6 +7,7 @@ import ErrorPage from "./structure/ErrorPage";
 import { ErrorPageEnum } from "./model/enum/common";
 import ManageDoctor from "./page/ManageAccount/ManageDoctor";
 import ManageUser from "./page/ManageAccount/ManageUser";
+import ManageService from "./page/ManageService";
 
 function Routing() {
 
@@ -20,9 +21,12 @@ function Routing() {
         <Route path={`${routerString.manageaccount}`} element={<Navigate to={`${routerString.manageaccountdoctor}`} />}/>
         <Route path={`${routerString.manageaccountdoctor}`} element={<UniformLayout page={<ManageDoctor/>}/>}/>
         <Route path={`${routerString.manageaccountuser}`} element={<UniformLayout page={<ManageUser/>}/>}/>
-        <Route path={`${routerString.managemedication}`} element={<UniformLayout page={<Medications/>}/>}/>
+        {/* <Route path={`${routerString.managemedication}`} element={<UniformLayout page={<Medications/>}/>}/> */}
         <Route path={`${routerString.managedepartment}`} element={<UniformLayout page={<ManageDepartment/>}/>}/>
         <Route path={`${routerString.schedule}`} element={<UniformLayout page={<Schedule/>} noBackground/>}/>
+        <Route path={`${routerString.managedepartments}`} element={<UniformLayout page={<ManageDepartment/>} noBackground/>}/>
+        <Route path={`${routerString.manageservice}`} element={<UniformLayout page={<ManageService/>} noBackground/>}/>
+        <Route path={`${routerString.managemedication}`} element={<UniformLayout page={<Medications/>}/>}/>
         {/*  */}
         <Route path={`${routerString.Forbidden}`} element={<ErrorPage pageType={ErrorPageEnum.Forbidden}/>}/>
         <Route path={`${routerString.Unauthorized}`} element={<ErrorPage pageType={ErrorPageEnum.Unauthorized}/>}/>

@@ -12,3 +12,16 @@ export interface ScheduleModel extends BaseModel {
   typeAppointmentId: string;
   statusUpadteTime: Date;
 }
+
+export enum TimeFrame {
+  morning,
+  afternoon
+}
+
+export enum StatusAppointment {
+  Checking,
+  CheckedAndWaitConfirm,
+  Confirmed,
+  Cancel,
+  Complete
+}

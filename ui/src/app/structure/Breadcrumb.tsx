@@ -10,12 +10,16 @@ const breadcrumbNameMap: Record<string, string> = {
   [routerString.manageaccount]: mappingRouter[routerString.manageaccount],
   [routerString.manageaccountdoctor]: mappingRouter[routerString.manageaccountdoctor],
   [routerString.manageaccountuser]: mappingRouter[routerString.manageaccountuser],
-  [routerString.managemedication]: mappingRouter[routerString.managemedication],
   [routerString.managedepartment]: mappingRouter[routerString.managedepartment],
+  [routerString.manage]: mappingRouter[routerString.manage],
+  [routerString.managemedication]: mappingRouter[routerString.managemedication],
+  [routerString.managedepartments]: mappingRouter[routerString.managedepartments],
+  [routerString.manageservice]: mappingRouter[routerString.manageservice],
 };
 
 const firstMenu = [
-  mappingRouter[routerString.manageaccount]
+  mappingRouter[routerString.manageaccount],
+  mappingRouter[routerString.manage],
 ]
 
 const UniformBreadcrumb = () => {

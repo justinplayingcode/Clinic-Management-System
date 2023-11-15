@@ -108,3 +108,8 @@ export const patientRelationshipList = [
     label: Utils.getPatientRelationshipText(patientRelationship.other)
   }
 ]
+
+export enum TypeService {
+  basic,
+  other
+}

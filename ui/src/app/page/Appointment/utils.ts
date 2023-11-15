@@ -6,7 +6,7 @@ export enum AppointmentStatus{
     Complete
 }
 
-export enum TimeFrame{
+export enum TimeFrame {
     Morning,
     Afternoon
 }

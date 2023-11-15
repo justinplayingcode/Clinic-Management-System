@@ -12,5 +12,4 @@ export const departmentField = {
 
 export const departmentRequest = [
   departmentField.displayName,
-  departmentField.isActive
 ]
