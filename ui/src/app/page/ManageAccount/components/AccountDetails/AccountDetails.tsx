@@ -1,23 +1,29 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../redux";
-import { Role } from "../../../../model/enum/auth";
-import { Avatar, Button, Col, Form, Modal, Row, Select } from "antd";
+import { ManOutlined, WomanOutlined } from "@ant-design/icons";
 import {
-  CalendarOutlined,
-  PhoneOutlined,
-  MailOutlined,
-  HomeOutlined,
-  ManOutlined,
-  WomanOutlined,
-} from "@ant-design/icons";
-import { Gender } from "../../../Appointment/utils";
+  Avatar,
+  Button,
+  Col,
+  Descriptions,
+  Form,
+  Modal,
+  Row,
+  Select,
+  Typography,
+} from "antd";
+import Title from "antd/es/typography/Title";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { departmentApi } from "../../../../../api";
+import { RootState } from "../../../../../redux";
 import {
   PositionDoctorList,
   RankDoctorList,
 } from "../../../../model/enum/common";
-import { useEffect, useState } from "react";
-import { departmentApi } from "../../../../../api";
-import Title from "antd/es/typography/Title";
+import { Gender } from "../../../Appointment/utils";
+import "./AccountDetails.scss";
+import { Role } from "../../../../model/enum/auth";
+
+const { Text } = Typography;
 
 type FieldType = {
   fullName?: string;
@@ -46,6 +52,19 @@ const AccountDetails = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
+
+  const renderAccountRole = (role: Role | null) => {
+    switch (role) {
+      case Role.admin:
+        return "Quản trị viên";
+      case Role.doctor:
+        return "Bác sĩ";
+      case Role.user:
+        return "Người dùng";
+      default:
+        return "--";
+    }
+  };
 
   const renderGenderInfo = (gender: Gender) => {
     switch (gender) {
@@ -141,73 +160,59 @@ const AccountDetails = () => {
   return (
     <>
       <Col>
-        <Col className="personalInfo-container">
+        <Col className="accountInfo-container">
           <Col className="avatar-container">
             <Avatar shape="square" size={132} src={info.avatar} />
+            <Col className="top-info">
+              <Row style={{ justifyContent: "center" }}>
+                <Text style={{ fontSize: "20px", fontWeight: 700 }}>
+                  {renderAccountRole(role)}
+                </Text>
+              </Row>
+              <Row style={{ justifyContent: "center" }}>
+                <span style={{ fontSize: "20px", fontWeight: 700 }}>
+                  {info.fullName || "--"}
+                </span>
+                {renderGenderInfo(info.gender)}
+              </Row>
+            </Col>
           </Col>
           <Col className="info-container">
-            <Row className="top-info">
-              <span style={{ fontSize: "20px", fontWeight: 700 }}>
-                {info.fullName || "--"}
-              </span>
-              {renderGenderInfo(info.gender)}
+            <Descriptions bordered title="Thông tin tài khoản">
+              <Descriptions.Item label="Ngày sinh">
+                {info.dateOfBirth || "--"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Số điện thoại">
+                {phoneNumber || "--"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Email">
+                {info?.email || "--"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Địa chỉ" span={24}>
+                {getInfoAddress() || "--"}
+              </Descriptions.Item>
+              {/* {role === Role.doctor && ( */}
+              <>
+                <Descriptions.Item label="Khoa">
+                  No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+                </Descriptions.Item>
+                <Descriptions.Item label="Chức vụ">
+                  No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+                </Descriptions.Item>
+                <Descriptions.Item label="Học vấn">
+                  No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+                </Descriptions.Item>
+              </>
+              {/* )} */}
+            </Descriptions>
+            <Row style={{ justifyContent: "center", marginTop: "20px" }}>
+              <Button type="primary" onClick={() => setOpen(true)}>
+                Chỉnh sửa thông tin
+              </Button>
             </Row>
-            <Col className="bottom-info">
-              <Row className="info-details">
-                <CalendarOutlined />
-                <span className="info-details-info">{`Ngày sinh: ${
-                  info.dateOfBirth || "--"
-                }`}</span>
-              </Row>
-              <Row className="info-details">
-                <PhoneOutlined />
-                <span className="info-details-info">{`Số điện thoại: ${
-                  phoneNumber || "--"
-                }`}</span>
-              </Row>
-              <Row className="info-details">
-                <MailOutlined />
-                <span className="info-details-info">{`Email: ${
-                  info?.email || "--"
-                }`}</span>
-              </Row>
-              <Row className="info-details">
-                <HomeOutlined />
-                <span className="info-details-info">{`Địa chỉ: ${
-                  getInfoAddress() || "--"
-                }`}</span>
-              </Row>
-              {role === Role.doctor && (
-                <>
-                  <Row className="info-details">
-                    <HomeOutlined />
-                    <span className="info-details-info">{`Khoa: ${
-                      getInfoAddress() || "--"
-                    }`}</span>
-                  </Row>
-                  <Row className="info-details">
-                    <HomeOutlined />
-                    <span className="info-details-info">{`Chức vụ: ${
-                      getInfoAddress() || "--"
-                    }`}</span>
-                  </Row>
-                  <Row className="info-details">
-                    <HomeOutlined />
-                    <span className="info-details-info">{`Học vấn: ${
-                      getInfoAddress() || "--"
-                    }`}</span>
-                  </Row>
-                </>
-              )}
-            </Col>
           </Col>
         </Col>
         {/* {role === Role.doctor && ( */}
-        <Col>
-          <Button type="primary" onClick={() => setOpen(true)}>
-            Chỉnh sửa thông tin
-          </Button>
-        </Col>
         {/* )} */}
         <Modal
           centered
