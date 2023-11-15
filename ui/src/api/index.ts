@@ -14,7 +14,9 @@ const path = {
   getAllUser: "/user/getall",
 
   manageDepartment: "",
-  getDepartment: "/department"
+  getDepartment: "/department",
+
+  getAllMedications: "/medication/getall",
 }
 
 const authApi = {
@@ -37,11 +39,15 @@ const departmentApi = {
   manageDepartment: (reqbody: any) => api.post(path.register, reqbody),
 }
 
+const medicationApi = {
+  getAll: (reqbody: any) => api.post(path.getAllMedications, reqbody),
+}
 
 
 
 export {
   authApi,
   departmentApi,
-  userApi
+  userApi,
+  medicationApi
 };

@@ -4,10 +4,11 @@ import { Appointment, Histories, ManageDepartment, Medications, Overview, Schedu
 import { routerString } from "./model/router";
 import LandingPage from "./page/LandingPage";
 import ErrorPage from "./structure/ErrorPage";
-import { ErrorPageEnum } from "./model/enum/common";
+import { AccountType, ErrorPageEnum } from "./model/enum/common";
 import ManageDoctor from "./page/ManageAccount/ManageDoctor";
 import ManageUser from "./page/ManageAccount/ManageUser";
 import ManageService from "./page/ManageService";
+import AccountDetails from "./page/ManageAccount/components/AccountDetails/AccountDetails";
 
 function Routing() {
 
@@ -21,7 +22,8 @@ function Routing() {
         <Route path={`${routerString.manageaccount}`} element={<Navigate to={`${routerString.manageaccountdoctor}`} />}/>
         <Route path={`${routerString.manageaccountdoctor}`} element={<UniformLayout page={<ManageDoctor/>}/>}/>
         <Route path={`${routerString.manageaccountuser}`} element={<UniformLayout page={<ManageUser/>}/>}/>
-        {/* <Route path={`${routerString.managemedication}`} element={<UniformLayout page={<Medications/>}/>}/> */}
+        <Route path={`${routerString.accountdetail}/:id`} element={<UniformLayout page={<AccountDetails type={AccountType.account}/>}/>}/>
+        <Route path={`${routerString.doctordetail}/:id`} element={<UniformLayout page={<AccountDetails type={AccountType.doctor}/>}/>}/>
         <Route path={`${routerString.managedepartment}`} element={<UniformLayout page={<ManageDepartment/>}/>}/>
         <Route path={`${routerString.schedule}`} element={<UniformLayout page={<Schedule/>} noBackground/>}/>
         <Route path={`${routerString.managedepartments}`} element={<UniformLayout page={<ManageDepartment/>} noBackground/>}/>

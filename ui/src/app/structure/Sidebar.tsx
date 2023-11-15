@@ -65,6 +65,17 @@ const items = (role: Role): MenuItem[] => {
   }
 }
 
+const sideBarKeys = [
+  routerString.home,
+  routerString.histories,
+  routerString.appointment,
+  routerString.schedule,
+  routerString.manageaccountdoctor,
+  routerString.manageaccountuser,
+  routerString.managedepartments,
+  routerString.managemedication,
+  routerString.manageservice
+]
 
 
 const Sidebar: React.FC = () => {
@@ -84,6 +95,18 @@ const Sidebar: React.FC = () => {
     navigate(e.key);
   };
 
+  const getSelectedKey = (currentPath: string): string[] => {
+    const arr = currentPath.split("/");
+    let key = arr.join("/");
+    let currentItem = sideBarKeys.includes(key);
+    while(!currentItem) {
+      arr.pop();
+      key = arr.join("/");
+      currentItem = sideBarKeys.includes(key);
+    }
+    return [key]
+  }
+
   return (
     <div id="main-sidebar" key={location.pathname}>
       <div className='sidebar-top'>
@@ -96,7 +119,7 @@ const Sidebar: React.FC = () => {
           onClick={onClick}
           style={{ width: 240, height: "calc(100% - 60px)" }}
           defaultOpenKeys={[`/${arrpath[0]}`]}
-          selectedKeys={[current]}
+          selectedKeys={getSelectedKey(current)}
           mode="inline"
           items={items(role!)}
           className='sidebar-menu'
