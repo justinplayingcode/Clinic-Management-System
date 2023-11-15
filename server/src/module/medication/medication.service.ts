@@ -1,5 +1,5 @@
 import { ClientSession } from "mongoose";
-import { MedicationModel } from "./medication.model";
+import { IRequestGetAllOfStaticReport, MedicationModel } from "./medication.model";
 import MedicationRepository from "./medication.repository";
 import Medication from "./medication.schema";
 import ErrorObject from "../../common/model/error";
@@ -82,4 +82,27 @@ export default class medicationService {
       throw error;
     }
   };
+  public getDataOfStaticReport = async (request: IRequestGetAllOfStaticReport) => {
+    try {
+      const medications = await this._medicationRepository.getDataOfStaticReport(
+        request.page,
+        request.pageSize,
+        request.searchByColumn,
+        request.searchKey
+      )
+      const result: any[] = [];
+      medications.forEach(medication => {
+        result.push({
+          ...medication,
+        })
+      })
+      return result;
+    } catch (error) {
+      logger("getall-mediactionservice", error?.message);
+      throw error;
+    }
+  }
+}
+function logger(arg0: string, message: any) {
+  throw new Error("Function not implemented.");
 }
