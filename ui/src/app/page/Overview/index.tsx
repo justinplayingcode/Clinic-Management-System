@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, Modal, Row } from "antd";
+import { Avatar, Button, Col, Form, Modal, Row } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
 import BasicInfoForm from "./components/BasicInfo";
@@ -19,6 +19,7 @@ import { Gender } from "../../model/enum/common";
 function Overview() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [closable, setClosable] = useState<boolean>(true);
+  const [form] = Form.useForm();
 
   const { info, phoneNumber } = useSelector((state: RootState) => state.auth);
 
@@ -61,6 +62,11 @@ function Overview() {
 
     return list.join(", ");
   };
+
+  const onCloseModel = () => {
+    setOpen(false);
+    form.resetFields();
+  }
 
   return (
     <div>
@@ -113,8 +119,8 @@ function Overview() {
         centered
         width={800}
         open={isOpen}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
+        onOk={onCloseModel}
+        onCancel={onCloseModel}
         closable={closable}
         keyboard={false}
         maskClosable={false}
@@ -124,7 +130,7 @@ function Overview() {
           <Title level={4}>Cập nhật thông tin cá nhân</Title>
         </div>
         <div>
-          <BasicInfoForm value={info} dismissForm={() => setOpen(false)} />
+          <BasicInfoForm form={form} value={info} dismissForm={onCloseModel} />
         </div>
       </Modal>
     </div>

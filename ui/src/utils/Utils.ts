@@ -1,3 +1,4 @@
+import { Role } from "../app/model/enum/auth";
 import { Gender, PositionOfDoctor, RankOfDoctor, patientRelationship } from "../app/model/enum/common";
 
 export default class Utils {
@@ -33,6 +34,19 @@ export default class Utils {
     }
   };
 
+  public static renderAccountRole = (role: Role | null) => {
+    switch (role) {
+      case Role.admin:
+        return "Quản trị viên";
+      case Role.doctor:
+        return "Bác sĩ";
+      case Role.user:
+        return "Người dùng";
+      default:
+        return "--";
+    }
+  };
+
   public static getDoctorRankText = (rank: RankOfDoctor) => {
     switch (rank) {
       case RankOfDoctor.thacSi:
@@ -56,7 +70,7 @@ export default class Utils {
         return "Trưởng khoa";
       case PositionOfDoctor.viceDean:
         return "Phó khoa";
-        case PositionOfDoctor.none:
+      case PositionOfDoctor.none:
         return "Không";
       default:
         return "";
