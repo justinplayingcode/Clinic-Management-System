@@ -20,10 +20,8 @@ import {
 import "./AccountDetails.scss";
 import { Utils } from "../../../../../utils";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { closeLoading, openLoading, showToastMessage } from "../../../../../redux/reducers";
-import { RootState } from "../../../../../redux";
-import { Role } from "../../../../model/enum/auth";
 
 type FieldType = {
   fullName?: string;
@@ -50,9 +48,6 @@ interface IAccountDetails {
 }
 
 const AccountDetails = ({ ...props }: IAccountDetails) => {
-  const { role } = useSelector(
-    (state: RootState) => state.auth
-  );
   const [isOpen, setOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
@@ -140,18 +135,6 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
     // );
   };
 
-  const onRenderRole = () => {
-    if (props.type === AccountType.doctor) {
-      return "Bác sĩ"
-    } else {
-      if (role === Role.admin) {
-        return "Quản trị viên"
-      } else {
-        return "Người dùng"
-      }
-    }
-  }
-
   const onCloseModel = () => {
     setOpen(false);
     form.resetFields();
@@ -172,7 +155,7 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
                   {Utils.getGenderText(currentAccount.gender)}
                 </Descriptions.Item>
                 <Descriptions.Item label="Vai trò">
-                  {onRenderRole()}
+                  {props.type === AccountType.doctor ? "Bác sĩ" : Utils.renderAccountRole(currentAccount.role)}
                 </Descriptions.Item>
               </Descriptions>
             </Col>

@@ -4,7 +4,7 @@ import { ICommandBarItemProps } from "@fluentui/react";
 import { useState } from "react";
 import { tooltipPlainText } from "../../../utils/basicRender";
 import { medicationApi } from "../../../api";
-import { Modal } from "antd";
+import { Button, Drawer, Flex } from "antd";
 
 function Medications() {
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -76,7 +76,15 @@ function Medications() {
     return command;
   };
 
-  const renderCreateModel = () => {
+  const onClosePanel = () => {
+    setOpen(false)
+  }
+
+  const onAddMedication = () => {
+    setOpen(false)
+  }
+
+  const renderPanel = () => {
     return (
       <>thêm thuốc</>
     )
@@ -91,19 +99,26 @@ function Medications() {
           searchByColumn={"displayName"}
           searchPlaceholder={"tên thuốc"}
       />
-      <Modal
-        centered
-        width={600}
+      <Drawer
+        title="Thêm thuốc mới"
+        width={480}
+        closable={false}
+        onClose={onClosePanel}
         open={isOpen}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
-        closable={true}
-        keyboard={false}
-        maskClosable={false}
-        footer={() => <></>}
-      >
-        {renderCreateModel()}
-      </Modal>
+        styles={{
+          body: {
+            paddingBottom: 80,
+          },
+        }}
+        footer={
+          <Flex justify="end">
+            <Button onClick={onClosePanel}>Hủy</Button>
+            <Button onClick={onAddMedication} type="primary" style={{ marginLeft: 8 }}>
+              Thêm
+            </Button>
+          </Flex>
+        }
+      >{renderPanel()}</Drawer>
     </>
   );
 }

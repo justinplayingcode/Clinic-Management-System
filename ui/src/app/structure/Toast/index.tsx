@@ -42,7 +42,7 @@ export const Toast = () => {
   const handleDismiss = useCallback(() => dispatch(closeToastMessage()), [dispatch]);
 
   useEffect(() => {
-    timerID.current = window.setTimeout(() => handleDismiss(), 5000);
+    timerID.current = window.setTimeout(() => handleDismiss(), 7000);
     return () => {
       if (timerID.current) {
         clearTimeout(timerID.current);

@@ -1,16 +1,25 @@
 import { AxiosResponse } from "axios";
 import UniformTable from "../components/table"
-import { userApi } from "../../../api";
+import { authApi, userApi } from "../../../api";
 import { ICommandBarItemProps } from "@fluentui/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
 import { tooltipPlainText } from "../../../utils/basicRender";
 import { Utils } from "../../../utils";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Button, Flex, Modal } from "antd";
+import "./index.scss";
+import { useDispatch } from "react-redux";
+import { closeLoading, openLoading, showToastMessage } from "../../../redux/reducers";
+import { toastType } from "../../model/enum/common";
 
 function ManageUser() {
   const { tableSelectedCount, tableSelectedItem } = useSelector((state: RootState) => state.currentSeleted);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [openResetPW, setOpenResetPW] = useState<boolean>(false)
 
   const column = [
     {
@@ -82,7 +91,12 @@ function ManageUser() {
           key: 'edit',
           text: 'Thông tin tài khoản',
           iconProps: { iconName: 'ContactInfo' },
-          onClick: () => { navigate(`/manageaccount/user/detail/${tableSelectedItem[0]?.accountId}`) },
+          onClick: () => { navigate(`/manageaccount/user/detail/${tableSelectedItem[0]?._id}`) },
+      }, {
+        key: 'resetpw',
+        text: 'Đặt lại mật khẩu',
+        iconProps: { iconName: 'Signin' },
+        onClick: () => setOpenResetPW(true),
       })
     };
     command.push({
@@ -94,6 +108,38 @@ function ManageUser() {
     return command;
   }
 
+  const onResetPassword = () => {
+    dispatch(openLoading());
+    authApi.resetpassword({ id: tableSelectedItem[0]?.accountId })
+      .then((result: any) => {
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Đặt lại mật khẩu thành công, mật khẩu đặt lại: 1234567",
+              type: toastType.succes,
+            })
+          );
+          setOpenResetPW(false);
+        } else {
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        }
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
+  }
+
   const integrateItems = (reqbody: any): Promise<AxiosResponse<any, any>> => {
     const body = {
       ...reqbody,
@@ -101,7 +147,22 @@ function ManageUser() {
     return userApi.manageUser(body);
   }
 
+  const renderResetPWModal = (): JSX.Element => {
+    return (
+      <div className="modal-reset-pw">
+        <div className="modal-reset-pw-title">
+          Đặt lại mật khẩu cho tài khoản <span>{`${tableSelectedItem[0]?.phoneNumber}`}</span>
+        </div>
+        <Flex gap="small" wrap="wrap" className="modal-reset-pw-button" justify="end">
+          <Button type="primary" onClick={onResetPassword}>Xác nhận</Button>
+          <Button onClick={() => setOpenResetPW(false)}>Hủy</Button>
+        </Flex>
+      </div>
+    )
+  }
+
   return (  
+    <>
     <UniformTable 
       columns={column} 
       commandBarItems={commandBar()} 
@@ -109,6 +170,21 @@ function ManageUser() {
       searchByColumn={"fullName"}
       searchPlaceholder="tên"
     />
+    <Modal
+      centered
+      title="Xác nhận"
+      width={400}
+      open={openResetPW}
+      onOk={() => setOpenResetPW(false)}
+      onCancel={() => setOpenResetPW(false)}
+      closable={true}
+      keyboard={false}
+      maskClosable={false}
+      footer={() => <></>}
+    >
+      {renderResetPWModal()}
+    </Modal>
+    </>
   );
 }
 

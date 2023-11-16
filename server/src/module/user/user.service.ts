@@ -48,7 +48,18 @@ export default class UserService {
 
   public findById = async (id) => {
     try {
-      return await this._userRepository.findById(id);
+      const user = await this._userRepository.findById(id);
+      const { accountId, email, avatar, fullName, gender, address, dateOfBirth, phoneNumber } = user;
+      return {
+        fullName,
+        gender,
+        email,
+        avatar,
+        address, 
+        phoneNumber,
+        dateOfBirth: MomentTimezone.convertDDMMYYY(dateOfBirth),
+        accountId
+      }
     } catch (error) {
       logger("38-userservice", error?.message);
       throw error;

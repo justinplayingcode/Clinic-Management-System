@@ -234,7 +234,7 @@ export default class AccountController {
 
   //POST
   public resetPassword = async (req, res, next) => {
-    const verifyReq = validateReqBody(req, ["accountId"]);
+    const verifyReq = validateReqBody(req, ["id"]);
     if (!verifyReq.pass) {
       const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "resetPassword verify reqbody");
       return next(err)
@@ -247,7 +247,7 @@ export default class AccountController {
           logger("resetPassword-hashpw-accountController", "Lỗi");
           return next(err);
         } else {
-          await this._accountService.findByIdAndUpdate(req.body.accountId, { password: hashpw }, session );
+          await this._accountService.findByIdAndUpdate(req.body.id, { password: hashpw }, session );
           await session.commitTransaction();
           session.endSession();
           const _res: IBaseRespone = {

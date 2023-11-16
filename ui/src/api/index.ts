@@ -6,13 +6,15 @@ const path = {
   getCheckCurrentUser: "/auth",
   getInfoCurrentUser: "/auth/user",
   changepassword: "/auth/changepassword",
+  resetpassword: "/auth/resetpw",
   register: "/auth/register",
   registerDoctor: "/doctor/register",
 
   updateInfo: "/user/update", 
   getAllDoctor: "/doctor",
-  getDoctorInfo: "doctor/detail",
+  getDoctorInfo: "/doctor/detail",
   getAllUser: "/user/getall",
+  getUserInfo: "/user/detail",
 
   manageDepartment: "",
   getDepartment: "/department",
@@ -25,6 +27,7 @@ const authApi = {
   getCheckCurrentUser: () => api.get(path.getCheckCurrentUser),
   getInfoCurrentUser: () => api.get(path.getInfoCurrentUser),
   changepassword: (reqbody: any) => api.put(path.changepassword, reqbody),
+  resetpassword: (reqbody: any) => api.put(path.resetpassword, reqbody),
   register: (reqbody: any) => api.post(path.register, reqbody),
   registerDoctor: (reqbody: any) => api.post(path.registerDoctor, reqbody),
 }
@@ -34,7 +37,7 @@ const userApi = {
   manageUser: (reqbody: any) => api.post(path.getAllUser, reqbody),
   manageDoctor: (reqbody: any) => api.post(path.getAllDoctor, reqbody),
   doctorInfo: (query: string) => api.get(`${path.getDoctorInfo}?id=${query}`),
-  accoutInfo: (query: string) => api.get(`${path.getDoctorInfo}?id=${query}`),
+  accoutInfo: (query: string) => api.get(`${path.getUserInfo}?id=${query}`),
 }
 
 const departmentApi = {
