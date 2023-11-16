@@ -5,12 +5,16 @@ import ErrorObject from "../../common/model/error";
 import { ApiStatus, ApiStatusCode } from "../../common/enum/apiStatusCode";
 import { UpdateInfoRequest, IUserModelUpdate } from "./user.model";
 import Validate from "../../common/utils/validate.utils";
+import { IBaseRespone } from "../../common/model/responese";
+import AccountService from "../account/account.service";
 
 export default class UserController {
   private _userService;
+  private _accountService;
 
   constructor() {
     this._userService = new UserService();
+    this._accountService = new AccountService();
   }
 
   //POST
@@ -66,4 +70,21 @@ export default class UserController {
       next(error);
     }
   };
+
+  public getInfoById = async (req, res, next) => {
+    const { id } = req.query;
+    try {
+      const user = await this._userService.findById(id);
+      const { role } = await this._accountService.findById(user?.accountId);
+      const _res: IBaseRespone = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: { ...user, role: role },
+      };
+      res.status(ApiStatusCode.OK).json(_res);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

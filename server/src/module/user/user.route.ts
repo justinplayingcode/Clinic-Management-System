@@ -9,6 +9,7 @@ const userController = new UserController();
 const accountController = new AccountController();
 
 userRoute.route("/update").post(middlewares.verifyToken, userController.updateInfo);
-userRoute.route("/getall").post(accountController.getAllUser);
+userRoute.route("/getall").post(middlewares.verifyToken, accountController.getAllUser);
+userRoute.route("/detail").get(middlewares.verifyToken, userController.getInfoById);
 
 export default userRoute;

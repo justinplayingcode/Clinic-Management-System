@@ -143,6 +143,10 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
     callApiWard(`${host}d/${district.value}?depth=2`);
   }, [district]);
 
+  useEffect(() => {
+    form.resetFields();
+  }, [value])
+
   const onFinish = (values: any) => {
     values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
     values["city"] = values.city.label;

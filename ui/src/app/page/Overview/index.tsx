@@ -130,7 +130,7 @@ function Overview() {
           <Title level={4}>Cập nhật thông tin cá nhân</Title>
         </div>
         <div>
-          <BasicInfoForm form={form} value={info} dismissForm={onCloseModel} />
+          <BasicInfoForm form={form} value={info} dismissForm={onCloseModel}/>
         </div>
       </Modal>
     </div>
