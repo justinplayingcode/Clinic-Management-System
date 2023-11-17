@@ -10,5 +10,5 @@ export {
   Histories,
   Appointment, Schedule,
   ManageDepartment,
-  Medications
-}
+  Medications,
+};

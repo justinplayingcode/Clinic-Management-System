@@ -1,7 +1,9 @@
+import Services from "./components/Services";
+
 function ManageService() {
-  return (  
+  return (
     <>
-      manageservice
+      <Services />
     </>
   );
 }
