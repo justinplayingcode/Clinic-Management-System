@@ -121,13 +121,6 @@ function Department() {
   const renderManageButton = () => {
     return (
       <Row>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setAddEit({ open: true, isEdit: false })}
-        >
-          Thêm
-        </Button>
         {selectItem && (
           <Button
             icon={<EditOutlined />}
@@ -139,6 +132,13 @@ function Department() {
             Sửa
           </Button>
         )}
+        <Button
+          icon={<PlusOutlined />}
+          style={{ marginLeft: 8}}
+          onClick={() => setAddEit({ open: true, isEdit: false })}
+        >
+          Thêm
+        </Button>
       </Row>
     );
   };
