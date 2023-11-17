@@ -285,8 +285,14 @@ function Schedule() {
             )}
           </Col>
         </Col>
-        <Col className="details-section">
-          <Col className="top-details">
+        <Col
+          className="details-section"
+          style={{ height: !selectItem ? "100%" : "" }}
+        >
+          <Col
+            className="top-details"
+            style={{ height: !selectItem ? "100%" : "" }}
+          >
             <Title level={4}>Chi tiết lịch hẹn</Title>
             {!selectItem ? (
               <Row style={{ justifyContent: "center", marginTop: "80px" }}>

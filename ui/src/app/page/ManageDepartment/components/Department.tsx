@@ -1,5 +1,10 @@
-import { RightOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Col, Empty, Row } from "antd";
+import {
+  EditOutlined,
+  PlusOutlined,
+  RightOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { Avatar, Button, Col, Empty, Form, Input, Modal, Row } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
@@ -17,6 +22,14 @@ interface ISelectOption {
 function Department() {
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
   const [selectItem, setSelectItem] = useState<ISelectOption>();
+  const [isOpenAddEit, setAddEit] = useState<{
+    open: boolean;
+    isEdit: boolean;
+  }>({
+    open: false,
+    isEdit: false,
+  });
+  const [departmentInputValue, setInputValue] = useState<string>("");
 
   const callApiDepartment = () => {
     return departmentApi.getDepartmentList().then((response) => {
@@ -105,11 +118,52 @@ function Department() {
     );
   };
 
+  const renderManageButton = () => {
+    return (
+      <Row>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setAddEit({ open: true, isEdit: false })}
+        >
+          Thêm
+        </Button>
+        {selectItem && (
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => {
+              setAddEit({ open: true, isEdit: true });
+              setInputValue(selectItem.label);
+            }}
+          >
+            Sửa
+          </Button>
+        )}
+      </Row>
+    );
+  };
+
+  const handleSubmitAddEdit = () => {
+    setAddEit({ open: false, isEdit: false });
+    // api goes here
+    console.log(departmentInputValue);
+    setInputValue("");
+  };
+
+  const handleCancelAddEdit = () => {
+    setAddEit({ open: false, isEdit: false });
+
+    setInputValue("");
+  };
+
   return (
     <>
-      <Row className="appointmentList-container">
+      <Row className="departmentList-container">
         <Col className="list-section">
-          <Title level={4}>Danh sách khoa</Title>
+          <Row style={{ justifyContent: "space-between" }}>
+            <Title level={4}>Danh sách khoa</Title>
+            {renderManageButton()}
+          </Row>
           <Paragraph>
             Vui lòng chọn một trong các lịch hẹn có sẵn để xem chi tiết
           </Paragraph>
@@ -143,6 +197,17 @@ function Department() {
             )}
           </Col>
         </Col>
+        <Modal
+          title={isOpenAddEit.isEdit ? "Sửa khoa" : "Thêm khoa"}
+          open={isOpenAddEit.open}
+          onOk={handleSubmitAddEdit}
+          onCancel={handleCancelAddEdit}
+        >
+          <Input
+            value={departmentInputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        </Modal>
       </Row>
     </>
   );
