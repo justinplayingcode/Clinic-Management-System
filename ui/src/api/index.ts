@@ -20,6 +20,8 @@ const path = {
   getDepartment: "/department",
 
   getAllMedications: "/medication/getall",
+  createlMedications: "/medication/create",
+  updateMedications: "/medication/update",
 }
 
 const authApi = {
@@ -47,6 +49,8 @@ const departmentApi = {
 
 const medicationApi = {
   getAll: (reqbody: any) => api.post(path.getAllMedications, reqbody),
+  createlMedications: (reqbody: any) => api.post(path.createlMedications, reqbody),
+  updateMedications: (reqbody: any) => api.post(path.updateMedications, reqbody),
 }
 
 

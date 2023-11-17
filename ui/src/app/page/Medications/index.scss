@@ -1,0 +1,13 @@
+#medication-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .button {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: end;
+    margin: 0;
+  }
+}

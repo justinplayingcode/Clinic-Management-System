@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import MedicationController from './mediaction.controller';
+import MedicationController from './medication.controller';
 import middlewares from '../../middlewares';
 import { Role } from '../../common/enum/permission';
 const medicationRoute = Router();

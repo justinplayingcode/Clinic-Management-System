@@ -4,7 +4,7 @@ import ErrorObject from "../../common/model/error";
 import { IBaseRespone } from "../../common/model/responese";
 import validateReqBody from "../../common/utils/request.utils";
 import medicationService from "./medication.service";
-import { IRequestGetAllOfStaticReport, typeMedicationRequest } from "./medication.model";
+import { IRequestGetAllOfStaticReport, typeMedicationRequest, typeMedicationUpdateRequest } from "./medication.model";
 import { StaticReportRequestFields } from "../../common/model/request";
 
 export default class MedicationController {
@@ -44,7 +44,6 @@ export default class MedicationController {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
@@ -57,7 +56,7 @@ export default class MedicationController {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const verifyReq = validateReqBody(req, typeMedicationRequest);
+      const verifyReq = validateReqBody(req, typeMedicationUpdateRequest);
       if (!verifyReq.pass) {
         const err: any = new ErrorObject(
           verifyReq.message,
@@ -72,7 +71,7 @@ export default class MedicationController {
         usage: req.body.usage,
         price: req.body.price,
       };
-      const Id = req.body._id;
+      const Id = req.body.id;
 
       await this._MedicationService.updateMedicationService(
         Id,

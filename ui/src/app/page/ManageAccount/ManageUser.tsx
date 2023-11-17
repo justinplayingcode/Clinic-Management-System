@@ -23,14 +23,14 @@ function ManageUser() {
 
   const column = [
     {
-        key: 'name',
-        name: 'Họ và tên',
-        minWidth: 80,
-        maxWidth: 180,
-        isResizable: true,
-        onRender: (item: any) => {
-            return <span>{tooltipPlainText(item.fullName)}</span>;
-        },
+      key: 'name',
+      name: 'Họ và tên',
+      minWidth: 80,
+      maxWidth: 180,
+      isResizable: true,
+      onRender: (item: any) => {
+          return <span>{tooltipPlainText(item.fullName)}</span>;
+      },
     },
     {
       key: 'gender',
@@ -53,20 +53,20 @@ function ManageUser() {
       },
     },
     {
-        key: 'phoneNumber',
-        name: 'Số điện thoại',
-        minWidth: 80,
-        maxWidth: 150,
-        isResizable: true,
-        onRender: (item: any) => {
-            return <span>{tooltipPlainText(item.phoneNumber)}</span>;
-        },
+      key: 'phoneNumber',
+      name: 'Số điện thoại',
+      minWidth: 80,
+      maxWidth: 150,
+      isResizable: true,
+      onRender: (item: any) => {
+          return <span>{tooltipPlainText(item.phoneNumber)}</span>;
+      },
     },
     {
       key: 'address',
       name: 'Địa chỉ',
-      minWidth: 70,
-      maxWidth: 90,
+      minWidth: 150,
+      maxWidth: 300,
       isResizable: true,
       onRender: (item: any) => {
         return <span>{tooltipPlainText(item.address)}</span>;
