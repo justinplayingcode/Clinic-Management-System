@@ -146,13 +146,6 @@ function Services() {
   const renderManageButton = () => {
     return (
       <Row>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setAddEit({ open: true, isEdit: false })}
-        >
-          Thêm
-        </Button>
         {selectItem && (
           <Button
             icon={<EditOutlined />}
@@ -168,6 +161,13 @@ function Services() {
             Sửa
           </Button>
         )}
+        <Button
+          style={{ marginLeft: 8 }}
+          icon={<PlusOutlined />}
+          onClick={() => setAddEit({ open: true, isEdit: false })}
+        >
+          Thêm
+        </Button>
       </Row>
     );
   };
@@ -267,7 +267,7 @@ function Services() {
             >
               <Select
                 options={[
-                  { value: ServiceType.Basic, label: "Thông thường" },
+                  { value: ServiceType.Basic, label: "Khám bệnh" },
                   { value: ServiceType.Other, label: "Khác" },
                 ]}
               ></Select>

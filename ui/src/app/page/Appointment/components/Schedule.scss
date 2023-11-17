@@ -7,7 +7,7 @@
     height: 100%;
     border-radius: 12px;
     background: #fff;
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+    border: 1px solid #ccc;
     padding: 20px 27px;
     .list-container {
       display: flex;
@@ -17,8 +17,7 @@
         border-radius: 8px;
         border: 1px solid #ccc;
         background: #fff;
-        box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
-
+        border: 1px solid #ccc;
         align-items: center;
         padding: 12px 20px;
         gap: 16px;
@@ -41,7 +40,7 @@
     .top-details {
       border-radius: 12px;
       background: #fff;
-      box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+      border: 1px solid #ccc;
       padding: 20px 27px;
       min-height: 550px;
       .details-container {
