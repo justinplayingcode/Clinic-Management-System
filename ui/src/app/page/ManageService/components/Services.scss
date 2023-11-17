@@ -1,10 +1,9 @@
-.departmentList-container {
+.serviceList-container {
   gap: 24px;
   align-items: start;
   height: 100%;
-  flex-flow: row nowrap;
   .list-section {
-    width: 30%;
+    width: 40%;
     height: 100%;
     border-radius: 12px;
     background: #fff;
@@ -37,7 +36,8 @@
     }
   }
   .details-section {
-    width: 70%;
+    flex: 1;
+    width: 60%;
     height: 100%;
     .top-details {
       border-radius: 12px;
