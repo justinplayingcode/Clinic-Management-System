@@ -15,6 +15,7 @@ export const MedicationField = {
   usage: "usage",
   price: "price",
   isActive: "isActive",
+  id: "id"
 };
 
 export const typeMedicationRequest = [
@@ -22,7 +23,14 @@ export const typeMedicationRequest = [
   MedicationField.designation,
   MedicationField.usage,
   MedicationField.price,
-  MedicationField.isActive,
+];
+
+export const typeMedicationUpdateRequest = [
+  MedicationField.id,
+  MedicationField.displayName,
+  MedicationField.designation,
+  MedicationField.usage,
+  MedicationField.price,
 ];
 export interface IRequestGetAllOfStaticReport {
   page: number,
