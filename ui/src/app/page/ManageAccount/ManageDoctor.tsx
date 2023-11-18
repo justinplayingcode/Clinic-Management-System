@@ -10,6 +10,99 @@ import { RootState } from "../../../redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+const column = [
+  {
+    key: "name",
+    name: "Họ và tên",
+    minWidth: 80,
+    maxWidth: 180,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.fullName)}</span>;
+    },
+  },
+  {
+    key: "departmentName",
+    name: "Khoa",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.departmentName)}</span>;
+    },
+  },
+  {
+    key: "rank",
+    name: "Học vấn",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getDoctorRankText(item.rank)}</span>;
+    },
+  },
+  {
+    key: "position",
+    name: "Vai trò",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getDoctorPositionText(item.position)}</span>;
+    },
+  },
+  {
+    key: "phoneNumber",
+    name: "Số điện thoại",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.phoneNumber)}</span>;
+    },
+  },
+  {
+    key: "email",
+    name: "Email",
+    minWidth: 100,
+    maxWidth: 160,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.email)}</span>;
+    },
+  },
+  {
+    key: "gender",
+    name: "Giới tính",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getGenderText(item.gender)}</span>;
+    },
+  },
+  {
+    key: "dob",
+    name: "Ngày sinh",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.dateOfBirth)}</span>;
+    },
+  },
+  {
+    key: "address",
+    name: "Địa chỉ",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.address)}</span>;
+    },
+  },
+];
+
 function ManageDoctor() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const { tableSelectedCount, tableSelectedItem } = useSelector(
@@ -17,98 +110,6 @@ function ManageDoctor() {
   );
   const navigate = useNavigate();
 
-  const departmentColumn = [
-    {
-      key: "name",
-      name: "Họ và tên",
-      minWidth: 80,
-      maxWidth: 180,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{tooltipPlainText(item.fullName)}</span>;
-      },
-    },
-    {
-      key: "departmentName",
-      name: "Khoa",
-      minWidth: 80,
-      maxWidth: 150,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{tooltipPlainText(item.departmentName)}</span>;
-      },
-    },
-    {
-      key: "rank",
-      name: "Học vấn",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{Utils.getDoctorRankText(item.rank)}</span>;
-      },
-    },
-    {
-      key: "position",
-      name: "Vai trò",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{Utils.getDoctorPositionText(item.position)}</span>;
-      },
-    },
-    {
-      key: "phoneNumber",
-      name: "Số điện thoại",
-      minWidth: 80,
-      maxWidth: 150,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{tooltipPlainText(item.phoneNumber)}</span>;
-      },
-    },
-    {
-      key: "email",
-      name: "Email",
-      minWidth: 100,
-      maxWidth: 160,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{tooltipPlainText(item.email)}</span>;
-      },
-    },
-    {
-      key: "gender",
-      name: "Giới tính",
-      minWidth: 80,
-      maxWidth: 150,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{Utils.getGenderText(item.gender)}</span>;
-      },
-    },
-    {
-      key: "dob",
-      name: "Ngày sinh",
-      minWidth: 80,
-      maxWidth: 150,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{tooltipPlainText(item.dateOfBirth)}</span>;
-      },
-    },
-    {
-      key: "address",
-      name: "Địa chỉ",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{tooltipPlainText(item.address)}</span>;
-      },
-    },
-  ];
 
   const integrateItems = (reqbody: any): Promise<AxiosResponse<any, any>> => {
     const body = {
@@ -145,7 +146,7 @@ function ManageDoctor() {
   return (
     <>
       <UniformTable
-        columns={departmentColumn}
+        columns={column}
         commandBarItems={commandBar()}
         integrateItems={integrateItems}
         searchByColumn={"fullName"}

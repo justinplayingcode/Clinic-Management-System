@@ -5,11 +5,16 @@ import { IBaseRespone } from "../../common/model/responese";
 import validateReqBody from "../../common/utils/request.utils";
 import { departmentRequest } from "./department.model";
 import departmentService from "./department.service";
+import { StaticReportRequestFields } from "../../common/model/request";
+import { IRequestGetAllOfStaticReport } from "../user/user.model";
+import DoctorService from "../doctor/doctor.service";
 
 export default class DepartmentController {
   private _DepartmentService;
+  private _doctorService;
   constructor() {
     this._DepartmentService = new departmentService();
+    this._doctorService = new DoctorService();
   }
 
   public CreateDepartment = async (req, res, next) => {
@@ -45,7 +50,6 @@ export default class DepartmentController {
     }
   };
   public updateDepartment = async (req, res, next) => {
-    // const Id = req.params.id;
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
@@ -61,7 +65,7 @@ export default class DepartmentController {
       const newDepartment = {
         displayName: req.body.displayName,
       };
-      const Id = req.body._id;
+      const Id = req.body.id;
       await this._DepartmentService.updateDepartment(
         Id,
         newDepartment,
@@ -74,7 +78,6 @@ export default class DepartmentController {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
@@ -117,6 +120,34 @@ export default class DepartmentController {
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
       next(error);
+    }
+  }
+
+  public getDoctorInDepartment = async (req, res, next) => {
+    const verifyReq = validateReqBody(req, StaticReportRequestFields);
+    let _res: IBaseRespone;
+    if (!verifyReq.pass) {
+      const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "getAllAccount verify reqbody");
+      return next(err)
+    }
+    try {
+      const param: IRequestGetAllOfStaticReport = {
+        page: req.body.page,
+        pageSize: req.body.pageSize,
+        searchByColumn: req.body.searchByColumn,
+        searchKey: req.body.searchKey,
+        conditions: { departmentId: req.body.id }
+      }
+      const result = await this._doctorService.getAll(param);
+      _res = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: result,
+      }
+      res.status(ApiStatusCode.OK).json(_res)
+    } catch (error) {
+      next(error)
     }
   }
 }

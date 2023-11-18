@@ -1,3 +1,4 @@
+import fields from "../../common/constant/fields";
 import { BaseModel } from "../../common/model/common";
 
 export interface DepartmentModel extends BaseModel {
@@ -11,5 +12,10 @@ export const departmentField = {
 }
 
 export const departmentRequest = [
+  departmentField.displayName,
+]
+
+export const departmentUpdateRequest = [
+  fields.id,
   departmentField.displayName,
 ]

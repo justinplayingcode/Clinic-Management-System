@@ -4,13 +4,14 @@ export interface ScheduleModel extends BaseModel {
   doctorId: string;
   patientId: string;
   departmentId: string;
+  accountId: string;
   appointmentDate: Date;
   appointmentHour: string;
-  approve: number;
   initialSymptom: string;
-  statusAppointment: number;
+  status: number;
   typeAppointmentId: string;
   statusUpadteTime: Date;
+  cancellationReason: string;
 }
 
 export enum TimeFrame {

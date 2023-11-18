@@ -81,24 +81,26 @@ export default class DoctorService {
     try {
       const doctors = await this._doctorRepository.getDoctorOfStaticReport(page, pageSize, searchByColumn, searchKey, conditions);
       const result = doctors.map(doctor => {
-        let { accountId, _id: userId, email, avatar, fullName, gender, address, dateOfBirth, phoneNumber  } = doctor.userId;
-        return {
-          doctorId: doctor._id,
-          rank: doctor.rank,
-          position: doctor.position,
-          departmentName: doctor.departmentId.displayName,
-          accountId,
-          userId,
-          email,
-          avatar,
-          fullName,
-          gender,
-          address,
-          dateOfBirth: MomentTimezone.convertDDMMYYY(dateOfBirth),
-          phoneNumber
+        if (doctor.userId) {
+          let { accountId, _id: userId, email, avatar, fullName, gender, address, dateOfBirth, phoneNumber  } = doctor.userId;
+          return {
+            doctorId: doctor._id,
+            rank: doctor.rank,
+            position: doctor.position,
+            departmentName: doctor.departmentId.displayName,
+            accountId,
+            userId,
+            email,
+            avatar,
+            fullName,
+            gender,
+            address,
+            dateOfBirth: MomentTimezone.convertDDMMYYY(dateOfBirth),
+            phoneNumber
+          }
         }
       })
-      return result
+      return result.filter(i => i)
     } catch (error) {
       logger("getAll-doctorservice", error?.message);
       throw error;
