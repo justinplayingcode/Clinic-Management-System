@@ -47,16 +47,17 @@ const items = (role: Role): MenuItem[] => {
       return [
         getItem(mappingRouter[routerString.home], `${routerString.home}`, <HomeOutlined />),
         getItem("Quản lý lịch hẹn", `${routerString.schedule}`, <ScheduleOutlined />),
-        getItem(mappingRouter[routerString.managemedication], `${routerString.managemedication}`, <PlusSquareOutlined />),
         getItem(mappingRouter[routerString.appointment], `${routerString.appointment}`, <MedicineBoxOutlined />),
         getItem(mappingRouter[routerString.histories], `${routerString.histories}`, <FileSearchOutlined />),
+        getItem(mappingRouter[routerString.managemedication], `${routerString.managemedication}`, <PlusSquareOutlined />),
       ]
     default:
       return [
         getItem(mappingRouter[routerString.home], `${routerString.home}`, <HomeOutlined />),
         getItem(mappingRouter[routerString.schedule], `${routerString.schedule}`, <CalendarOutlined />),
-        getItem(mappingRouter[routerString.appointment], `${routerString.appointment}`, <MedicineBoxOutlined />),
+        getItem("Đặt lịch khám bệnh", `${routerString.appointment}`, <MedicineBoxOutlined />),
         getItem(mappingRouter[routerString.histories], `${routerString.histories}`, <FileSearchOutlined />),
+        getItem(mappingRouter[routerString.managemedication], `${routerString.managemedication}`, <PlusSquareOutlined />),
       ]
   }
 }

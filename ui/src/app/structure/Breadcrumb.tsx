@@ -1,6 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 import { mappingRouter, routerString } from '../model/router';
+import { RootState } from '../../redux';
+import { useSelector } from 'react-redux';
+import { Role } from '../model/enum/auth';
 
 const breadcrumbNameMap: Record<string, string> = {
   [routerString.home]: mappingRouter[routerString.home],
@@ -22,6 +25,7 @@ const firstMenu = [
 ]
 
 const UniformBreadcrumb = () => {
+  const { role } = useSelector((state: RootState) => state.auth);
   const location = useLocation();
   const pathSnippets = location.pathname.split('/').filter((i) => i);
   const extraBreadcrumbItems = pathSnippets.map((_, index) => {
@@ -37,6 +41,9 @@ const UniformBreadcrumb = () => {
   });
   const _extraBreadcrumbItems = extraBreadcrumbItems.filter(i => i.key);
   _extraBreadcrumbItems[_extraBreadcrumbItems.length - 1].title = _extraBreadcrumbItems[_extraBreadcrumbItems.length - 1].key as any;
+  if (role === Role.user && _extraBreadcrumbItems[_extraBreadcrumbItems.length - 1].key === mappingRouter[routerString.appointment]) {
+    _extraBreadcrumbItems[_extraBreadcrumbItems.length - 1].title = <>Đặt lịch khám bệnh</>
+  }
 
   return (
     <Breadcrumb items={_extraBreadcrumbItems} style={{ height: 60, padding: 20, fontSize: 16 }} />

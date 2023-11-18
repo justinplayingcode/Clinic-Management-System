@@ -111,5 +111,15 @@
           justify-content: center;
           height: 60px;
       }
+      .details-list-no-selection {
+        .ms-DetailsHeader {
+          padding-left: 40px;
+        }
+        .ms-DetailsList-contentWrapper {
+          .ms-DetailsRow-fields {
+            padding-left: 40px;
+          }
+        }
+      }
   }
 }

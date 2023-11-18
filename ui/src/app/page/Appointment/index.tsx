@@ -13,7 +13,6 @@ import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import {
   genderList,
   host,
@@ -72,7 +71,7 @@ const defaultSelectOption: ISelectOption = {
 function Appointment() {
   const [form] = Form.useForm();
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [city, setCity] = useState<ISelectOption>({
     value: "",
@@ -161,21 +160,19 @@ function Appointment() {
     console.log("Failed:", errorInfo);
   };
   return (
-    <div>
-      Appointment
+    <>
+      <div className="appointment-form-title">Thông tin đăng ký khám bệnh</div>
       <Form
         form={form}
         name="basic"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         layout={"vertical"}
-        // style={{ maxWidth: 800 }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
-        //  initialValues={_initialValues(value)}
       >
-        <Col style={{ padding: "32px" }}>
+        <Col style={{ padding: "0 32px" }}>
           <Col>
             <Row className="form-section-title">
               <Text strong>Thông tin bệnh nhân</Text>
@@ -430,7 +427,7 @@ function Appointment() {
           </Form.Item>
         </Col>
       </Form>
-    </div>
+    </>
   );
 }
 

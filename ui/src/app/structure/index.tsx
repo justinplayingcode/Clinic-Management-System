@@ -13,10 +13,11 @@ import { closeLoading, openLoading, setInfoUser, setPhoneNumber, setRole, userLo
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { routerString } from "../model/router";
 import { Role } from "../model/enum/auth";
-import { Avatar, Dropdown } from "antd";
+import { Avatar, Dropdown, Form, Modal } from "antd";
 import { MdLogout } from "react-icons/md";
-import { UserOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { ApiStatusCode } from "../model/enum/apiStatus";
+import ChangePassword from "./ChangePassword";
 
 interface IUniformLayoutProps {
   page: JSX.Element;
@@ -28,11 +29,13 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
   const { phoneNumber, role } = useSelector((state: RootState) => state.auth);
   const { isLoading } = useSelector((state: RootState) => state.loading);
   const { isShow } = useSelector((state: RootState) => state.toast);
+  const [form] = Form.useForm();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
   const [loading, setLoading] = useState<boolean>(true);
+  const [openCPW, setOpenCPW] = useState<boolean>(false);
 
   useEffect(() => {
     if(!localStorage.getItem('accessToken')) {
@@ -70,12 +73,18 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
     }, 1000)
   }
 
+  const closeModalCPW = () => {
+    setOpenCPW(false)
+    form.resetFields();
+  }
+
   const renderContent = () => {
       const { page, permission, noBackground } = props;
       const colorList = ['#FF007F', '#1B4D3E', '#002244'];
       const userList = ['Doctor', 'User', 'Admin'];
       const items = [
         { key: 'accountinformation', label: <Link to={routerString.home}> <UserOutlined /> &nbsp; Thông tin cá nhân</Link> },
+        { key: 'accountchangepassword', label: <div style={{ display: "flex", alignItems: "center"}} onClick={() => setOpenCPW(true)}><LockOutlined /> &nbsp; Đổi mật khẩu</div> },
         { key: 'accountlogout', label: <div style={{ display: "flex", alignItems: "center"}} onClick={logOut}><MdLogout/> &ensp; Đăng xuất</div>},
       ]
 
@@ -100,6 +109,16 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
                 </Avatar>
               </Dropdown>
             </div>
+            <Modal
+              className="changepw-modal"
+              title="Đổi mật khẩu"
+              open={openCPW}
+              footer={() => <></>}
+              onCancel={closeModalCPW}
+              maskClosable={false}
+            >
+              <ChangePassword form={form} onCloes={closeModalCPW}/>
+            </Modal>
           </div>
           <div className="layout-wrapper">
             <div className="main-wrapper" style={noBackground ? {} : styleMainWrapper}>

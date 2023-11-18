@@ -24,7 +24,7 @@ api.interceptors.response.use((response) => {
       if (status === ApiStatusCode.Forbidden) {
         window.open(`/#${routerString.Forbidden}`, "_self")
       }
-    return Promise.reject(error);
+    return Promise.reject(error?.response?.data);
   }
 );
 

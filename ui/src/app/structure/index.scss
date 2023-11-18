@@ -48,3 +48,30 @@
     }
   }
 }
+
+#changepw-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 12px 0;
+  .ant-modal-footer {
+    margin: 0;
+  }
+  .button {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: end;
+    margin: 0;
+  }
+}
+
+.changepw-modal {
+  .ant-modal-content {
+    padding-bottom: 4px;
+    .ant-modal-footer {
+      display: none;
+    }
+  }
+}

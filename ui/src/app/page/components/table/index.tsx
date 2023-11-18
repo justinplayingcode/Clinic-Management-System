@@ -24,6 +24,7 @@ export interface IUniformTableOwnProps {
     integrateItems: (requestBody: any) => Promise<any>;
     searchByColumn: string;
     searchPlaceholder: string;
+    noSelected?: boolean;
 }
 
 export interface  IUniformTablePropsFromState {
@@ -199,7 +200,7 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
                             </div>
                         </div>
                     </div>
-                    <div className='details-list-wrapper' ref={this._detailListRef}>
+                    <div className={`details-list-wrapper ${this.props.noSelected ? "details-list-no-selection" : ""}`} ref={this._detailListRef}>
                         <MarqueeSelection selection={this._selection}>
                           {
                             isLoading ? 
@@ -213,7 +214,7 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
                             <DetailsList
                               items={items}
                               columns={columns}
-                              selectionMode={SelectionMode.single}
+                              selectionMode={this.props.noSelected ? SelectionMode.none : SelectionMode.single}
                               setKey="single"
                               layoutMode={DetailsListLayoutMode.justified}
                               constrainMode={ConstrainMode.unconstrained}
