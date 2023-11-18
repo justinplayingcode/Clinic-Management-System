@@ -2,9 +2,8 @@ import {
   EditOutlined,
   PlusOutlined,
   RightOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Col, Empty, Form, Input, Modal, Row } from "antd";
+import { Button, Col, Empty, Input, Modal, Row } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
@@ -13,11 +12,99 @@ import { useEffect, useState } from "react";
 import { departmentApi } from "../../../../api";
 import UniformTable from "../../components/table";
 import "./Department.scss";
+import { tooltipPlainText } from "../../../../utils/basicRender";
+import { Utils } from "../../../../utils";
+import { useDispatch } from "react-redux";
+import { closeLoading, openLoading, showToastMessage } from "../../../../redux/reducers";
+import { toastType } from "../../../model/enum/common";
 
 interface ISelectOption {
   value: string;
   label: string;
 }
+
+const columns = [
+  {
+    key: "name",
+    name: "Họ và tên",
+    minWidth: 80,
+    maxWidth: 180,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.fullName)}</span>;
+    },
+  },
+  {
+    key: "rank",
+    name: "Học vấn",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getDoctorRankText(item.rank)}</span>;
+    },
+  },
+  {
+    key: "position",
+    name: "Vai trò",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getDoctorPositionText(item.position)}</span>;
+    },
+  },
+  {
+    key: "phoneNumber",
+    name: "Số điện thoại",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.phoneNumber)}</span>;
+    },
+  },
+  {
+    key: "email",
+    name: "Email",
+    minWidth: 100,
+    maxWidth: 160,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.email)}</span>;
+    },
+  },
+  {
+    key: "gender",
+    name: "Giới tính",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getGenderText(item.gender)}</span>;
+    },
+  },
+  {
+    key: "dob",
+    name: "Ngày sinh",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.dateOfBirth)}</span>;
+    },
+  },
+  {
+    key: "address",
+    name: "Địa chỉ",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.address)}</span>;
+    },
+  },
+]
 
 function Department() {
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
@@ -30,6 +117,9 @@ function Department() {
     isEdit: false,
   });
   const [departmentInputValue, setInputValue] = useState<string>("");
+  const [errorInputValue, setErrorInputValue] = useState<string>("");
+
+  const dispatch = useDispatch();
 
   const callApiDepartment = () => {
     return departmentApi.getDepartmentList().then((response) => {
@@ -56,7 +146,7 @@ function Department() {
         onClick={() => setSelectItem(item)}
       >
         <Col className="preview-avatar">
-          <Avatar size="large" icon={<UserOutlined />} />
+          {/* <Avatar size="large" icon={<UserOutlined />} /> */}
         </Col>
         <Row className="preview-info">
           <Col>
@@ -73,48 +163,25 @@ function Department() {
     );
   };
 
-  const departmentColumn = [
-    {
-      key: "name",
-      name: "Name",
-      minWidth: 210,
-      maxWidth: 350,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{item.name}</span>;
-      },
-    },
-    {
-      key: "code",
-      name: "Code",
-      minWidth: 70,
-      maxWidth: 90,
-      isResizable: true,
-      onRender: (item: any) => {
-        return <span>{item.code}</span>;
-      },
-    },
-  ];
-
   const integrateItems = (reqbody: any): Promise<AxiosResponse<any, any>> => {
     const body = {
       ...reqbody,
+      id: selectItem?.value
     };
     return departmentApi.manageDepartment(body);
   };
 
-  const renderAppointmentDetails = (item: ISelectOption) => {
+  const renderAppointmentDetails = (_: ISelectOption) => {
     // add logic switch case để trả ra column với api tương ứng
     return (
-      <>
-        <UniformTable
-          columns={departmentColumn}
-          commandBarItems={[]}
-          integrateItems={integrateItems}
-          searchByColumn={"displayName"}
-          searchPlaceholder={"tên"}
-        />
-      </>
+      <UniformTable
+        key={JSON.stringify(selectItem?.value)}
+        columns={columns}
+        commandBarItems={[]}
+        integrateItems={integrateItems}
+        searchByColumn={"fullName"}
+        searchPlaceholder={"tên"}
+      />
     );
   };
 
@@ -144,15 +211,53 @@ function Department() {
   };
 
   const handleSubmitAddEdit = () => {
-    setAddEit({ open: false, isEdit: false });
-    // api goes here
-    console.log(departmentInputValue);
-    setInputValue("");
+    if (!departmentInputValue) {
+      return;
+    }
+    dispatch(openLoading());
+    let api = departmentApi.createDepartment;
+    let body: any = { displayName: departmentInputValue };
+    if (isOpenAddEit.isEdit) {
+      api = departmentApi.updateDepartment;
+      body = {
+        displayName: departmentInputValue,
+        id: selectItem?.value
+      }
+    }
+    api(body).then((result: any) => {
+      if (result.isSuccess) {
+        dispatch(
+          showToastMessage({
+            message: "Thành công",
+            type: toastType.succes,
+          })
+        );
+        callApiDepartment();
+        setInputValue("");
+        handleCancelAddEdit();
+      } else {
+        showToastMessage({
+          message: "Có lỗi, hãy thử lại",
+          type: toastType.error,
+        })
+      }
+    })
+    .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
   };
 
   const handleCancelAddEdit = () => {
     setAddEit({ open: false, isEdit: false });
-
+    setErrorInputValue("");
     setInputValue("");
   };
 
@@ -205,8 +310,17 @@ function Department() {
         >
           <Input
             value={departmentInputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value) {
+                setErrorInputValue("")
+              } else {
+                setErrorInputValue("Vui lòng nhập tên khoa!")
+              }
+              setInputValue(e.target.value)
+            }}
+            status={errorInputValue ? "error" : undefined}
           />
+          <div style={{ color: "#ff4d4f" }}>{errorInputValue}</div>
         </Modal>
       </Row>
     </>

@@ -35,5 +35,6 @@ export interface IRequestGetAllOfStaticReport {
   pageSize: number,
   searchByColumn: string,
   searchKey: string,
-  role?: Role
+  role?: Role,
+  conditions?: any
 }

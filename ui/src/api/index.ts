@@ -16,8 +16,10 @@ const path = {
   getAllUser: "/user/getall",
   getUserInfo: "/user/detail",
 
-  manageDepartment: "",
+  manageDepartment: "/department/doctors",
   getDepartment: "/department",
+  createDepartment: "/department/create",
+  updateDepartment: "/department/update",
 
   getAllMedications: "/medication/getall",
   createlMedications: "/medication/create",
@@ -44,7 +46,9 @@ const userApi = {
 
 const departmentApi = {
   getDepartmentList: () => api.get(path.getDepartment),
-  manageDepartment: (reqbody: any) => api.post(path.register, reqbody),
+  manageDepartment: (reqbody: any) => api.post(path.manageDepartment, reqbody), // api get doctor of department
+  createDepartment: (reqbody: any) => api.post(path.createDepartment, reqbody),
+  updateDepartment: (reqbody: any) => api.post(path.updateDepartment, reqbody),
 }
 
 const medicationApi = {

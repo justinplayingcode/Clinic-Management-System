@@ -56,6 +56,10 @@ const scheduleSchema = new Schema({
     type: Date,
     trim: true,
   },
+  cancellationReason: {
+    type: String,
+    trim: true,
+  },
 });
 
 const Schedule: Model<ScheduleModel> = mongoose.model<ScheduleModel>(
