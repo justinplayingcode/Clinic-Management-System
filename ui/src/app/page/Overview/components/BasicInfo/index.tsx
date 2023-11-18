@@ -74,7 +74,6 @@ const host = "https://provinces.open-api.vn/api/";
 
 const BasicInfoForm = (props: IBasicInfoProps) => {
   const { dismissForm, value, form } = props;
-  // const [form] = Form.useForm();
 
   const dispatch = useDispatch();
 
@@ -91,7 +90,6 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
     label: value.commune || "",
   });
   const [details, setDetails] = useState<string>(value.address || "");
-
   const [cityList, setCityList] = useState<ISelectOption[]>([]);
   const [districtList, setDistrictList] = useState<ISelectOption[]>([]);
   const [communeList, setComuneList] = useState<ISelectOption[]>([]);

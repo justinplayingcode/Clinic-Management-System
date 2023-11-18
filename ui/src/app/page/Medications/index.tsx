@@ -10,6 +10,7 @@ import { RootState } from "../../../redux";
 import { closeLoading, openLoading, showToastMessage, tableRefresh } from "../../../redux/reducers";
 import { toastType } from "../../model/enum/common";
 import "./index.scss"
+import { Role } from "../../model/enum/auth";
 
 type FieldType = {
   displayName?: string;
@@ -22,6 +23,8 @@ function Medications() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [isEdit, setEdit] = useState<boolean>(false);
   const [values, setValues] = useState<any>({});
+
+  const { role } = useSelector((state: RootState) => state.auth);
 
   const [form] = Form.useForm();
 
@@ -82,32 +85,34 @@ function Medications() {
 
   const commandBar = () => {
     const command: ICommandBarItemProps[] = [];
-    command.push({
-      key: "newItem",
-      text: "Thêm mới thuốc",
-      iconProps: { iconName: "Add" },
-      onClick: () => { 
-        setEdit(false); 
-        setOpen(true);
-        setValues({})
-      },
-    });
-    if (tableSelectedCount > 0) {
+    if (role === Role.admin) {
       command.push({
-        key: "editItem",
-        text: "Sửa",
-        iconProps: { iconName: "Edit" },
+        key: "newItem",
+        text: "Thêm mới thuốc",
+        iconProps: { iconName: "Add" },
         onClick: () => { 
-          setEdit(true); 
+          setEdit(false); 
           setOpen(true);
-          setValues({
-            displayName: tableSelectedItem[0]?.displayName,
-            designation: tableSelectedItem[0]?.designation,
-            usage: tableSelectedItem[0]?.usage,
-            price: tableSelectedItem[0]?.price
-          })
+          setValues({})
         },
       });
+      if (tableSelectedCount > 0) {
+        command.push({
+          key: "editItem",
+          text: "Sửa",
+          iconProps: { iconName: "Edit" },
+          onClick: () => { 
+            setEdit(true); 
+            setOpen(true);
+            setValues({
+              displayName: tableSelectedItem[0]?.displayName,
+              designation: tableSelectedItem[0]?.designation,
+              usage: tableSelectedItem[0]?.usage,
+              price: tableSelectedItem[0]?.price
+            })
+          },
+        });
+      }
     }
     command.push({
       key: "export",
@@ -279,6 +284,7 @@ function Medications() {
           integrateItems={integrateItems}
           searchByColumn={"displayName"}
           searchPlaceholder={"tên thuốc"}
+          noSelected
       />
       <Drawer
         title="Thêm thuốc mới"

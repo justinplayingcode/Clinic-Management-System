@@ -22,7 +22,7 @@ const accountSchema = new Schema({
     type: String,
     trim: true,
     required: [true, "password must be required"],
-    minlength: [6, "password must be at least 6 characters"],
+    minlength: [6, "Mật khẩu phải dài hơn 6 kí tự"],
   },
   role: {
     type: Number,

@@ -1,32 +1,22 @@
 import {
   EditOutlined,
-  InfoCircleFilled,
   PlusOutlined,
   RightOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
   Col,
   Empty,
   Form,
   Input,
   Modal,
-  Popconfirm,
   Row,
   Select,
 } from "antd";
-import Paragraph from "antd/es/typography/Paragraph";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
-import moment from "moment";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux";
-import { Role } from "../../../model/enum/auth";
 import "./Services.scss";
-import { Gender, TimeFrame, AppointmentStatus } from "../../Appointment/utils";
 
 enum ServiceType {
   Basic,
@@ -66,7 +56,6 @@ type FieldType = {
 function Services() {
   const [form] = Form.useForm();
   const [selectItem, setSelectItem] = useState<IServiceInfo>();
-  const [cancelReason, setCancelReason] = useState<string>("");
   const [isOpenAddEit, setAddEit] = useState<{
     open: boolean;
     isEdit: boolean;
@@ -74,8 +63,6 @@ function Services() {
     open: false,
     isEdit: false,
   });
-
-  const { role } = useSelector((state: RootState) => state.auth);
 
   const renderServiceType = (type: ServiceType) => {
     switch (type) {
@@ -191,10 +178,6 @@ function Services() {
             <Title level={4}>Danh sách dịch vụ</Title>
             {renderManageButton()}
           </Row>
-          {/* <Paragraph>
-            Vui lòng chọn một trong các lịch hẹn có sẵn để xem chi tiết hoặc bấm
-            vào <Text strong>Đặt khám mới</Text> để tạo lịch hẹn mới.
-          </Paragraph> */}
           <Col className="list-container">
             {appointmentList.length > 0 ? (
               appointmentList.map((item, index) => appointmentItem(item, index))
@@ -237,7 +220,6 @@ function Services() {
           title={isOpenAddEit.isEdit ? "Sửa khoa" : "Thêm khoa"}
           open={isOpenAddEit.open}
           footer={() => <></>}
-          // onOk={handleSubmitAddEdit}
           onCancel={handleCancelAddEdit}
         >
           <Form
