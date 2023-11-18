@@ -29,7 +29,6 @@ export default class TypeAppointmentController {
       const newTypeAppointment = {
         displayName: req.body.displayName,
         cost: req.body.cost,
-        type: req.body.type
       };
       await this._TypeAppointmentService.createTypeAppointmentService(
         newTypeAppointment,
@@ -109,15 +108,17 @@ export default class TypeAppointmentController {
   };
   public getAllTypeAppointment = async (req, res, next) => {
     try {
-      const result = await this._TypeAppointmentService.getAllTypeAppointmentService();
+      // const Id = req.body._id;
+      await this._TypeAppointmentService.;
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        data: result
+        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
+
       next(error);
     }
   }

@@ -29,7 +29,6 @@ export default class TypeAppointmentController {
       const newTypeAppointment = {
         displayName: req.body.displayName,
         cost: req.body.cost,
-        type: req.body.type
       };
       await this._TypeAppointmentService.createTypeAppointmentService(
         newTypeAppointment,

@@ -104,7 +104,7 @@ export default class typeAppointmentService {
   };
   public getAllTypeAppointmentService = async () => {
     try {
-      return await this._typeAppointmentRepository.getAll();
+      return await this._typeAppointmentRepository.getAll()
     } catch (error) {
       throw error;
     }
