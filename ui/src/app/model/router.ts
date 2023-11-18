@@ -12,11 +12,9 @@ export const routerString = {
   manageaccountuser: "/manageaccount/user",
   accountdetail: "/manageaccount/user/detail",
   doctordetail: "/manageaccount/doctor/detail",
-  managedepartment: "/managedepartment",
-  manage: "/manage",
-  managedepartments: "/manage/department",
-  manageservice: "/manage/service",
-  managemedication: "/manage/medication",
+  managedepartments: "/department",
+  manageservice: "/service",
+  managemedication: "/medication",
 }
 
 export const mappingRouter = {
@@ -29,7 +27,6 @@ export const mappingRouter = {
   [routerString.manageaccountuser]: "Người dùng",
   [routerString.accountdetail]: "Thông tin chi tiết",
   [routerString.doctordetail]: "Thông tin chi tiết",
-  [routerString.manage]: "Quản lý chung",
   [routerString.managedepartments]: "Khoa",
   [routerString.managemedication]: "Thuốc",
   [routerString.manageservice]: "Dịch vụ",

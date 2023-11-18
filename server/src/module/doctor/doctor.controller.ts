@@ -36,26 +36,20 @@ export default class DoctorController {
         position: req.body.position,
         departmentId: req.body.departmentId
       }
-      const user = await this._userService.findByKey(fields.accountId, req.body.id);
-      if(user) {
-        const doctor = await this._doctorService.findByKey(doctorField.userId, user._id);
-        if(doctor) {
-          const doctorId = doctor._id;
-          await this._doctorService.updateDoctor(doctorId,updatedDoctor,session);
-          await session.commitTransaction();
-          session.endSession();
-          const _res: IBaseRespone = {
-            status: ApiStatus.succes,
-            isSuccess: true,
-            statusCode: ApiStatusCode.OK
-          };
-          res.status(ApiStatusCode.OK).json(_res);
-        } else{ 
-          const err : any = new ErrorObject("Không tồn tại bác sĩ", ApiStatusCode.BadRequest,"60 - update Doctor - controller");
-          return next(err);
-        }
-      } else {
-        const err : any = new ErrorObject("Không tồn tại người dùng", ApiStatusCode.BadRequest,"65 - update Doctor - controller");
+      const doctor = await this._doctorService.findById(req.body.id);
+      if(doctor) {
+        const doctorId = doctor._id;
+        await this._doctorService.updateDoctor(doctorId, updatedDoctor, session);
+        await session.commitTransaction();
+        session.endSession();
+        const _res: IBaseRespone = {
+          status: ApiStatus.succes,
+          isSuccess: true,
+          statusCode: ApiStatusCode.OK
+        };
+        res.status(ApiStatusCode.OK).json(_res);
+      } else { 
+        const err : any = new ErrorObject("Không tồn tại bác sĩ", ApiStatusCode.BadRequest, "update Doctor controller");
         return next(err);
       }
     } catch(error){
