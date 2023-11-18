@@ -71,7 +71,16 @@ export default class DoctorService {
     try {
       return await this._doctorRepository.findByKey(key, data);
     } catch (error) {
-      logger("74-doctorservice", error?.message);
+      logger("findbykey-doctorservice", error?.message);
+      throw error;
+    }
+  };
+
+  public findById = async (id) => {
+    try {
+      return await this._doctorRepository.findById(id);
+    } catch (error) {
+      logger("findById-doctorservice", error?.message);
       throw error;
     }
   };
@@ -115,6 +124,7 @@ export default class DoctorService {
         rank: doctor.rank,
         position: doctor.position,
         departmentName: doctor.departmentId.displayName,
+        departmentId: doctor.departmentId._id,
         accountId,
         userId,
         email,

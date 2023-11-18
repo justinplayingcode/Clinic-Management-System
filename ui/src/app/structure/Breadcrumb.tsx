@@ -12,8 +12,6 @@ const breadcrumbNameMap: Record<string, string> = {
   [routerString.manageaccountuser]: mappingRouter[routerString.manageaccountuser],
   [routerString.accountdetail]: mappingRouter[routerString.accountdetail],
   [routerString.doctordetail]: mappingRouter[routerString.doctordetail],
-  [routerString.managedepartment]: mappingRouter[routerString.managedepartment],
-  [routerString.manage]: mappingRouter[routerString.manage],
   [routerString.managemedication]: mappingRouter[routerString.managemedication],
   [routerString.managedepartments]: mappingRouter[routerString.managedepartments],
   [routerString.manageservice]: mappingRouter[routerString.manageservice],
@@ -21,7 +19,6 @@ const breadcrumbNameMap: Record<string, string> = {
 
 const firstMenu = [
   mappingRouter[routerString.manageaccount],
-  mappingRouter[routerString.manage],
 ]
 
 const UniformBreadcrumb = () => {
@@ -42,7 +39,7 @@ const UniformBreadcrumb = () => {
   _extraBreadcrumbItems[_extraBreadcrumbItems.length - 1].title = _extraBreadcrumbItems[_extraBreadcrumbItems.length - 1].key as any;
 
   return (
-    <Breadcrumb items={_extraBreadcrumbItems} style={{ height: 60, padding: 20, fontSize: 16, color: "#333" }} />
+    <Breadcrumb items={_extraBreadcrumbItems} style={{ height: 60, padding: 20, fontSize: 16 }} />
   );
 };
 

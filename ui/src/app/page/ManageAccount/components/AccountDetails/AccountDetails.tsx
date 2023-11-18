@@ -10,7 +10,7 @@ import {
 } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
-import { departmentApi, userApi } from "../../../../../api";
+import { authApi, departmentApi, userApi } from "../../../../../api";
 import {
   AccountType,
   PositionDoctorList,
@@ -52,11 +52,12 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
   const [form] = Form.useForm();
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
   const [currentAccount, setCurrentAccount] = useState<any>({});
+  const [initValue, setInitValue] = useState<any>({});
 
   const { id: param } = useParams();
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const getInfoAccount = () => {
     let api = userApi.doctorInfo;
     if (props.type === AccountType.account) {
       api = userApi.accoutInfo
@@ -66,6 +67,13 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
     api(param as string)
       .then((result) => {
         setCurrentAccount(result?.data)
+        if (props.type === AccountType.doctor) {
+          setInitValue({
+            departmentId: result?.data?.departmentId,
+            position: result?.data?.position,
+            rank: result?.data?.rank
+          })
+        }
       })
       .catch(() => {
         dispatch(
@@ -78,6 +86,10 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
       .finally(() => {
         dispatch(closeLoading());
       });
+  }
+
+  useEffect(() => {
+    getInfoAccount();
   }, [])
 
   const callApiDepartment = () => {
@@ -93,46 +105,41 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
   };
 
   const onFinish = (values: any) => {
-    values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
-    values["city"] = values.city.label;
-    values["district"] = values.district.label;
-    values["commune"] = values.commune.label;
-    values["address"] = values.address || "";
-    values["email"] = values.email || "";
-
-    // dispatch(openLoading());
-    // authApi
-    //   .registerDoctor(values)
-    //   .then(() => {
-    //     dispatch(
-    //       showToastMessage({
-    //         message: "Tạo tài khoản thành công",
-    //         type: toastType.succes,
-    //       })
-    //     );
-    //     dismissForm();
-    //     dispatch(tableRefresh());
-    //   })
-    //   .catch(() => {
-    //     dispatch(
-    //       showToastMessage({
-    //         message: "Có lỗi, hãy thử lại",
-    //         type: toastType.error,
-    //       })
-    //     );
-    //   })
-    //   .finally(() => {
-    //     dispatch(closeLoading());
-    //   });
-  };
-
-  const onFinishFailed = (_: any) => {
-    // dispatch(
-    //   showToastMessage({
-    //     message: "Hãy điền các trường còn trống",
-    //     type: toastType.error,
-    //   })
-    // );
+    const body = {
+      ...values,
+      id: param
+    }
+    dispatch(openLoading());
+    authApi
+      .updateDoctor(body)
+      .then((result: any) => {
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Cập nhật thành công",
+              type: toastType.succes,
+            })
+          );
+          getInfoAccount();
+          setOpen(false);
+        } else {
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        }
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
   };
 
   const onCloseModel = () => {
@@ -197,7 +204,6 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
           centered
           width={400}
           open={isOpen}
-          onOk={onCloseModel}
           onCancel={onCloseModel}
           closable={true}
           keyboard={false}
@@ -215,18 +221,12 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
             layout={"vertical"}
             style={{ maxWidth: 800 }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
-            initialValues={{
-              departmentId: currentAccount?.departmentName,
-              position: currentAccount?.position,
-              rank: currentAccount?.rank
-            }}
+            initialValues={initValue}
           >
             <Form.Item<FieldType>
               label="Khoa"
               name="departmentId"
-              rules={[{ required: true, message: "Hãy chọn khoa!" }]}
             >
               <Select placeholder="Chọn khoa" options={departmentList}></Select>
             </Form.Item>
@@ -234,7 +234,6 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
             <Form.Item<FieldType>
               label="Chức vụ"
               name="position"
-              rules={[{ required: true, message: "Hãy chọn chức vụ!" }]}
             >
               <Select
                 placeholder="Chọn chức vụ"
@@ -244,7 +243,6 @@ const AccountDetails = ({ ...props }: IAccountDetails) => {
             <Form.Item<FieldType>
               label="Học vấn"
               name="rank"
-              rules={[{ required: true, message: "Hãy chọn học vấn!" }]}
             >
               <Select
                 placeholder="Chọn học vấn"

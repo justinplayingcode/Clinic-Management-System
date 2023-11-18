@@ -13,8 +13,8 @@ const App: React.FunctionComponent = () => {
           theme={{
             components: {
               Breadcrumb: {
-                itemColor: "#1E3461",
-                linkColor: "1E3461",
+                lastItemColor: "#0067A2",
+                linkColor: "#0067A2",
                 linkHoverColor: "#0067A2"
               },
             },
