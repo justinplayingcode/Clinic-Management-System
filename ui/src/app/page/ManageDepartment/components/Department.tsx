@@ -14,9 +14,11 @@ import UniformTable from "../../components/table";
 import "./Department.scss";
 import { tooltipPlainText } from "../../../../utils/basicRender";
 import { Utils } from "../../../../utils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeLoading, openLoading, showToastMessage } from "../../../../redux/reducers";
 import { toastType } from "../../../model/enum/common";
+import { RootState } from "../../../../redux";
+import { Role } from "../../../model/enum/auth";
 
 interface ISelectOption {
   value: string;
@@ -120,6 +122,7 @@ function Department() {
   const [errorInputValue, setErrorInputValue] = useState<string>("");
 
   const dispatch = useDispatch();
+  const { role } = useSelector((state: RootState) => state.auth);
 
   const callApiDepartment = () => {
     let result = [];
@@ -279,7 +282,7 @@ function Department() {
         <Col className="list-section">
           <Row style={{ justifyContent: "space-between" }}>
             <Title level={4}>Danh sách khoa</Title>
-            {renderManageButton()}
+            {role === Role.admin && renderManageButton()}
           </Row>
           <Paragraph>
             Vui lòng chọn một trong các khoa để xem chi tiết
