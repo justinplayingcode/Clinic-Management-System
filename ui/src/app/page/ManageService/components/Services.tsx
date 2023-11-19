@@ -21,14 +21,9 @@ import Paragraph from "antd/es/typography/Paragraph";
 import { serviceApi } from "../../../../api";
 import { useDispatch, useSelector } from "react-redux";
 import { closeLoading, openLoading, showToastMessage } from "../../../../redux/reducers";
-import { toastType } from "../../../model/enum/common";
+import { ServiceType, toastType } from "../../../model/enum/common";
 import { RootState } from "../../../../redux";
 import { Role } from "../../../model/enum/auth";
-
-enum ServiceType {
-  Basic,
-  Other,
-}
 
 interface IServiceInfo {
   id: string;

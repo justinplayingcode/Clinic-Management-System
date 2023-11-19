@@ -118,3 +118,8 @@ export enum AccountType {
   account,
   doctor
 }
+
+export enum ServiceType {
+  Basic,
+  Other,
+}
