@@ -16,5 +16,5 @@ typeAppointmentRoute
 typeAppointmentRoute
   .route("/delete")
   .put(middlewares.verifyToken,middlewares.permission([Role.admin]),typeAppointmentController.DeleteTypeAppointment);
-
+typeAppointmentRoute.route("/getall").get(middlewares.verifyToken,typeAppointmentController.getAllTypeAppointment)
 export default typeAppointmentRoute;
