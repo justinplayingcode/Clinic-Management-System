@@ -19,9 +19,11 @@ import { useEffect, useState } from "react";
 import "./Services.scss";
 import Paragraph from "antd/es/typography/Paragraph";
 import { serviceApi } from "../../../../api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeLoading, openLoading, showToastMessage } from "../../../../redux/reducers";
 import { toastType } from "../../../model/enum/common";
+import { RootState } from "../../../../redux";
+import { Role } from "../../../model/enum/auth";
 
 enum ServiceType {
   Basic,
@@ -34,21 +36,6 @@ interface IServiceInfo {
   type: ServiceType;
   price: string;
 }
-
-// const appointmentList: IServiceInfo[] = [
-//   {
-//     id: "1",
-//     name: "Chụp X-quang",
-//     type: ServiceType.Basic,
-//     price: "1",
-//   },
-//   {
-//     id: "2",
-//     name: "Siêu âm",
-//     type: ServiceType.Other,
-//     price: "2",
-//   },
-// ];
 
 type FieldType = {
   name?: string;
@@ -69,6 +56,7 @@ function Services() {
   });
 
   const dispatch = useDispatch();
+  const { role } = useSelector((state: RootState) => state.auth);
 
   const callApiAllService = () => {
     serviceApi.getAll().then((response) => {
@@ -244,7 +232,7 @@ function Services() {
         <Col className="list-section">
           <Row style={{ justifyContent: "space-between" }}>
             <Title level={4}>Danh sách dịch vụ</Title>
-            {renderManageButton()}
+            {role === Role.admin && renderManageButton()}
           </Row>
           <Paragraph>
             Vui lòng chọn một trong các dịch vụ để xem chi tiết
