@@ -1,9 +1,22 @@
 import {
+  CheckCircleOutlined,
   InfoCircleFilled,
   RightOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Col, Empty, Input, Popconfirm, Row } from "antd";
+import {
+  Avatar,
+  Button,
+  Col,
+  Empty,
+  Input,
+  Modal,
+  Popconfirm,
+  Row,
+  Steps,
+  message,
+  theme,
+} from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
@@ -14,7 +27,19 @@ import { RootState } from "../../../../redux";
 import { Role } from "../../../model/enum/auth";
 import { AppointmentStatus, Gender, TimeFrame } from "../utils";
 import "./Schedule.scss";
+import DetailsInfo from "../../components/DetailsInfo";
+import { PositionOfDoctor, RankOfDoctor } from "../../../model/enum/common";
+import { Utils } from "../../../../utils";
+import { departmentApi } from "../../../../api";
+import UniformTable from "../../components/table";
+import { AxiosResponse } from "axios";
+import { tooltipPlainText } from "../../../../utils/basicRender";
+import { ICommandBarItemProps } from "@fluentui/react";
 
+interface ISelectOption {
+  value: string;
+  label: string;
+}
 interface IAppointmentInfo {
   id: string;
   name: string;
@@ -31,11 +56,103 @@ interface IAppointmentInfo {
   reason: string;
   status: AppointmentStatus;
   appointmentCode: string;
+
+  doctor?: {
+    id: string;
+    name: string;
+    departmentName: string;
+    position: PositionOfDoctor;
+    rank: RankOfDoctor;
+    phoneNumber: string;
+  };
 }
+
+const columns = [
+  {
+    key: "name",
+    name: "Họ và tên",
+    minWidth: 80,
+    maxWidth: 180,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.fullName)}</span>;
+    },
+  },
+  {
+    key: "rank",
+    name: "Học vấn",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getDoctorRankText(item.rank)}</span>;
+    },
+  },
+  {
+    key: "position",
+    name: "Vai trò",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getDoctorPositionText(item.position)}</span>;
+    },
+  },
+  {
+    key: "phoneNumber",
+    name: "Số điện thoại",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.phoneNumber)}</span>;
+    },
+  },
+  {
+    key: "email",
+    name: "Email",
+    minWidth: 100,
+    maxWidth: 160,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.email)}</span>;
+    },
+  },
+  {
+    key: "gender",
+    name: "Giới tính",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{Utils.getGenderText(item.gender)}</span>;
+    },
+  },
+  {
+    key: "dob",
+    name: "Ngày sinh",
+    minWidth: 80,
+    maxWidth: 150,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.dateOfBirth)}</span>;
+    },
+  },
+  {
+    key: "address",
+    name: "Địa chỉ",
+    minWidth: 70,
+    maxWidth: 90,
+    isResizable: true,
+    onRender: (item: any) => {
+      return <span>{tooltipPlainText(item.address)}</span>;
+    },
+  },
+];
 
 // const appointmentList: IAppointmentInfo[] = [];
 
-const appointmentList: IAppointmentInfo[] = [
+const listData: IAppointmentInfo[] = [
   {
     id: "1",
     name: "Phạm Duy Thắng",
@@ -52,6 +169,15 @@ const appointmentList: IAppointmentInfo[] = [
     reason: "Xoang mũi, khó thở",
     status: AppointmentStatus.Checking,
     appointmentCode: "APP000123456",
+
+    // doctor: {
+    //   id: "doctor1",
+    //   name: "Name 1",
+    //   departmentName: "Khoa Nội",
+    //   position: PositionOfDoctor.viceDean,
+    //   rank: RankOfDoctor.GSTS,
+    //   phoneNumber: "0123456789",
+    // },
   },
   {
     id: "2",
@@ -69,14 +195,42 @@ const appointmentList: IAppointmentInfo[] = [
     reason: "Xoang mũi, khó thở",
     status: AppointmentStatus.CheckedAndWaitConfirm,
     appointmentCode: "APP000123456",
+
+    doctor: {
+      id: "doctor2",
+      name: "Name 2",
+      departmentName: "Khoa Nội",
+      position: PositionOfDoctor.viceDean,
+      rank: RankOfDoctor.GSTS,
+      phoneNumber: "0123456789",
+    },
   },
 ];
 
 function Schedule() {
+  const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
+  const [isOpenSelectDoctor, setOpenSelectDoctor] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<IAppointmentInfo>();
   const [cancelReason, setCancelReason] = useState<string>("");
+  const { tableSelectedCount, tableSelectedItem } = useSelector(
+    (state: RootState) => state.currentSeleted
+  );
+  const [appointmentList, setAppointmentList] =
+    useState<IAppointmentInfo[]>(listData);
 
   const { role } = useSelector((state: RootState) => state.auth);
+
+  const callApiDepartment = () => {
+    return departmentApi.getDepartmentList().then((response) => {
+      const result = response?.data?.map((item: any) => {
+        return {
+          value: item?._id,
+          label: item?.displayName,
+        };
+      });
+      setDepartmentList(result);
+    });
+  };
 
   const renderAppointmentStatus = (status: AppointmentStatus) => {
     switch (status) {
@@ -208,6 +362,33 @@ function Schedule() {
             {renderItemTitleValue(`Địa chỉ:`, getInfoAddress(item))}
           </Col>
         </Col>
+        {selectItem?.doctor?.id && (
+          <DetailsInfo
+            title="Thông tin bác sĩ"
+            items={[
+              {
+                label: "Họ và tên",
+                value: selectItem?.doctor.name,
+              },
+              {
+                label: "Khoa",
+                value: selectItem?.doctor.departmentName,
+              },
+              {
+                label: "Chức vụ",
+                value: Utils.getDoctorPositionText(selectItem?.doctor.position),
+              },
+              {
+                label: "Học vấn",
+                value: Utils.getDoctorRankText(selectItem?.doctor.rank),
+              },
+              {
+                label: "Số điện thoại",
+                value: selectItem?.doctor.phoneNumber,
+              },
+            ]}
+          />
+        )}
       </>
     );
   };
@@ -225,14 +406,23 @@ function Schedule() {
         <Row className="button-container">
           <Popconfirm
             title="Xác nhận lịch hẹn"
-            // description="Are you sure to delete this task?"
             onConfirm={() => console.log("confirm")}
-            // onCancel={() => {}}
             okText="Yes"
             cancelText="No"
+            disabled
           >
             <Button type="primary">Xác nhận</Button>
           </Popconfirm>
+          {!selectItem?.doctor && (
+            <Button
+              onClick={() => {
+                setOpenSelectDoctor(true);
+                callApiDepartment();
+              }}
+            >
+              Chọn bác sĩ
+            </Button>
+          )}
           <Popconfirm
             title="Hủy lịch hẹn"
             description={
@@ -260,6 +450,190 @@ function Schedule() {
     }
 
     return;
+  };
+
+  const renderScheduleStepper = () => {
+    const defaultSelectOption: ISelectOption = {
+      value: "",
+      label: "",
+    };
+    const { token } = theme.useToken();
+    const [current, setCurrent] = useState(0);
+    const [selectDepartment, setSelectDepartment] =
+      useState<ISelectOption>(defaultSelectOption);
+    const [selectDoctor, setSelectDoctor] = useState<string>("");
+
+    const contentStyle: React.CSSProperties = {
+      lineHeight: "260px",
+      textAlign: "center",
+      color: token.colorTextTertiary,
+      backgroundColor: token.colorFillAlter,
+      borderRadius: token.borderRadiusLG,
+      border: `1px dashed ${token.colorBorder}`,
+      marginTop: 16,
+    };
+
+    const renderStepperFooter = () => {
+      return <></>;
+    };
+
+    const next = () => {
+      setCurrent(current + 1);
+    };
+
+    const prev = () => {
+      setCurrent(current - 1);
+    };
+
+    const handleCancel = () => {
+      setCurrent(0);
+      setSelectDepartment(defaultSelectOption);
+      setSelectDoctor("");
+      setOpenSelectDoctor(false);
+    };
+
+    const handleOk = () => {
+      setCurrent(0);
+      setSelectDepartment(defaultSelectOption);
+      setSelectDoctor("");
+      setOpenSelectDoctor(false);
+    };
+
+    const commandBar = () => {
+      const command: ICommandBarItemProps[] = [];
+      if (tableSelectedCount === 1) {
+        command.push({
+          key: "select",
+          text: "Chọn bác sĩ",
+          iconProps: { iconName: "Checkmark" },
+          onClick: () => {
+            setSelectDoctor(tableSelectedItem[0].doctorId);
+          },
+        });
+      }
+
+      return command;
+    };
+
+    const departmentItem = (item: ISelectOption, _: number) => {
+      return (
+        <Row
+          className={`preview-container ${
+            selectDepartment?.value === item.value && "active"
+          }`}
+          onClick={() => {
+            setSelectDepartment(item);
+          }}
+        >
+          <Col className="preview-avatar">
+            {/* <Avatar size="large" icon={<UserOutlined />} /> */}
+          </Col>
+          <Row className="preview-info">
+            <Col>
+              <Row className="preview-name">
+                <Text strong>{item.label}</Text>
+              </Row>
+            </Col>
+
+            {selectDepartment?.value === item.value && (
+              <CheckCircleOutlined
+                style={{ fontSize: "20px", color: "#00AB1C" }}
+              />
+            )}
+          </Row>
+        </Row>
+      );
+    };
+
+    const integrateItems = (reqbody: any): Promise<AxiosResponse<any, any>> => {
+      const body = {
+        ...reqbody,
+        id: selectDepartment?.value,
+      };
+      return departmentApi.manageDepartment(body);
+    };
+
+    const stepperItem = [
+      {
+        title: "Chọn Khoa",
+        content: (
+          <>
+            <Col className="list-container">
+              {departmentList.length > 0 ? (
+                departmentList.map((item, index) => departmentItem(item, index))
+              ) : (
+                <Row style={{ justifyContent: "center", marginTop: "80px" }}>
+                  <Col style={{ flexDirection: "column" }}>
+                    <Empty />
+                  </Col>
+                </Row>
+              )}
+            </Col>
+          </>
+        ),
+      },
+      {
+        title: "Chọn bác sĩ",
+        content: (
+          <div>
+            <UniformTable
+              key={JSON.stringify(selectDepartment?.value)}
+              columns={columns}
+              commandBarItems={commandBar()}
+              integrateItems={integrateItems}
+              searchByColumn={"fullName"}
+              searchPlaceholder={"tên"}
+            />
+          </div>
+        ),
+      },
+    ];
+
+    return (
+      <Modal
+        title="Chỉ định bác sĩ"
+        footer={renderStepperFooter}
+        open={isOpenSelectDoctor}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Steps current={current} items={stepperItem} />
+        <div className="selectDoctor-modal" style={contentStyle}>
+          {stepperItem[current].content}
+        </div>
+        <div style={{ marginTop: 24 }}>
+          {current < stepperItem.length - 1 && (
+            <Button
+              type="primary"
+              disabled={selectDepartment.value === defaultSelectOption.value}
+              onClick={() => next()}
+            >
+              Sau
+            </Button>
+          )}
+          {current === stepperItem.length - 1 && (
+            <Button
+              type="primary"
+              disabled={selectDoctor === ""}
+              onClick={() => {
+                console.log({
+                  ...selectItem,
+                  idDoctor: selectDoctor,
+                });
+                handleOk();
+              }}
+            >
+              Hoàn thành
+            </Button>
+          )}
+          {current > 0 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Trước
+            </Button>
+          )}
+        </div>
+      </Modal>
+    );
   };
 
   return (
@@ -326,6 +700,7 @@ function Schedule() {
             )}
           </Col>
         </Col>
+        {renderScheduleStepper()}
       </Row>
     </>
   );
