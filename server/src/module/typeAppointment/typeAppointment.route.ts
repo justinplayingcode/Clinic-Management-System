@@ -7,14 +7,8 @@ const typeAppointmentRoute = Router();
 
 const typeAppointmentController = new TypeAppointmentController();
 
-typeAppointmentRoute
-  .route("/create")
-  .post(middlewares.verifyToken,middlewares.permission([Role.admin]),typeAppointmentController.CreateTypeAppointment);
-typeAppointmentRoute
-  .route("/update")
-  .post(middlewares.verifyToken,middlewares.permission([Role.admin]),typeAppointmentController.UpdateTypeAppointment);
-typeAppointmentRoute
-  .route("/delete")
-  .put(middlewares.verifyToken,middlewares.permission([Role.admin]),typeAppointmentController.DeleteTypeAppointment);
+typeAppointmentRoute.route("/create").post(middlewares.verifyToken,middlewares.permission([Role.admin]),typeAppointmentController.CreateTypeAppointment);
+typeAppointmentRoute.route("/update").post(middlewares.verifyToken,middlewares.permission([Role.admin]),typeAppointmentController.UpdateTypeAppointment);
+typeAppointmentRoute.route("/delete").put(middlewares.verifyToken,middlewares.permission([Role.admin]),typeAppointmentController.DeleteTypeAppointment);
 typeAppointmentRoute.route("/getall").get(middlewares.verifyToken,typeAppointmentController.getAllTypeAppointment)
 export default typeAppointmentRoute;

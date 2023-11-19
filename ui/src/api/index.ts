@@ -25,6 +25,10 @@ const path = {
   getAllMedications: "/medication/getall",
   createlMedications: "/medication/create",
   updateMedications: "/medication/update",
+
+  getAllService: "/typeAppointment/getall",
+  createService: "/typeAppointment/create",
+  updateService: "/typeAppointment/update",
 }
 
 const authApi = {
@@ -59,11 +63,16 @@ const medicationApi = {
   updateMedications: (reqbody: any) => api.post(path.updateMedications, reqbody),
 }
 
-
+const serviceApi = {
+  getAll: () => api.get(path.getAllService),
+  createlService: (reqbody: any) => api.post(path.createService, reqbody),
+  updateService: (reqbody: any) => api.post(path.updateService, reqbody),
+}
 
 export {
   authApi,
   departmentApi,
   userApi,
-  medicationApi
+  medicationApi,
+  serviceApi
 };

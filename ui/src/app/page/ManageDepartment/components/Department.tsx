@@ -122,14 +122,26 @@ function Department() {
   const dispatch = useDispatch();
 
   const callApiDepartment = () => {
-    return departmentApi.getDepartmentList().then((response) => {
-      const result = response?.data?.map((item: any) => {
+    let result = [];
+    dispatch(openLoading());
+    departmentApi.getDepartmentList().then((response) => {
+      result = response?.data?.map((item: any) => {
         return {
           value: item?._id,
           label: item?.displayName,
         };
       });
       setDepartmentList(result);
+    }).catch(() => {
+      dispatch(
+        showToastMessage({
+          message: "Có lỗi, hãy thông báo tới đơn vị hỗ trợ của Riordan Clinic",
+          type: toastType.error,
+        })
+      );
+    })
+    .finally(() => {
+      dispatch(closeLoading());
     });
   };
 
@@ -270,7 +282,7 @@ function Department() {
             {renderManageButton()}
           </Row>
           <Paragraph>
-            Vui lòng chọn một trong các lịch hẹn có sẵn để xem chi tiết
+            Vui lòng chọn một trong các khoa để xem chi tiết
           </Paragraph>
           <Col className="list-container">
             {departmentList.length > 0 ? (
