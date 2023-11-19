@@ -4,6 +4,7 @@ export interface typeAppointmentModel extends BaseModel {
   displayName: string;
   cost: number;
   isActive: boolean;
+  type: number;
 }
 
 export const typeAppointmentField = {

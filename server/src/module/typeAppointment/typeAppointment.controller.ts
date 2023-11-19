@@ -53,7 +53,7 @@ export default class TypeAppointmentController {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const verifyReq = validateReqBody(req, ['id', 'displayName', 'cost']);
+      const verifyReq = validateReqBody(req, ['id', 'displayName', 'cost', 'type']);
       if (!verifyReq) {
         const err: any = new ErrorObject(
           verifyReq.message,
@@ -65,6 +65,7 @@ export default class TypeAppointmentController {
       const newTypeAppointment = {
         displayName: req.body.displayName,
         cost: req.body.cost,
+        type: req.body.type
       };
       const Id = req.body.id;
       await this._TypeAppointmentService.updateTypeAppointmentService(
@@ -98,7 +99,6 @@ export default class TypeAppointmentController {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {

@@ -15,8 +15,13 @@ import {
 } from "antd";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Services.scss";
+import Paragraph from "antd/es/typography/Paragraph";
+import { serviceApi } from "../../../../api";
+import { useDispatch } from "react-redux";
+import { closeLoading, openLoading, showToastMessage } from "../../../../redux/reducers";
+import { toastType } from "../../../model/enum/common";
 
 enum ServiceType {
   Basic,
@@ -30,22 +35,20 @@ interface IServiceInfo {
   price: string;
 }
 
-// const appointmentList: IAppointmentInfo[] = [];
-
-const appointmentList: IServiceInfo[] = [
-  {
-    id: "1",
-    name: "Chụp X-quang",
-    type: ServiceType.Basic,
-    price: "1",
-  },
-  {
-    id: "2",
-    name: "Siêu âm",
-    type: ServiceType.Other,
-    price: "2",
-  },
-];
+// const appointmentList: IServiceInfo[] = [
+//   {
+//     id: "1",
+//     name: "Chụp X-quang",
+//     type: ServiceType.Basic,
+//     price: "1",
+//   },
+//   {
+//     id: "2",
+//     name: "Siêu âm",
+//     type: ServiceType.Other,
+//     price: "2",
+//   },
+// ];
 
 type FieldType = {
   name?: string;
@@ -55,6 +58,7 @@ type FieldType = {
 
 function Services() {
   const [form] = Form.useForm();
+  const [appointmentList, setAppointmentList] = useState<IServiceInfo[]>([]);
   const [selectItem, setSelectItem] = useState<IServiceInfo>();
   const [isOpenAddEit, setAddEit] = useState<{
     open: boolean;
@@ -63,6 +67,26 @@ function Services() {
     open: false,
     isEdit: false,
   });
+
+  const dispatch = useDispatch();
+
+  const callApiAllService = () => {
+    serviceApi.getAll().then((response) => {
+      const result = response?.data?.map((item: any) => {
+        return {
+          id: item?._id,
+          name: item?.displayName,
+          type: item?.type,
+          price: item?.cost,
+        };
+      });
+      setAppointmentList(result);
+    });
+  }
+
+  useEffect(() => {
+    callApiAllService();
+  }, [])
 
   const renderServiceType = (type: ServiceType) => {
     switch (type) {
@@ -123,7 +147,7 @@ function Services() {
           <Col className="details-content">
             {renderItemTitleValue(`Tên dịch vụ:`, item.name)}
             {renderItemTitleValue(`Loại:`, renderServiceType(item.type))}
-            {renderItemTitleValue(`Giá tiền:`, item.price)}
+            {renderItemTitleValue(`Giá tiền (VNĐ):`, item.price)}
           </Col>
         </Col>
       </>
@@ -161,13 +185,57 @@ function Services() {
 
   const handleCancelAddEdit = () => {
     setAddEit({ open: false, isEdit: false });
-
     form.resetFields();
   };
 
   const onFinish = (values: any) => {
-    console.log(values);
-    handleCancelAddEdit();
+    dispatch(openLoading());
+    let api, body;
+    const basicBody = {
+      displayName: values.name,
+      cost: values.price,
+      type: values.type
+    };
+    if (isOpenAddEit.isEdit) {
+      api = serviceApi.updateService;
+      body = {
+        ...basicBody,
+        id: selectItem!.id
+      }
+    } else {
+      api = serviceApi.createlService;
+      body = { ...basicBody }
+    }
+    api(body).then((result: any) => {
+      if (result.isSuccess) {
+        dispatch(
+          showToastMessage({
+            message: "Thành công",
+            type: toastType.succes,
+          })
+        );
+        setSelectItem(undefined);
+        callApiAllService();
+        handleCancelAddEdit();
+      } else {
+        showToastMessage({
+          message: "Có lỗi, hãy thử lại",
+          type: toastType.error,
+        })
+      }
+    })
+    .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
+    
   };
 
   return (
@@ -178,6 +246,9 @@ function Services() {
             <Title level={4}>Danh sách dịch vụ</Title>
             {renderManageButton()}
           </Row>
+          <Paragraph>
+            Vui lòng chọn một trong các dịch vụ để xem chi tiết
+          </Paragraph>
           <Col className="list-container">
             {appointmentList.length > 0 ? (
               appointmentList.map((item, index) => appointmentItem(item, index))
@@ -224,7 +295,7 @@ function Services() {
         >
           <Form
             form={form}
-            name="basic"
+            name="service"
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
             layout={"vertical"}
@@ -258,7 +329,7 @@ function Services() {
             <Form.Item<FieldType>
               label="Giá tiền"
               name="price"
-              rules={[{ required: true, message: "Hãy nhập giá dịch vụ" }]}
+              rules={[{ required: true, message: "Hãy nhập giá dịch vụ, giá phải là số!", pattern: new RegExp("^[0-9]*$") }]}
             >
               <Input />
             </Form.Item>
