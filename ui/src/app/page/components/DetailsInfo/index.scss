@@ -1,0 +1,13 @@
+.details-container {
+  //   margin-top: 24px;
+  .details-content {
+    border-radius: 8px;
+    background: #efefef;
+    padding: 0 14px;
+    .details-item {
+      justify-content: space-between;
+      border-bottom: 1px solid #ccc;
+      padding: 12px 0;
+    }
+  }
+}

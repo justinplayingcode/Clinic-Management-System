@@ -1,27 +1,24 @@
-import { Avatar, Button, Col, Form, Modal, Row } from "antd";
+import { ManOutlined, WomanOutlined } from "@ant-design/icons";
+import { Avatar, Button, Col, Descriptions, Form, Modal, Row } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
-import BasicInfoForm from "./components/BasicInfo";
-import "./index.scss";
-import {
-  CalendarOutlined,
-  HomeOutlined,
-  MailOutlined,
-  ManOutlined,
-  PhoneOutlined,
-  WomanOutlined,
-} from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux";
-import HeaderSection from "../components/headerSection";
+import { Utils } from "../../../utils";
+import { Role } from "../../model/enum/auth";
 import { Gender } from "../../model/enum/common";
+import HeaderSection from "../components/headerSection";
+import BasicInfoForm from "./components/BasicInfo";
+import "./index.scss";
 
 function Overview() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [closable, setClosable] = useState<boolean>(true);
   const [form] = Form.useForm();
 
-  const { info, phoneNumber } = useSelector((state: RootState) => state.auth);
+  const { role, info, phoneNumber } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   useEffect(() => {
     if (!info?.fullName) {
@@ -29,31 +26,6 @@ function Overview() {
       setClosable(false);
     }
   }, []);
-
-  const renderGenderInfo = (gender: Gender) => {
-    switch (gender) {
-      case Gender.Male:
-        return (
-          <div style={{ fontSize: "16px", color: "#00A2FF" }}>
-            <ManOutlined
-              style={{ fontSize: "16px", color: "#00A2FF", margin: "0 4px" }}
-            />
-            <span>Nam</span>
-          </div>
-        );
-      case Gender.Female:
-        return (
-          <div style={{ fontSize: "16px", color: "#00A2FF" }}>
-            <WomanOutlined
-              style={{ fontSize: "16px", color: "#FF4785", margin: "0 4px" }}
-            />
-            <span>Nữ</span>
-          </div>
-        );
-      default:
-        return <></>;
-    }
-  };
 
   const getInfoAddress = () => {
     const list = [];
@@ -66,54 +38,59 @@ function Overview() {
   const onCloseModel = () => {
     setOpen(false);
     form.resetFields();
-  }
+  };
 
   return (
     <div>
-      <HeaderSection
-        text="Thông tin cá nhân"
-        children={<Button onClick={() => setOpen(true)}>Cập nhật</Button>}
-      />
       <div>
-        <Row className="personalInfo-container">
-          <Col className="avatar-container">
-            <Avatar shape="square" size={132} src={info.avatar} />
-          </Col>
-          <Col className="info-container">
-            <Row className="top-info">
-              <span style={{ fontSize: "20px", fontWeight: 700 }}>
-                {info.fullName || "--"}
-              </span>
-              {renderGenderInfo(info.gender)}
+        <Col className="personalInfo-container">
+          <Row className="avatar-container">
+            <Row className="left-container">
+              <Avatar shape="square" size={132} src={info.avatar} />
+              <Descriptions style={{ flex: 1 }}>
+                <Descriptions.Item label="Họ và tên" span={12}>
+                  {info.fullName || "--"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Giới tính">
+                  {Utils.getGenderText(info.gender)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Vai trò">
+                  {Utils.renderAccountRole(role)}
+                </Descriptions.Item>
+              </Descriptions>
             </Row>
-            <Col className="bottom-info">
-              <Row className="info-details">
-                <CalendarOutlined />
-                <span className="info-details-info">{`Ngày sinh: ${
-                  info.dateOfBirth || "--"
-                }`}</span>
-              </Row>
-              <Row className="info-details">
-                <PhoneOutlined />
-                <span className="info-details-info">{`Số điện thoại: ${
-                  phoneNumber || "--"
-                }`}</span>
-              </Row>
-              <Row className="info-details">
-                <MailOutlined />
-                <span className="info-details-info">{`Email: ${
-                  info?.email || "--"
-                }`}</span>
-              </Row>
-              <Row className="info-details">
-                <HomeOutlined />
-                <span className="info-details-info">{`Địa chỉ: ${
-                  getInfoAddress() || "--"
-                }`}</span>
-              </Row>
-            </Col>
+            <Button onClick={() => setOpen(true)}>Cập nhật</Button>
+          </Row>
+          <Col className="info-container">
+            <Descriptions bordered title="Thông tin cá nhân">
+              <Descriptions.Item label="Ngày sinh">
+                {info.dateOfBirth || "--"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Số điện thoại">
+                {phoneNumber || "--"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Email">
+                {info?.email || "--"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Địa chỉ" span={24}>
+                {getInfoAddress() || "--"}
+              </Descriptions.Item>
+            </Descriptions>
+            {role === Role.doctor && (
+              <Descriptions bordered title="Thông tin bác sĩ">
+                <Descriptions.Item label="Khoa">
+                  {info.departmentName}
+                </Descriptions.Item>
+                <Descriptions.Item label="Chức vụ">
+                  {Utils.getDoctorPositionText(info.position)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Học vấn">
+                  {Utils.getDoctorRankText(info.rank)}
+                </Descriptions.Item>
+              </Descriptions>
+            )}
           </Col>
-        </Row>
+        </Col>
       </div>
       <Modal
         centered
@@ -130,7 +107,7 @@ function Overview() {
           <Title level={4}>Cập nhật thông tin cá nhân</Title>
         </div>
         <div>
-          <BasicInfoForm form={form} value={info} dismissForm={onCloseModel}/>
+          <BasicInfoForm form={form} value={info} dismissForm={onCloseModel} />
         </div>
       </Modal>
     </div>

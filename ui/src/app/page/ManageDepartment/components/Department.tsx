@@ -1,8 +1,4 @@
-import {
-  EditOutlined,
-  PlusOutlined,
-  RightOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Col, Empty, Input, Modal, Row } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Text from "antd/es/typography/Text";
@@ -15,7 +11,11 @@ import "./Department.scss";
 import { tooltipPlainText } from "../../../../utils/basicRender";
 import { Utils } from "../../../../utils";
 import { useDispatch, useSelector } from "react-redux";
-import { closeLoading, openLoading, showToastMessage } from "../../../../redux/reducers";
+import {
+  closeLoading,
+  openLoading,
+  showToastMessage,
+} from "../../../../redux/reducers";
 import { toastType } from "../../../model/enum/common";
 import { RootState } from "../../../../redux";
 import { Role } from "../../../model/enum/auth";
@@ -106,7 +106,7 @@ const columns = [
       return <span>{tooltipPlainText(item.address)}</span>;
     },
   },
-]
+];
 
 function Department() {
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
@@ -127,25 +127,29 @@ function Department() {
   const callApiDepartment = () => {
     let result = [];
     dispatch(openLoading());
-    departmentApi.getDepartmentList().then((response) => {
-      result = response?.data?.map((item: any) => {
-        return {
-          value: item?._id,
-          label: item?.displayName,
-        };
+    departmentApi
+      .getDepartmentList()
+      .then((response) => {
+        result = response?.data?.map((item: any) => {
+          return {
+            value: item?._id,
+            label: item?.displayName,
+          };
+        });
+        setDepartmentList(result);
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message:
+              "Có lỗi, hãy thông báo tới đơn vị hỗ trợ của Riordan Clinic",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
       });
-      setDepartmentList(result);
-    }).catch(() => {
-      dispatch(
-        showToastMessage({
-          message: "Có lỗi, hãy thông báo tới đơn vị hỗ trợ của Riordan Clinic",
-          type: toastType.error,
-        })
-      );
-    })
-    .finally(() => {
-      dispatch(closeLoading());
-    });
   };
 
   useEffect(() => {
@@ -181,7 +185,7 @@ function Department() {
   const integrateItems = (reqbody: any): Promise<AxiosResponse<any, any>> => {
     const body = {
       ...reqbody,
-      id: selectItem?.value
+      id: selectItem?.value,
     };
     return departmentApi.manageDepartment(body);
   };
@@ -216,7 +220,7 @@ function Department() {
         )}
         <Button
           icon={<PlusOutlined />}
-          style={{ marginLeft: 8}}
+          style={{ marginLeft: 8 }}
           onClick={() => setAddEit({ open: true, isEdit: false })}
         >
           Thêm
@@ -236,28 +240,29 @@ function Department() {
       api = departmentApi.updateDepartment;
       body = {
         displayName: departmentInputValue,
-        id: selectItem?.value
-      }
+        id: selectItem?.value,
+      };
     }
-    api(body).then((result: any) => {
-      if (result.isSuccess) {
-        dispatch(
+    api(body)
+      .then((result: any) => {
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Thành công",
+              type: toastType.succes,
+            })
+          );
+          callApiDepartment();
+          setInputValue("");
+          handleCancelAddEdit();
+        } else {
           showToastMessage({
-            message: "Thành công",
-            type: toastType.succes,
-          })
-        );
-        callApiDepartment();
-        setInputValue("");
-        handleCancelAddEdit();
-      } else {
-        showToastMessage({
-          message: "Có lỗi, hãy thử lại",
-          type: toastType.error,
-        })
-      }
-    })
-    .catch(() => {
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          });
+        }
+      })
+      .catch(() => {
         dispatch(
           showToastMessage({
             message: "Có lỗi, hãy thử lại",
@@ -280,7 +285,7 @@ function Department() {
     <>
       <Row className="departmentList-container">
         <Col className="list-section">
-          <Row style={{ justifyContent: "space-between" }}>
+          <Row style={{ justifyContent: "space-between", minWidth: "319px" }}>
             <Title level={4}>Danh sách khoa</Title>
             {role === Role.admin && renderManageButton()}
           </Row>
@@ -327,11 +332,11 @@ function Department() {
             value={departmentInputValue}
             onChange={(e) => {
               if (e.target.value) {
-                setErrorInputValue("")
+                setErrorInputValue("");
               } else {
-                setErrorInputValue("Vui lòng nhập tên khoa!")
+                setErrorInputValue("Vui lòng nhập tên khoa!");
               }
-              setInputValue(e.target.value)
+              setInputValue(e.target.value);
             }}
             status={errorInputValue ? "error" : undefined}
           />
