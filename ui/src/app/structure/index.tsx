@@ -13,11 +13,12 @@ import { closeLoading, openLoading, setInfoUser, setPhoneNumber, setRole, userLo
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { routerString } from "../model/router";
 import { Role } from "../model/enum/auth";
-import { Avatar, Dropdown, Form, Modal } from "antd";
+import { Avatar, Dropdown, Form, Modal, Tooltip } from "antd";
 import { MdLogout } from "react-icons/md";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { CalendarOutlined, CommentOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
 import { ApiStatusCode } from "../model/enum/apiStatus";
 import ChangePassword from "./ChangePassword";
+import { Utils } from "../../utils";
 
 interface IUniformLayoutProps {
   page: JSX.Element;
@@ -26,7 +27,7 @@ interface IUniformLayoutProps {
 }
 
 function UniformLayout({ ...props }: IUniformLayoutProps) {
-  const { phoneNumber, role } = useSelector((state: RootState) => state.auth);
+  const { phoneNumber, role, info } = useSelector((state: RootState) => state.auth);
   const { isLoading } = useSelector((state: RootState) => state.loading);
   const { isShow } = useSelector((state: RootState) => state.toast);
   const [form] = Form.useForm();
@@ -80,7 +81,6 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
 
   const renderContent = () => {
       const { page, permission, noBackground } = props;
-      const colorList = ['#FF007F', '#1B4D3E', '#002244'];
       const userList = ['Doctor', 'User', 'Admin'];
       const items = [
         { key: 'accountinformation', label: <Link to={routerString.home}> <UserOutlined /> &nbsp; Thông tin cá nhân</Link> },
@@ -103,9 +103,13 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
           <div className="main-header">
             <UniformBreadcrumb/>
             <div style={{ paddingRight: "24px"}}>
+              {/* <Avatar shape="square" icon={<CalendarOutlined />} style={{ marginRight: 12, verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large"></Avatar>
+              <Tooltip title="Đổi mật khẩu" key="#changepw" color="#fff" overlayClassName="common-tooltip">
+                <Avatar shape="square" icon={<LockOutlined />} style={{ marginRight: 12, verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large" onClick={() => setOpenCPW(true)}></Avatar>
+              </Tooltip> */}
               <Dropdown menu={{ items }} placement="bottomLeft" arrow>
-                <Avatar style={{ backgroundColor: `${colorList[role || 0]}`, verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large">
-                  {userList[role!]}
+                <Avatar shape="square" style={{ backgroundColor: "#002244", verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large">
+                  {Utils.convertUserNameIconText(info.fullName) || userList[role!]}
                 </Avatar>
               </Dropdown>
             </div>
