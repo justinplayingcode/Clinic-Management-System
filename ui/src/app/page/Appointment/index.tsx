@@ -14,12 +14,16 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import {
+  ServiceType,
   genderList,
   host,
   patientRelationshipList,
 } from "../../model/enum/common";
 import "./index.scss";
 import { TimeFrame } from "./utils";
+import { serviceApi } from "../../../api";
+import { RootState } from "../../../redux";
+import { useSelector } from "react-redux";
 
 const { Text } = Typography;
 interface ISelectOption {
@@ -32,7 +36,7 @@ type FieldType = {
   dateOfBirth?: string;
   gender?: string;
   phoneNumber?: string;
-  identificationNumber?: string;
+  insurance?: string;
 
   city?: string;
   district?: string;
@@ -41,6 +45,7 @@ type FieldType = {
 
   appointmentDate: string;
   appointmentTime: string;
+  appointmentType?: string;
   appointmentReason: string;
 
   guardianName?: string;
@@ -51,11 +56,11 @@ type FieldType = {
 const appointmentTimeOptions = [
   {
     value: TimeFrame.Morning,
-    label: "7h30 - 11h30",
+    label: "Sáng (8h - 11h30)",
   },
   {
     value: TimeFrame.Afternoon,
-    label: "14h - 16h ",
+    label: "Chiều (13h - 16h30)",
   },
 ];
 
@@ -72,6 +77,7 @@ function Appointment() {
   const [form] = Form.useForm();
 
   // const dispatch = useDispatch();
+  const { info } = useSelector((state: RootState) => state.auth);
 
   const [city, setCity] = useState<ISelectOption>({
     value: "",
@@ -86,10 +92,14 @@ function Appointment() {
     label: "",
   });
   const [details, setDetails] = useState<string>("");
-
   const [cityList, setCityList] = useState<ISelectOption[]>([]);
   const [districtList, setDistrictList] = useState<ISelectOption[]>([]);
   const [communeList, setComuneList] = useState<ISelectOption[]>([]);
+  const [appointmentTypeList, setAppointmentTypeList] = useState<ISelectOption[]>([]);
+  const [appointmentType, setAppointmentType] = useState<ISelectOption>({
+    value: "",
+    label: "",
+  });
 
   const callAPI = (api: any) => {
     return axios.get(api).then((response) => {
@@ -132,8 +142,24 @@ function Appointment() {
     return current && current < dayjs().endOf("day");
   };
 
+  const callApiAppointmentType = () => {
+    const result: any[] = [];
+    serviceApi.getAll().then((response) => {
+      response?.data?.forEach((item: any) => {
+        if (item.type === ServiceType.Basic) {
+          result.push({
+            value: item?._id,
+            label: item?.displayName
+          });
+        }
+      });
+      setAppointmentTypeList(result);
+    });
+  }
+
   useEffect(() => {
     callAPI(host);
+    callApiAppointmentType();
   }, []);
 
   useEffect(() => {
@@ -146,14 +172,16 @@ function Appointment() {
 
   const onFinish = (values: any) => {
     values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
-
     values.appointmentDate = values["appointmentDate"].format("MM/DD/YYYY");
-
     values["city"] = values.city.label;
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;
     values["address"] = values.address || "";
     console.log("Success:", values);
+    const body = {
+      ...values,
+      accountId: info.accountId
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -164,7 +192,7 @@ function Appointment() {
       <div className="appointment-form-title">Thông tin đăng ký khám bệnh</div>
       <Form
         form={form}
-        name="basic"
+        name="basic-appointment"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
         layout={"vertical"}
@@ -229,10 +257,13 @@ function Appointment() {
               </Col>
               <Col span={12} style={{ flex: 1 }}>
                 <Form.Item<FieldType>
-                  label="CCCD/CMND"
-                  name="identificationNumber"
+                  label="Số thẻ BHYT"
+                  name="insurance"
+                  rules={[
+                    { required: true, message: "Hãy nhập số thẻ BHYT!" },
+                  ]}
                 >
-                  <Input placeholder="Nhập CCCD/CMND" />
+                  <Input placeholder="Nhập số thẻ BHYT" />
                 </Form.Item>
               </Col>
             </Row>
@@ -341,7 +372,7 @@ function Appointment() {
             </Row>
             <Col>
               <Row style={{ gap: "40px" }}>
-                <Col span={12} style={{ flex: 1 }}>
+                <Col span={8} style={{ flex: 1 }}>
                   <Form.Item<FieldType>
                     label="Ngày khám"
                     name="appointmentDate"
@@ -355,7 +386,29 @@ function Appointment() {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={12} style={{ flex: 1 }}>
+                <Col span={8} style={{ flex: 1 }}>
+                  <Form.Item<FieldType>
+                    label="Loại khám"
+                    name="appointmentType"
+                    rules={[
+                      { required: true, message: "Hãy chọn loại khám!" },
+                    ]}
+                  >
+                    <Select
+                      labelInValue
+                      placeholder="Chọn loại khám"
+                      options={appointmentTypeList}
+                      value={appointmentType}
+                      onChange={(value: { value: string; label: string }) => {
+                        setAppointmentType({
+                          value: value.value,
+                          label: value.label,
+                        })
+                      }}
+                    ></Select>
+                  </Form.Item>
+                </Col>
+                <Col span={8} style={{ flex: 1 }}>
                   <Form.Item<FieldType>
                     label="Khung giờ khám"
                     name="appointmentTime"
