@@ -103,7 +103,7 @@ function Overview() {
               </Descriptions.Item>
             </Descriptions>
           : 
-            <Descriptions style={{ flex: 1 }} bordered title="Chi tiết lịch hẹn tiếp theo">
+            <Descriptions style={{ flex: 1 }} title="Chi tiết lịch hẹn tiếp theo">
               <Descriptions.Item label="Bác sĩ" span={2}>
                 {info.fullName || "--"}
               </Descriptions.Item>
@@ -111,15 +111,27 @@ function Overview() {
                 --
               </Descriptions.Item>
               <Descriptions.Item label="Chức vụ">
-                {/* {Utils.renderAccountRole(role)} */}
                 --
               </Descriptions.Item>
               <Descriptions.Item label="Học vị">
-                {/* {Utils.renderAccountRole(role)} */}
                 --
               </Descriptions.Item>
               <Descriptions.Item label="Số điện thoại">
-                {/* {Utils.renderAccountRole(role)} */}
+                --
+              </Descriptions.Item>
+              <Descriptions.Item label="Người khám" span={2}>
+                --
+              </Descriptions.Item>
+              <Descriptions.Item label="Giới tính">
+                --
+              </Descriptions.Item>
+              <Descriptions.Item label="Ngày sinh">
+                --
+              </Descriptions.Item>
+              <Descriptions.Item label="Địa chỉ">
+                --
+              </Descriptions.Item>
+              <Descriptions.Item label="Triệu chứng" span={2}>
                 --
               </Descriptions.Item>
             </Descriptions>
