@@ -236,7 +236,7 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
                             </div>
                         }
                     </div>
-                    {total > pageSize ? 
+                    {(total > pageSize && !isLoading) ? 
                       <div className='details-list-paging'>
                           <Pagination
                             pageTotal={Math.ceil(total/pageSize)}

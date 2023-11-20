@@ -15,12 +15,12 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import {
   ServiceType,
+  TimeFrame,
   genderList,
   host,
   patientRelationshipList,
 } from "../../model/enum/common";
 import "./index.scss";
-import { TimeFrame } from "./utils";
 import { serviceApi } from "../../../api";
 import { RootState } from "../../../redux";
 import { useSelector } from "react-redux";

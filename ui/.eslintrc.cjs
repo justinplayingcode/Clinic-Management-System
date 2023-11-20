@@ -31,6 +31,7 @@ module.exports = {
     "no-constant-condition": "off",
     "react-hooks/exhaustive-deps": "off",
     "no-extra-boolean-cast": "off",
-    "no-extra-semi": "off"
+    "no-extra-semi": "off",
+    "react-hooks/rules-of-hooks": "off"
   },
 }

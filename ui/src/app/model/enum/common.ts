@@ -123,3 +123,16 @@ export enum ServiceType {
   Basic,
   Other,
 }
+
+export enum AppointmentStatus{
+  Checking,
+  CheckedAndWaitConfirm,
+  Confirmed,
+  Cancel,
+  Complete
+}
+
+export enum TimeFrame {
+  Morning,
+  Afternoon
+}

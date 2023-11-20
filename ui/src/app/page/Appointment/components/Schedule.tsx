@@ -14,7 +14,6 @@ import {
   Popconfirm,
   Row,
   Steps,
-  message,
   theme,
 } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
@@ -25,16 +24,14 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux";
 import { Role } from "../../../model/enum/auth";
-import { AppointmentStatus, Gender, TimeFrame } from "../utils";
 import "./Schedule.scss";
 import DetailsInfo from "../../components/DetailsInfo";
-import { PositionOfDoctor, RankOfDoctor } from "../../../model/enum/common";
+import { AppointmentStatus, Gender, PositionOfDoctor, RankOfDoctor, TimeFrame } from "../../../model/enum/common";
 import { Utils } from "../../../../utils";
 import { departmentApi } from "../../../../api";
 import UniformTable from "../../components/table";
 import { AxiosResponse } from "axios";
-import { tooltipPlainText } from "../../../../utils/basicRender";
-import { ICommandBarItemProps } from "@fluentui/react";
+import { renderAppointmentStatus, tooltipPlainText } from "../../../../utils/basicRender";
 
 interface ISelectOption {
   value: string;
@@ -71,8 +68,8 @@ const columns = [
   {
     key: "name",
     name: "Họ và tên",
-    minWidth: 80,
-    maxWidth: 180,
+    minWidth: 100,
+    maxWidth: 150,
     isResizable: true,
     onRender: (item: any) => {
       return <span>{tooltipPlainText(item.fullName)}</span>;
@@ -111,46 +108,14 @@ const columns = [
   {
     key: "email",
     name: "Email",
-    minWidth: 100,
+    minWidth: 80,
     maxWidth: 160,
     isResizable: true,
     onRender: (item: any) => {
       return <span>{tooltipPlainText(item.email)}</span>;
     },
-  },
-  {
-    key: "gender",
-    name: "Giới tính",
-    minWidth: 80,
-    maxWidth: 150,
-    isResizable: true,
-    onRender: (item: any) => {
-      return <span>{Utils.getGenderText(item.gender)}</span>;
-    },
-  },
-  {
-    key: "dob",
-    name: "Ngày sinh",
-    minWidth: 80,
-    maxWidth: 150,
-    isResizable: true,
-    onRender: (item: any) => {
-      return <span>{tooltipPlainText(item.dateOfBirth)}</span>;
-    },
-  },
-  {
-    key: "address",
-    name: "Địa chỉ",
-    minWidth: 70,
-    maxWidth: 90,
-    isResizable: true,
-    onRender: (item: any) => {
-      return <span>{tooltipPlainText(item.address)}</span>;
-    },
-  },
+  }
 ];
-
-// const appointmentList: IAppointmentInfo[] = [];
 
 const listData: IAppointmentInfo[] = [
   {
@@ -230,24 +195,7 @@ function Schedule() {
       });
       setDepartmentList(result);
     });
-  };
-
-  const renderAppointmentStatus = (status: AppointmentStatus) => {
-    switch (status) {
-      case AppointmentStatus.Checking:
-        return <Text style={{ color: "#FFDE00" }}>Chờ duyệt</Text>;
-      case AppointmentStatus.CheckedAndWaitConfirm:
-        return <Text style={{ color: "#EE7D21" }}>Đã duyệt, chờ xác nhận</Text>;
-      case AppointmentStatus.Confirmed:
-        return <Text style={{ color: "#00794E" }}>Đã xác nhận</Text>;
-      case AppointmentStatus.Cancel:
-        return <Text style={{ color: "#ED1C2E" }}>Bị hủy</Text>;
-      case AppointmentStatus.Complete:
-        return <Text style={{ color: "#005AA9" }}>Hoàn thành</Text>;
-      default:
-        return <></>;
-    }
-  };
+  };;
 
   const appointmentItem = (item: IAppointmentInfo, index: number) => {
     return (
@@ -273,7 +221,6 @@ function Schedule() {
               {renderAppointmentStatus(item.status)}
             </Row>
           </Col>
-
           {selectItem?.id === item.id && (
             <RightOutlined style={{ color: "#00A2FF" }} />
           )}
@@ -599,32 +546,17 @@ function Schedule() {
         <div className="selectDoctor-modal" style={contentStyle}>
           {stepperItem[current].content}
         </div>
-        <div style={{ marginTop: 24 }}>
-          {current < stepperItem.length - 1 && (
-            <Button
-              type="primary"
-              disabled={selectDepartment.value === defaultSelectOption.value}
-              onClick={() => next()}
-            >
-              Sau
-            </Button>
-          )}
-          {current === stepperItem.length - 1 && (
-            <Button
-              type="primary"
-              disabled={tableSelectedCount !== 1}
-              onClick={() => {
-                handleOk();
-              }}
-            >
-              Hoàn thành
-            </Button>
-          )}
-          {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-              Trước
-            </Button>
-          )}
+        <div style={{ marginTop: 24, display: "flex", justifyContent: "space-between" }}>
+          <Button disabled={current === 0} style={{ margin: "0 8px" }} onClick={() => prev()}>
+            Quay lại
+          </Button>
+          <Button
+            type="primary"
+            disabled={current === stepperItem.length - 1 ? tableSelectedCount !== 1 : selectDepartment.value === defaultSelectOption.value}
+            onClick={() => current === stepperItem.length - 1 ? handleOk() : next()}
+          >
+            {current === stepperItem.length - 1 ? "Hoàn thành" : "Tiếp theo"}
+          </Button>
         </div>
       </Modal>
     );
