@@ -409,20 +409,21 @@ function Schedule() {
             onConfirm={() => console.log("confirm")}
             okText="Yes"
             cancelText="No"
-            disabled
           >
-            <Button type="primary">Xác nhận</Button>
-          </Popconfirm>
-          {!selectItem?.doctor && (
-            <Button
-              onClick={() => {
-                setOpenSelectDoctor(true);
-                callApiDepartment();
-              }}
-            >
-              Chọn bác sĩ
+            <Button disabled={!selectItem?.doctor?.id} type="primary">
+              Xác nhận
             </Button>
-          )}
+          </Popconfirm>
+          {/* {!selectItem?.doctor && ( */}
+          <Button
+            onClick={() => {
+              setOpenSelectDoctor(true);
+              callApiDepartment();
+            }}
+          >
+            Chọn bác sĩ
+          </Button>
+          {/* )} */}
           <Popconfirm
             title="Hủy lịch hẹn"
             description={
@@ -493,26 +494,22 @@ function Schedule() {
     };
 
     const handleOk = () => {
+      setSelectItem({
+        ...selectItem,
+        doctor: {
+          id: tableSelectedItem[0].doctorId,
+          name: tableSelectedItem[0].fullName,
+          departmentName: tableSelectedItem[0].departmentName,
+          position: PositionOfDoctor.dean,
+          rank: RankOfDoctor.tienSi,
+          phoneNumber: tableSelectedItem[0].phoneNumber,
+        },
+      } as IAppointmentInfo);
+
       setCurrent(0);
       setSelectDepartment(defaultSelectOption);
       setSelectDoctor("");
       setOpenSelectDoctor(false);
-    };
-
-    const commandBar = () => {
-      const command: ICommandBarItemProps[] = [];
-      if (tableSelectedCount === 1) {
-        command.push({
-          key: "select",
-          text: "Chọn bác sĩ",
-          iconProps: { iconName: "Checkmark" },
-          onClick: () => {
-            setSelectDoctor(tableSelectedItem[0].doctorId);
-          },
-        });
-      }
-
-      return command;
     };
 
     const departmentItem = (item: ISelectOption, _: number) => {
@@ -579,7 +576,7 @@ function Schedule() {
             <UniformTable
               key={JSON.stringify(selectDepartment?.value)}
               columns={columns}
-              commandBarItems={commandBar()}
+              commandBarItems={[]}
               integrateItems={integrateItems}
               searchByColumn={"fullName"}
               searchPlaceholder={"tên"}
@@ -596,6 +593,7 @@ function Schedule() {
         open={isOpenSelectDoctor}
         onOk={handleOk}
         onCancel={handleCancel}
+        width={900}
       >
         <Steps current={current} items={stepperItem} />
         <div className="selectDoctor-modal" style={contentStyle}>
@@ -614,12 +612,8 @@ function Schedule() {
           {current === stepperItem.length - 1 && (
             <Button
               type="primary"
-              disabled={selectDoctor === ""}
+              disabled={tableSelectedCount !== 1}
               onClick={() => {
-                console.log({
-                  ...selectItem,
-                  idDoctor: selectDoctor,
-                });
                 handleOk();
               }}
             >
