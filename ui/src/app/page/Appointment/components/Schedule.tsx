@@ -26,12 +26,21 @@ import { RootState } from "../../../../redux";
 import { Role } from "../../../model/enum/auth";
 import "./Schedule.scss";
 import DetailsInfo from "../../components/DetailsInfo";
-import { AppointmentStatus, Gender, PositionOfDoctor, RankOfDoctor, TimeFrame } from "../../../model/enum/common";
+import {
+  AppointmentStatus,
+  Gender,
+  PositionOfDoctor,
+  RankOfDoctor,
+  TimeFrame,
+} from "../../../model/enum/common";
 import { Utils } from "../../../../utils";
 import { departmentApi } from "../../../../api";
 import UniformTable from "../../components/table";
 import { AxiosResponse } from "axios";
-import { renderAppointmentStatus, tooltipPlainText } from "../../../../utils/basicRender";
+import {
+  renderAppointmentStatus,
+  tooltipPlainText,
+} from "../../../../utils/basicRender";
 
 interface ISelectOption {
   value: string;
@@ -114,7 +123,7 @@ const columns = [
     onRender: (item: any) => {
       return <span>{tooltipPlainText(item.email)}</span>;
     },
-  }
+  },
 ];
 
 const listData: IAppointmentInfo[] = [
@@ -170,11 +179,38 @@ const listData: IAppointmentInfo[] = [
       phoneNumber: "0123456789",
     },
   },
+  {
+    id: "3",
+    name: "Phạm Duy Thắng",
+    dateOfBirth: "01/31/2001",
+    gender: Gender.Male,
+    phoneNumber: "0938273611",
+    city: "Hà Nội",
+    district: "Cầu Giấy",
+    commune: "Nhân Chính",
+    address: "",
+
+    date: "11/24/2023",
+    timeFrame: TimeFrame.Morning,
+    reason: "Xoang mũi, khó thở",
+    status: AppointmentStatus.Confirmed,
+    appointmentCode: "APP000123456",
+
+    doctor: {
+      id: "doctor2",
+      name: "Name 2",
+      departmentName: "Khoa Nội",
+      position: PositionOfDoctor.viceDean,
+      rank: RankOfDoctor.GSTS,
+      phoneNumber: "0123456789",
+    },
+  },
 ];
 
 function Schedule() {
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
   const [isOpenSelectDoctor, setOpenSelectDoctor] = useState<boolean>(false);
+  const [isOpenProcess, setOpenProcess] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<IAppointmentInfo>();
   const [cancelReason, setCancelReason] = useState<string>("");
   const { tableSelectedCount, tableSelectedItem } = useSelector(
@@ -195,7 +231,7 @@ function Schedule() {
       });
       setDepartmentList(result);
     });
-  };;
+  };
 
   const appointmentItem = (item: IAppointmentInfo, index: number) => {
     return (
@@ -344,60 +380,69 @@ function Schedule() {
     role: Role | null,
     status: AppointmentStatus | undefined
   ) => {
-    if (
-      (status === AppointmentStatus.Checking && role === Role.admin) ||
-      (status === AppointmentStatus.CheckedAndWaitConfirm &&
-        role === Role.doctor)
-    ) {
-      return (
-        <Row className="button-container">
-          <Popconfirm
-            title="Xác nhận lịch hẹn"
-            onConfirm={() => console.log("confirm")}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button disabled={!selectItem?.doctor?.id} type="primary">
-              Xác nhận
+    return (
+      <Row className="button-container">
+        {((status === AppointmentStatus.Checking && role === Role.admin) ||
+          (status === AppointmentStatus.CheckedAndWaitConfirm &&
+            role === Role.doctor)) && (
+          <>
+            <Popconfirm
+              title="Xác nhận lịch hẹn"
+              onConfirm={() => console.log("confirm")}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button disabled={!selectItem?.doctor?.id} type="primary">
+                Xác nhận
+              </Button>
+            </Popconfirm>
+            <Button
+              onClick={() => {
+                setOpenSelectDoctor(true);
+                callApiDepartment();
+              }}
+            >
+              Chọn bác sĩ
             </Button>
-          </Popconfirm>
-          {/* {!selectItem?.doctor && ( */}
+            <Popconfirm
+              title="Hủy lịch hẹn"
+              description={
+                <Col>
+                  <Text>Nhập lí do hủy:</Text>
+                  <Input
+                    value={cancelReason}
+                    onChange={(e) => setCancelReason(e.target.value)}
+                  ></Input>
+                </Col>
+              }
+              okButtonProps={{ disabled: !cancelReason }}
+              onConfirm={() => {
+                setCancelReason("");
+                console.log("confirm");
+              }}
+              onCancel={() => setCancelReason("")}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button>Hủy</Button>
+            </Popconfirm>
+          </>
+        )}
+        {status === AppointmentStatus.Confirmed && role === Role.doctor && (
           <Button
-            onClick={() => {
-              setOpenSelectDoctor(true);
-              callApiDepartment();
-            }}
-          >
-            Chọn bác sĩ
-          </Button>
-          {/* )} */}
-          <Popconfirm
-            title="Hủy lịch hẹn"
-            description={
-              <Col>
-                <Text>Nhập lí do hủy:</Text>
-                <Input
-                  value={cancelReason}
-                  onChange={(e) => setCancelReason(e.target.value)}
-                ></Input>
-              </Col>
+            disabled={
+              selectItem?.date !==
+              moment(new Date()).format("MM/DD/YYYY").toString()
             }
-            okButtonProps={{ disabled: !cancelReason }}
-            onConfirm={() => {
-              setCancelReason("");
-              console.log("confirm");
+            onClick={() => {
+              setOpenProcess(true);
             }}
-            onCancel={() => setCancelReason("")}
-            okText="Yes"
-            cancelText="No"
           >
-            <Button>Hủy</Button>
-          </Popconfirm>
-        </Row>
-      );
-    }
-
-    return;
+            Bắt đầu khám
+          </Button>
+        )}
+      </Row>
+    );
   };
 
   const renderScheduleStepper = () => {
@@ -546,18 +591,61 @@ function Schedule() {
         <div className="selectDoctor-modal" style={contentStyle}>
           {stepperItem[current].content}
         </div>
-        <div style={{ marginTop: 24, display: "flex", justifyContent: "space-between" }}>
-          <Button disabled={current === 0} style={{ margin: "0 8px" }} onClick={() => prev()}>
+        <div
+          style={{
+            marginTop: 24,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            disabled={current === 0}
+            style={{ margin: "0 8px" }}
+            onClick={() => prev()}
+          >
             Quay lại
           </Button>
           <Button
             type="primary"
-            disabled={current === stepperItem.length - 1 ? tableSelectedCount !== 1 : selectDepartment.value === defaultSelectOption.value}
-            onClick={() => current === stepperItem.length - 1 ? handleOk() : next()}
+            disabled={
+              current === stepperItem.length - 1
+                ? tableSelectedCount !== 1
+                : selectDepartment.value === defaultSelectOption.value
+            }
+            onClick={() =>
+              current === stepperItem.length - 1 ? handleOk() : next()
+            }
           >
             {current === stepperItem.length - 1 ? "Hoàn thành" : "Tiếp theo"}
           </Button>
         </div>
+      </Modal>
+    );
+  };
+
+  const renderCureProcess = () => {
+    const renderCureProcesFooter = () => {
+      return <> Footer</>;
+    };
+
+    const handleCancel = () => {
+      setOpenProcess(false);
+    };
+
+    const handleOk = () => {
+      setOpenProcess(false);
+    };
+
+    return (
+      <Modal
+        title="Chỉ định bác sĩ"
+        footer={renderCureProcesFooter}
+        open={isOpenProcess}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={900}
+      >
+        Bắt đầu quá trình khám
       </Modal>
     );
   };
@@ -627,6 +715,7 @@ function Schedule() {
           </Col>
         </Col>
         {renderScheduleStepper()}
+        {renderCureProcess()}
       </Row>
     </>
   );
