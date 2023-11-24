@@ -5,14 +5,18 @@ import Convert from "../../common/utils/convert.utils";
 import collection from "../../common/constant/collection";
 
 const patientSchema = new Schema({
-  fullname: {
+  fullName: {
     type: String,
     trim: true,
   },
-  dateofbirth: {
+  dateOfBirth: {
     type: Date,
   },
   address: {
+    type: String,
+    trim: true,
+  },
+  phoneNumber: {
     type: String,
     trim: true,
   },
@@ -32,7 +36,7 @@ const patientSchema = new Schema({
     type: String,
     trim: true,
   },
-  guardianPhone: {
+  guardianPhoneNumber: {
     type: String,
     trim: true,
   },
