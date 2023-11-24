@@ -7,7 +7,6 @@ const scheduleSchema = new Schema({
   doctorId: {
     type: Schema.Types.ObjectId,
     ref: collection.doctor,
-    required: [true, "doctorId must be required"],
   },
   patientId: {
     type: Schema.Types.ObjectId,
@@ -17,7 +16,6 @@ const scheduleSchema = new Schema({
   departmentId: {
     type: Schema.Types.ObjectId,
     ref: collection.department,
-    required: [true, "departmentId must be required"],
   },
   accountId: {
     type: Schema.Types.ObjectId,
@@ -26,16 +24,16 @@ const scheduleSchema = new Schema({
   },
   appointmentDate: {
     type: Date,
-    trim: true,
+    required: [true, "appointmentDate must be required"],
   },
-  appointmentHour: {
+  appointmentTime: {
     type: Number,
     enum: {
       values: Convert.enumToArray(TimeFrame),
       message: "{VALUE} is not supported in appointmentHour",
     }
   },
-  initialSymptom: {
+  appointmentReason: {
     type: String,
     trim: true,
   },
@@ -52,7 +50,7 @@ const scheduleSchema = new Schema({
     trim: true,
     require: [true, "typeAppointmentId must be required"],
   },
-  statusUpadteTime: {
+  statusUpdateTime: {
     type: Date,
     trim: true,
   },

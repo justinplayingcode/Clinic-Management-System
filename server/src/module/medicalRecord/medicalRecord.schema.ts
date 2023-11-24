@@ -22,13 +22,11 @@ const medicalRecordSchema = new Schema({
     prescriptionId: {
         type: Schema.Types.ObjectId,
         ref: collection.prescription,
-        required: [true, 'prescriptionId must be required']
     },
     // scheduleId: string;
     scheduleId: {
-        type: String,
-        trim: true,
-        unique: true,
+        type: Schema.Types.ObjectId,
+        ref: collection.schedule,
         required: [true, 'scheduleId must be required']
     },
     // tests: string;
