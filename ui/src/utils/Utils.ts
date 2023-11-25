@@ -93,9 +93,10 @@ export default class Utils {
   }
 
   public static convertUserNameIconText = (string: string) => {
-    const listString = string.split(" ");
-    const sec = listString.pop()![0] || "";
-    const fir = listString.pop()![0] || "";
+    const str = string || "- -";
+    const listString = str.split(" ");
+    const sec = listString?.pop()![0] || "";
+    const fir = listString?.pop()![0]  || "";
     return fir + sec;
   }
 }

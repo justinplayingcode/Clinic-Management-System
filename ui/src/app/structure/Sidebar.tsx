@@ -47,7 +47,7 @@ const items = (role: Role): MenuItem[] => {
       return [
         getItem(mappingRouter[routerString.home], `${routerString.home}`, <HomeOutlined />),
         getItem("Quản lý lịch hẹn", `${routerString.schedule}`, <ScheduleOutlined />),
-        getItem(mappingRouter[routerString.appointment], `${routerString.appointment}`, <MedicineBoxOutlined />),
+        // getItem(mappingRouter[routerString.appointment], `${routerString.appointment}`, <MedicineBoxOutlined />),
         getItem(mappingRouter[routerString.histories], `${routerString.histories}`, <FileSearchOutlined />),
         getItem("Khoa", `${routerString.managedepartments}`, <ApartmentOutlined/>),
         getItem("Dịch vụ", `${routerString.manageservice}`, <MdOutlineMedicalServices />),
