@@ -126,7 +126,7 @@ function Department() {
 
   const callApiDepartment = () => {
     let result = [];
-    dispatch(openLoading());
+    // dispatch(openLoading());
     departmentApi
       .getDepartmentList()
       .then((response) => {
@@ -147,9 +147,6 @@ function Department() {
           })
         );
       })
-      .finally(() => {
-        dispatch(closeLoading());
-      });
   };
 
   useEffect(() => {

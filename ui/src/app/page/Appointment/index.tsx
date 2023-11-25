@@ -19,11 +19,16 @@ import {
   genderList,
   host,
   patientRelationshipList,
+  toastType,
 } from "../../model/enum/common";
 import "./index.scss";
-import { serviceApi } from "../../../api";
+import { scheduleApi, serviceApi } from "../../../api";
 import { RootState } from "../../../redux";
 import { useSelector } from "react-redux";
+import { closeLoading, openLoading, showToastMessage } from "../../../redux/reducers";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { routerString } from "../../model/router";
 
 const { Text } = Typography;
 interface ISelectOption {
@@ -75,6 +80,8 @@ const defaultSelectOption: ISelectOption = {
 
 function Appointment() {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // const dispatch = useDispatch();
   const { info } = useSelector((state: RootState) => state.auth);
@@ -177,11 +184,40 @@ function Appointment() {
     values["district"] = values.district.label;
     values["commune"] = values.commune.label;
     values["address"] = values.address || "";
-    console.log("Success:", values);
+    values["relationship"] = patientRelationshipList[values.relationship].label || "";
     const body = {
       ...values,
-      accountId: info.accountId
+      appointmentTypeId: values?.appointmentType.value,
+      appointmentType: undefined
     }
+    dispatch(openLoading());
+    scheduleApi.userCreateSchedule(body).then((result: any) => {
+      if (result.isSuccess) {
+        dispatch(
+          showToastMessage({
+            message: "Hẹn lịch thành công",
+            type: toastType.succes,
+          })
+        );
+        navigate(`${routerString.schedule}`)
+      } else {
+        showToastMessage({
+          message: "Có lỗi, hãy thử lại",
+          type: toastType.error,
+        })
+      }
+    })
+    .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {

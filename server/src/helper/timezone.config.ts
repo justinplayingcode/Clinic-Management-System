@@ -10,4 +10,9 @@ export default class MomentTimezone {
   public static convertDDMMYYYCsv = (date: Date): string => {
     return moment(date).tz('Asia/Ho_Chi_Minh').format('DD-MM-YYYY');
   }
+  public static getCurrentDate = (): Date => {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    return currentDate;
+  }
 }

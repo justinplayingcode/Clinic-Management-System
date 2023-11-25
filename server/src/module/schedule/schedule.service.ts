@@ -43,7 +43,7 @@ export default class ScheduleService {
 
   public adminGetSchedule = async () => {
     try {
-      const schedules = await this._scheduleRepository.getAll({});
+      const schedules = await this._scheduleRepository.getAll({ appointmentDate: { $gte: MomentTimezone.getCurrentDate() } });
       const result = schedules.map( async schedule => {
         let doctor = undefined;
         let patient = undefined;
@@ -68,7 +68,7 @@ export default class ScheduleService {
 
   public doctorGetSchedule = async (doctorId) => {
     try {
-      const schedules = await this._scheduleRepository.getAll({ doctorId });
+      const schedules = await this._scheduleRepository.getAll({ doctorId, appointmentDate: { $gte: MomentTimezone.getCurrentDate() } });
       const result = schedules.map( async schedule => {
         let patient = undefined;
         if (schedule.patientId) {

@@ -109,7 +109,7 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
               </Tooltip> */}
               <Dropdown menu={{ items }} placement="bottomLeft" arrow>
                 <Avatar shape="square" style={{ backgroundColor: "#002244", verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large">
-                  {Utils.convertUserNameIconText(info.fullName) || userList[role!]}
+                  {Utils.convertUserNameIconText(info?.fullName) || userList[role!]}
                 </Avatar>
               </Dropdown>
             </div>
