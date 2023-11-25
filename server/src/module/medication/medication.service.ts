@@ -4,6 +4,7 @@ import MedicationRepository from "./medication.repository";
 import Medication from "./medication.schema";
 import ErrorObject from "../../common/model/error";
 import { ApiStatusCode } from "../../common/enum/apiStatusCode";
+import logger from "../../helper/logger.config";
 
 export default class medicationService {
   private _medicationRepository;
@@ -102,7 +103,13 @@ export default class medicationService {
       throw error;
     }
   }
-}
-function logger(arg0: string, message: any) {
-  throw new Error("Function not implemented.");
+
+  public MedicationsPicker = async (searchKey) => {
+    try {
+      return await this._medicationRepository.medicationPicker(searchKey);
+    } catch (error) {
+      logger("MedicationsPicker-mediactionservice", error?.message);
+      throw error;
+    }
+  }
 }

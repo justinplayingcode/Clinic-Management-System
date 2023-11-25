@@ -94,7 +94,7 @@ export default class ScheduleController {
     }
   }
 
-  //POST
+  //GET
   public getSchedule = async (req, res, next) => {
     const { accountId, role } = req.user;
     let response: IBaseRespone;
