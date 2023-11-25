@@ -129,7 +129,27 @@ export default class MedicationController {
         searchKey: req.body.searchKey,
       }
       const result = await this._MedicationService.getDataOfStaticReport(param);
+      _res = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: result,
+      }
+      res.status(ApiStatusCode.OK).json(_res)
+    } catch (error) {
+      next(error)
+    }
+  }
 
+  public getMedicationPicker =async (req, res, next) => {
+    const verifyReq = validateReqBody(req, ["searchKey"]);
+    let _res: IBaseRespone;
+    if (!verifyReq.pass) {
+      const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "getMedicationPicker verify reqbody");
+      return next(err)
+    }
+    try {
+      const result = await this._MedicationService.MedicationsPicker(req.body.searchKey);
       _res = {
         status: ApiStatus.succes,
         isSuccess: true,

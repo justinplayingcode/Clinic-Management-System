@@ -9,7 +9,6 @@ medicationRoute.route('/create').post(middlewares.verifyToken, middlewares.permi
 medicationRoute.route('/update').post(middlewares.verifyToken, middlewares.permission([Role.admin]), medicationController.UpdateMedication)
 medicationRoute.route('/delete').put(middlewares.verifyToken, middlewares.permission([Role.admin]), medicationController.DeleteMedication)
 medicationRoute.route("/getall").post(middlewares.verifyToken, medicationController.getAllMedication);
-
-
+medicationRoute.route("/picker").post(middlewares.verifyToken, medicationController.getMedicationPicker);
 
 export default medicationRoute;
