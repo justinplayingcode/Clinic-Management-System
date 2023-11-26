@@ -31,6 +31,7 @@ const path = {
   updateService: "/typeAppointment/update",
 
   userCreateSchedule: "/schedule/usercreate",
+  getSchedule: "/schedule/"
 }
 
 const authApi = {
@@ -73,6 +74,7 @@ const serviceApi = {
 
 const scheduleApi = {
   userCreateSchedule: (reqbody: any) => api.post(path.userCreateSchedule, reqbody),
+  getAll: () => api.get(path.getSchedule),
 }
 
 export {
