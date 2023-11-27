@@ -25,7 +25,11 @@ import "./index.scss";
 import { scheduleApi, serviceApi } from "../../../api";
 import { RootState } from "../../../redux";
 import { useSelector } from "react-redux";
-import { closeLoading, openLoading, showToastMessage } from "../../../redux/reducers";
+import {
+  closeLoading,
+  openLoading,
+  showToastMessage,
+} from "../../../redux/reducers";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { routerString } from "../../model/router";
@@ -102,7 +106,9 @@ function Appointment() {
   const [cityList, setCityList] = useState<ISelectOption[]>([]);
   const [districtList, setDistrictList] = useState<ISelectOption[]>([]);
   const [communeList, setComuneList] = useState<ISelectOption[]>([]);
-  const [appointmentTypeList, setAppointmentTypeList] = useState<ISelectOption[]>([]);
+  const [appointmentTypeList, setAppointmentTypeList] = useState<
+    ISelectOption[]
+  >([]);
   const [appointmentType, setAppointmentType] = useState<ISelectOption>({
     value: "",
     label: "",
@@ -156,13 +162,13 @@ function Appointment() {
         if (item.type === ServiceType.Basic) {
           result.push({
             value: item?._id,
-            label: item?.displayName
+            label: item?.displayName,
           });
         }
       });
       setAppointmentTypeList(result);
     });
-  }
+  };
 
   useEffect(() => {
     callAPI(host);
@@ -178,36 +184,43 @@ function Appointment() {
   }, [district]);
 
   const onFinish = (values: any) => {
+    console.log("object: ", values);
     values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
     values.appointmentDate = values["appointmentDate"].format("MM/DD/YYYY");
-    values["city"] = values.city.label;
-    values["district"] = values.district.label;
-    values["commune"] = values.commune.label;
-    values["address"] = values.address || "";
-    values["relationship"] = patientRelationshipList[values.relationship].label || "";
+    values["city"] = values.city?.label ?? values.city;
+    values["district"] = values.district?.label ?? values.district;
+    values["commune"] = values.commune?.label ?? values.commune;
+    values["address"] = values?.address || "";
+    values["guardianName"] = values?.guardianName ?? "";
+    values["guardianPhoneNumber"] = values?.guardianPhoneNumber ?? "";
+    values["relationship"] =
+      patientRelationshipList[values?.relationship]?.label || "";
     const body = {
       ...values,
       appointmentTypeId: values?.appointmentType.value,
-      appointmentType: undefined
-    }
+      appointmentType: undefined,
+    };
     dispatch(openLoading());
-    scheduleApi.userCreateSchedule(body).then((result: any) => {
-      if (result.isSuccess) {
-        dispatch(
+    scheduleApi
+      .userCreateSchedule(body)
+      .then((result: any) => {
+        console.log(result);
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Hẹn lịch thành công",
+              type: toastType.succes,
+            })
+          );
+          navigate(`${routerString.schedule}`);
+        } else {
           showToastMessage({
-            message: "Hẹn lịch thành công",
-            type: toastType.succes,
-          })
-        );
-        navigate(`${routerString.schedule}`)
-      } else {
-        showToastMessage({
-          message: "Có lỗi, hãy thử lại",
-          type: toastType.error,
-        })
-      }
-    })
-    .catch(() => {
+            message: result.message,
+            type: toastType.error,
+          });
+        }
+      })
+      .catch(() => {
         dispatch(
           showToastMessage({
             message: "Có lỗi, hãy thử lại",
@@ -295,9 +308,7 @@ function Appointment() {
                 <Form.Item<FieldType>
                   label="Số thẻ BHYT"
                   name="insurance"
-                  rules={[
-                    { required: true, message: "Hãy nhập số thẻ BHYT!" },
-                  ]}
+                  rules={[{ required: true, message: "Hãy nhập số thẻ BHYT!" }]}
                 >
                   <Input placeholder="Nhập số thẻ BHYT" />
                 </Form.Item>
@@ -426,9 +437,7 @@ function Appointment() {
                   <Form.Item<FieldType>
                     label="Loại khám"
                     name="appointmentType"
-                    rules={[
-                      { required: true, message: "Hãy chọn loại khám!" },
-                    ]}
+                    rules={[{ required: true, message: "Hãy chọn loại khám!" }]}
                   >
                     <Select
                       labelInValue
@@ -439,7 +448,7 @@ function Appointment() {
                         setAppointmentType({
                           value: value.value,
                           label: value.label,
-                        })
+                        });
                       }}
                     ></Select>
                   </Form.Item>

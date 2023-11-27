@@ -22,7 +22,7 @@ import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux";
 import { Role } from "../../../model/enum/auth";
 import "./Schedule.scss";
@@ -33,6 +33,7 @@ import {
   PositionOfDoctor,
   RankOfDoctor,
   TimeFrame,
+  toastType,
 } from "../../../model/enum/common";
 import { Utils } from "../../../../utils";
 import { departmentApi, scheduleApi } from "../../../../api";
@@ -42,6 +43,11 @@ import {
   renderAppointmentStatus,
   tooltipPlainText,
 } from "../../../../utils/basicRender";
+import {
+  closeLoading,
+  openLoading,
+  showToastMessage,
+} from "../../../../redux/reducers";
 
 interface ISelectOption {
   value: string;
@@ -144,7 +150,7 @@ function Schedule() {
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
   const [isOpenSelectDoctor, setOpenSelectDoctor] = useState<boolean>(false);
   const [isOpenProcess, setOpenProcess] = useState<boolean>(false);
-  const [selectItem, setSelectItem] = useState<IAppointmentInfo>();
+  const [selectItem, setSelectItem] = useState<IAppointmentInfo | null>();
   const [cancelReason, setCancelReason] = useState<string>("");
   const { tableSelectedCount, tableSelectedItem } = useSelector(
     (state: RootState) => state.currentSeleted
@@ -154,12 +160,40 @@ function Schedule() {
   );
 
   const { role } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
 
   const callScheduleList = () => {
-    return scheduleApi.getAll().then((response) => {
-      const result = response?.data;
-      setAppointmentList(result);
-    });
+    dispatch(openLoading());
+    scheduleApi
+      .getAll()
+      .then((result: any) => {
+        if (result.isSuccess) {
+          // dispatch(
+          //   showToastMessage({
+          //     message: "Cập nhật thành công",
+          //     type: toastType.succes,
+          //   })
+          // );
+          const res = result?.data;
+          setAppointmentList(res);
+        } else {
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          });
+        }
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
   };
 
   useEffect(() => {
@@ -322,13 +356,83 @@ function Schedule() {
   };
 
   const handleAdminVerifyDeny = (isAccept: boolean, cancelReason?: string) => {
-    console.log({
+    const body = {
       id: selectItem?._id ?? "",
       doctorId: selectItem?.doctorId ?? "",
       departmentId: selectItem?.doctor.departmentId ?? "",
       isAccept: isAccept,
       cancellationReason: cancelReason ?? "",
-    });
+    };
+    dispatch(openLoading());
+    scheduleApi
+      .adminVerify(body)
+      .then((result: any) => {
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Cập nhật thành công",
+              type: toastType.succes,
+            })
+          );
+          callScheduleList();
+          setSelectItem(null);
+        } else {
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          });
+        }
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
+  };
+
+  const handleDoctorVerifyDeny = (isAccept: boolean, cancelReason?: string) => {
+    const body = {
+      id: selectItem?._id ?? "",
+      isAccept: isAccept,
+      cancellationReason: cancelReason ?? "",
+    };
+    dispatch(openLoading());
+    scheduleApi
+      .doctorVerify(body)
+      .then((result: any) => {
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Cập nhật thành công",
+              type: toastType.succes,
+            })
+          );
+          callScheduleList();
+          setSelectItem(null);
+        } else {
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          });
+        }
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
   };
 
   const renderButtonAcordRole = (
@@ -344,7 +448,11 @@ function Schedule() {
             <Popconfirm
               title="Xác nhận lịch hẹn"
               onConfirm={() => {
-                handleAdminVerifyDeny(true);
+                if (role === Role.admin) {
+                  handleAdminVerifyDeny(true);
+                } else {
+                  handleDoctorVerifyDeny(true);
+                }
               }}
               okText="Yes"
               cancelText="No"
@@ -376,10 +484,16 @@ function Schedule() {
               }
               okButtonProps={{ disabled: !cancelReason }}
               onConfirm={() => {
-                handleAdminVerifyDeny(false, cancelReason);
+                if (role === Role.admin) {
+                  handleAdminVerifyDeny(false, cancelReason);
+                } else {
+                  handleDoctorVerifyDeny(false, cancelReason);
+                }
                 setCancelReason("");
               }}
-              onCancel={() => setCancelReason("")}
+              onCancel={() => {
+                setCancelReason("");
+              }}
               okText="Yes"
               cancelText="No"
             >
@@ -466,14 +580,6 @@ function Schedule() {
           dateOfBirth: tableSelectedItem[0].dateOfBirth,
           phoneNumber: tableSelectedItem[0].phoneNumber,
         },
-        // doctor: {
-        //   id: tableSelectedItem[0].doctorId,
-        //   name: tableSelectedItem[0].fullName,
-        //   departmentName: tableSelectedItem[0].departmentName,
-        //   position: PositionOfDoctor.dean,
-        //   rank: RankOfDoctor.tienSi,
-        //   phoneNumber: tableSelectedItem[0].phoneNumber,
-        // },
       } as IAppointmentInfo);
 
       setCurrent(0);
