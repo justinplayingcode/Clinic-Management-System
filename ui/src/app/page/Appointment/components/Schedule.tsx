@@ -2,6 +2,7 @@ import {
   CheckCircleOutlined,
   InfoCircleFilled,
   RightOutlined,
+  UndoOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import {
@@ -20,7 +21,7 @@ import Paragraph from "antd/es/typography/Paragraph";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux";
 import { Role } from "../../../model/enum/auth";
@@ -34,7 +35,7 @@ import {
   TimeFrame,
 } from "../../../model/enum/common";
 import { Utils } from "../../../../utils";
-import { departmentApi } from "../../../../api";
+import { departmentApi, scheduleApi } from "../../../../api";
 import UniformTable from "../../components/table";
 import { AxiosResponse } from "axios";
 import {
@@ -47,29 +48,42 @@ interface ISelectOption {
   label: string;
 }
 interface IAppointmentInfo {
-  id: string;
-  name: string;
-  dateOfBirth: string;
-  gender: Gender;
-  phoneNumber: string;
-  city: string;
-  district: string;
-  commune: string;
-  address: string;
-
-  date: string;
-  timeFrame: TimeFrame;
-  reason: string;
+  _id: string;
+  patientId: string;
+  accountId: string;
+  appointmentDate: string;
+  appointmentTime: TimeFrame;
+  appointmentReason: string;
   status: AppointmentStatus;
-  appointmentCode: string;
-
-  doctor?: {
-    id: string;
-    name: string;
-    departmentName: string;
-    position: PositionOfDoctor;
+  typeAppointmentId: string;
+  departmentId: string;
+  doctorId: string;
+  doctor: {
     rank: RankOfDoctor;
+    position: PositionOfDoctor;
+    departmentName: string;
+    departmentId: string;
+    accountId: string;
+    userId: string;
+    email: string;
+    avatar: string;
+    fullName: string;
+    gender: Gender;
+    address: string;
+    dateOfBirth: string;
     phoneNumber: string;
+  };
+
+  patient: {
+    fullName: string;
+    dateOfBirth: string;
+    address: string;
+    phoneNumber: string;
+    insurance: string;
+    gender: string;
+    guardianName: string;
+    guardianPhoneNumber: string;
+    guardianRelationship: string;
   };
 }
 
@@ -126,87 +140,6 @@ const columns = [
   },
 ];
 
-const listData: IAppointmentInfo[] = [
-  {
-    id: "1",
-    name: "Phạm Duy Thắng",
-    dateOfBirth: "01/31/2001",
-    gender: Gender.Male,
-    phoneNumber: "0938273611",
-    city: "Hà Nội",
-    district: "Cầu Giấy",
-    commune: "Nhân Chính",
-    address: "",
-
-    date: "11/05/2023",
-    timeFrame: TimeFrame.Morning,
-    reason: "Xoang mũi, khó thở",
-    status: AppointmentStatus.Checking,
-    appointmentCode: "APP000123456",
-
-    // doctor: {
-    //   id: "doctor1",
-    //   name: "Name 1",
-    //   departmentName: "Khoa Nội",
-    //   position: PositionOfDoctor.viceDean,
-    //   rank: RankOfDoctor.GSTS,
-    //   phoneNumber: "0123456789",
-    // },
-  },
-  {
-    id: "2",
-    name: "Phạm Duy Thắng",
-    dateOfBirth: "01/31/2001",
-    gender: Gender.Male,
-    phoneNumber: "0938273611",
-    city: "Hà Nội",
-    district: "Cầu Giấy",
-    commune: "Nhân Chính",
-    address: "",
-
-    date: "11/05/2023",
-    timeFrame: TimeFrame.Morning,
-    reason: "Xoang mũi, khó thở",
-    status: AppointmentStatus.CheckedAndWaitConfirm,
-    appointmentCode: "APP000123456",
-
-    doctor: {
-      id: "doctor2",
-      name: "Name 2",
-      departmentName: "Khoa Nội",
-      position: PositionOfDoctor.viceDean,
-      rank: RankOfDoctor.GSTS,
-      phoneNumber: "0123456789",
-    },
-  },
-  {
-    id: "3",
-    name: "Phạm Duy Thắng",
-    dateOfBirth: "01/31/2001",
-    gender: Gender.Male,
-    phoneNumber: "0938273611",
-    city: "Hà Nội",
-    district: "Cầu Giấy",
-    commune: "Nhân Chính",
-    address: "",
-
-    date: "11/25/2023",
-    timeFrame: TimeFrame.Morning,
-    reason: "Xoang mũi, khó thở",
-    status: AppointmentStatus.Confirmed,
-    appointmentCode: "APP000123456",
-
-    doctor: {
-      id: "doctor2",
-      name: "Name 2",
-      departmentName: "Khoa Nội",
-      position: PositionOfDoctor.viceDean,
-      rank: RankOfDoctor.GSTS,
-      phoneNumber: "0123456789",
-    },
-  },
-];
-
 function Schedule() {
   const [departmentList, setDepartmentList] = useState<ISelectOption[]>([]);
   const [isOpenSelectDoctor, setOpenSelectDoctor] = useState<boolean>(false);
@@ -216,10 +149,22 @@ function Schedule() {
   const { tableSelectedCount, tableSelectedItem } = useSelector(
     (state: RootState) => state.currentSeleted
   );
-  const [appointmentList, setAppointmentList] =
-    useState<IAppointmentInfo[]>(listData);
+  const [appointmentList, setAppointmentList] = useState<IAppointmentInfo[]>(
+    []
+  );
 
   const { role } = useSelector((state: RootState) => state.auth);
+
+  const callScheduleList = () => {
+    return scheduleApi.getAll().then((response) => {
+      const result = response?.data;
+      setAppointmentList(result);
+    });
+  };
+
+  useEffect(() => {
+    callScheduleList();
+  }, []);
 
   const callApiDepartment = () => {
     return departmentApi.getDepartmentList().then((response) => {
@@ -238,7 +183,7 @@ function Schedule() {
       <Row
         key={`preview-container-${index}`}
         className={`preview-container ${
-          selectItem?.id === item.id && "active"
+          selectItem?._id === item._id && "active"
         }`}
         onClick={() => setSelectItem(item)}
       >
@@ -248,16 +193,16 @@ function Schedule() {
         <Row className="preview-info">
           <Col>
             <Row className="preview-name">
-              <Text strong>{item.name}</Text>
+              <Text strong>{item.patient.fullName}</Text>
             </Row>
             <Row className="preview-time">
-              <span>{moment(item.date).format("DD/MM/YYYY")}</span>
+              <span>{item.patient.dateOfBirth}</span>
             </Row>
             <Row className="preview-status">
               {renderAppointmentStatus(item.status)}
             </Row>
           </Col>
-          {selectItem?.id === item.id && (
+          {selectItem?._id === item._id && (
             <RightOutlined style={{ color: "#00A2FF" }} />
           )}
         </Row>
@@ -301,8 +246,8 @@ function Schedule() {
 
   const getInfoAddress = (item: IAppointmentInfo) => {
     const list = [];
-    if (item.address) list.push(item.address);
-    list.push(item.commune, item.district, item.city);
+    if (item.patient.address) list.push(item.patient.address);
+    // list.push(item.commune, item.district, item.city);
 
     return list.join(", ");
   };
@@ -316,18 +261,18 @@ function Schedule() {
           <Col className="details-content">
             {renderItemTitleValue(
               `Ngày khám:`,
-              moment(item.date).format("DD/MM/YYYY")
+              moment(item.appointmentDate).format("DD/MM/YYYY")
             )}
             {renderItemTitleValue(
               `Khung giờ khám:`,
-              renderTimeFrame(item.timeFrame)
+              renderTimeFrame(item.appointmentTime)
             )}
-            {renderItemTitleValue(`Lý do/Triệu chứng:`, item.reason)}
+            {renderItemTitleValue(`Lý do/Triệu chứng:`, item.appointmentReason)}
             {renderItemTitleValue(
               `Trạng thái:`,
               renderAppointmentStatus(item.status)
             )}
-            {renderItemTitleValue(`Mã đặt lịch:`, item.appointmentCode)}
+            {/* {renderItemTitleValue(`Mã đặt lịch:`, item.appointmentCode)} */}
           </Col>
         </Col>
 
@@ -335,23 +280,23 @@ function Schedule() {
           <Text strong>Thông tin người bệnh</Text>
 
           <Col className="details-content">
-            {renderItemTitleValue(`Họ và tên:`, item.name)}
+            {renderItemTitleValue(`Họ và tên:`, item.patient.fullName)}
+            {renderItemTitleValue(`Ngày sinh:`, item.patient.dateOfBirth)}
             {renderItemTitleValue(
-              `Ngày sinh:`,
-              moment(item.dateOfBirth).format("DD/MM/YYYY")
+              `Giới tính:`,
+              renderGenderInfo(Number(item.patient.gender))
             )}
-            {renderItemTitleValue(`Giới tính:`, renderGenderInfo(item.gender))}
-            {renderItemTitleValue(`Số điện thoại:`, item.phoneNumber)}
+            {renderItemTitleValue(`Số điện thoại:`, item.patient.phoneNumber)}
             {renderItemTitleValue(`Địa chỉ:`, getInfoAddress(item))}
           </Col>
         </Col>
-        {selectItem?.doctor?.id && (
+        {selectItem?.doctorId && (
           <DetailsInfo
             title="Thông tin bác sĩ"
             items={[
               {
                 label: "Họ và tên",
-                value: selectItem?.doctor.name,
+                value: selectItem?.doctor.fullName,
               },
               {
                 label: "Khoa",
@@ -376,6 +321,16 @@ function Schedule() {
     );
   };
 
+  const handleAdminVerifyDeny = (isAccept: boolean, cancelReason?: string) => {
+    console.log({
+      id: selectItem?._id ?? "",
+      doctorId: selectItem?.doctorId ?? "",
+      departmentId: selectItem?.doctor.departmentId ?? "",
+      isAccept: isAccept,
+      cancellationReason: cancelReason ?? "",
+    });
+  };
+
   const renderButtonAcordRole = (
     role: Role | null,
     status: AppointmentStatus | undefined
@@ -388,22 +343,26 @@ function Schedule() {
           <>
             <Popconfirm
               title="Xác nhận lịch hẹn"
-              onConfirm={() => console.log("confirm")}
+              onConfirm={() => {
+                handleAdminVerifyDeny(true);
+              }}
               okText="Yes"
               cancelText="No"
             >
-              <Button disabled={!selectItem?.doctor?.id} type="primary">
+              <Button disabled={!selectItem?.doctorId} type="primary">
                 Xác nhận
               </Button>
             </Popconfirm>
-            <Button
-              onClick={() => {
-                setOpenSelectDoctor(true);
-                callApiDepartment();
-              }}
-            >
-              Chọn bác sĩ
-            </Button>
+            {status === AppointmentStatus.Checking && role === Role.admin && (
+              <Button
+                onClick={() => {
+                  setOpenSelectDoctor(true);
+                  callApiDepartment();
+                }}
+              >
+                Chọn bác sĩ
+              </Button>
+            )}
             <Popconfirm
               title="Hủy lịch hẹn"
               description={
@@ -417,8 +376,8 @@ function Schedule() {
               }
               okButtonProps={{ disabled: !cancelReason }}
               onConfirm={() => {
+                handleAdminVerifyDeny(false, cancelReason);
                 setCancelReason("");
-                console.log("confirm");
               }}
               onCancel={() => setCancelReason("")}
               okText="Yes"
@@ -431,7 +390,7 @@ function Schedule() {
         {status === AppointmentStatus.Confirmed && role === Role.doctor && (
           <Button
             disabled={
-              selectItem?.date !==
+              selectItem?.appointmentDate !==
               moment(new Date()).format("MM/DD/YYYY").toString()
             }
             onClick={() => {
@@ -454,7 +413,6 @@ function Schedule() {
     const [current, setCurrent] = useState(0);
     const [selectDepartment, setSelectDepartment] =
       useState<ISelectOption>(defaultSelectOption);
-    const [selectDoctor, setSelectDoctor] = useState<string>("");
 
     const contentStyle: React.CSSProperties = {
       lineHeight: "260px",
@@ -481,26 +439,45 @@ function Schedule() {
     const handleCancel = () => {
       setCurrent(0);
       setSelectDepartment(defaultSelectOption);
-      setSelectDoctor("");
+      // setSelectDoctor("");
       setOpenSelectDoctor(false);
     };
 
     const handleOk = () => {
+      // setSelectDoctor({
+      //   doctorId: tableSelectedItem[0].doctorId,
+      //   departmentId: selectDepartment?.value,
+      // });
       setSelectItem({
         ...selectItem,
+        doctorId: tableSelectedItem[0].doctorId,
         doctor: {
-          id: tableSelectedItem[0].doctorId,
-          name: tableSelectedItem[0].fullName,
+          rank: tableSelectedItem[0].rank,
+          position: tableSelectedItem[0].position,
           departmentName: tableSelectedItem[0].departmentName,
-          position: PositionOfDoctor.dean,
-          rank: RankOfDoctor.tienSi,
+          departmentId: selectDepartment?.value,
+          accountId: tableSelectedItem[0].accountId,
+          userId: tableSelectedItem[0].userId,
+          email: tableSelectedItem[0].email,
+          avatar: tableSelectedItem[0].avatar,
+          fullName: tableSelectedItem[0].fullName,
+          gender: tableSelectedItem[0].gender,
+          address: tableSelectedItem[0].address,
+          dateOfBirth: tableSelectedItem[0].dateOfBirth,
           phoneNumber: tableSelectedItem[0].phoneNumber,
         },
+        // doctor: {
+        //   id: tableSelectedItem[0].doctorId,
+        //   name: tableSelectedItem[0].fullName,
+        //   departmentName: tableSelectedItem[0].departmentName,
+        //   position: PositionOfDoctor.dean,
+        //   rank: RankOfDoctor.tienSi,
+        //   phoneNumber: tableSelectedItem[0].phoneNumber,
+        // },
       } as IAppointmentInfo);
 
       setCurrent(0);
       setSelectDepartment(defaultSelectOption);
-      setSelectDoctor("");
       setOpenSelectDoctor(false);
     };
 
@@ -654,7 +631,17 @@ function Schedule() {
     <>
       <Row className="appointmentList-container">
         <Col className="list-section">
-          <Title level={4}>Danh sách lịch hẹn</Title>
+          <Row style={{ justifyContent: "space-between" }}>
+            <Title level={4}>Danh sách lịch hẹn</Title>
+            <Button
+              icon={<UndoOutlined />}
+              onClick={() => {
+                callScheduleList();
+              }}
+            >
+              Làm mới
+            </Button>
+          </Row>
           <Paragraph>
             Vui lòng chọn một trong các lịch hẹn có sẵn để xem chi tiết hoặc bấm
             vào <Text strong>Đặt khám mới</Text> để tạo lịch hẹn mới.
@@ -673,14 +660,8 @@ function Schedule() {
             )}
           </Col>
         </Col>
-        <Col
-          className="details-section"
-          style={{ height: !selectItem ? "100%" : "" }}
-        >
-          <Col
-            className="top-details"
-            style={{ height: !selectItem ? "100%" : "" }}
-          >
+        <Col className="details-section">
+          <Col className="top-details">
             <Title level={4}>Chi tiết lịch hẹn</Title>
             {!selectItem ? (
               <Row style={{ justifyContent: "center", marginTop: "80px" }}>
@@ -695,23 +676,23 @@ function Schedule() {
             ) : (
               renderAppointmentDetails(selectItem)
             )}
-          </Col>
-          {renderButtonAcordRole(role, selectItem?.status)}
-          <Col className="bottom-details">
-            {selectItem && (
-              <Row style={{ alignItems: "start", gap: "4px" }}>
-                <InfoCircleFilled
-                  style={{ marginTop: "4px", color: "#FFA95A" }}
-                />
-                <Paragraph style={{ flex: 1 }}>
-                  Lịch khám của bạn đã được gửi đi. Vui lòng đợi{" "}
-                  <Text strong>Riordan Clinic</Text> xác nhận. Mọi yêu cầu về{" "}
-                  <Text strong>Hủy lịch/ Đổi lịch</Text> vui lòng gọi Hotline{" "}
-                  <Text strong>19001234</Text> để được hỗ trợ. Trân trọng cảm
-                  ơn!
-                </Paragraph>
-              </Row>
-            )}
+            {renderButtonAcordRole(role, selectItem?.status)}
+            <Col className="bottom-details">
+              {selectItem && (
+                <Row style={{ alignItems: "start", gap: "4px" }}>
+                  <InfoCircleFilled
+                    style={{ marginTop: "4px", color: "#FFA95A" }}
+                  />
+                  <Paragraph style={{ flex: 1 }}>
+                    Lịch khám của bạn đã được gửi đi. Vui lòng đợi{" "}
+                    <Text strong>Riordan Clinic</Text> xác nhận. Mọi yêu cầu về{" "}
+                    <Text strong>Hủy lịch/ Đổi lịch</Text> vui lòng gọi Hotline{" "}
+                    <Text strong>19001234</Text> để được hỗ trợ. Trân trọng cảm
+                    ơn!
+                  </Paragraph>
+                </Row>
+              )}
+            </Col>
           </Col>
         </Col>
         {renderScheduleStepper()}
