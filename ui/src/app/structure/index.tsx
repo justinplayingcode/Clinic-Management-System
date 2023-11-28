@@ -9,13 +9,13 @@ import React from "react";
 import { Toast } from "./Toast";
 import { authApi } from "../../api";
 import { useDispatch } from "react-redux";
-import { closeLoading, openLoading, setInfoUser, setPhoneNumber, setRole, userLogout } from "../../redux/reducers";
+import { setInfoUser, setPhoneNumber, setRole, userLogout } from "../../redux/reducers";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { routerString } from "../model/router";
 import { Role } from "../model/enum/auth";
-import { Avatar, Dropdown, Form, Modal, Tooltip } from "antd";
+import { Avatar, Dropdown, Form, Modal } from "antd";
 import { MdLogout } from "react-icons/md";
-import { CalendarOutlined, CommentOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { ApiStatusCode } from "../model/enum/apiStatus";
 import ChangePassword from "./ChangePassword";
 import { Utils } from "../../utils";
@@ -64,14 +64,10 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
     }
   }, [])
 
-  const logOut = () => {
-    dispatch(openLoading());
-    setTimeout(() => {
+  const logOut = async () => {
       dispatch(userLogout());
-      navigate("/")
       localStorage.clear();
-      dispatch(closeLoading());
-    }, 1000)
+      navigate("/")
   }
 
   const closeModalCPW = () => {

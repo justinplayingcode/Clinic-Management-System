@@ -168,12 +168,6 @@ function Schedule() {
       .getAll()
       .then((result: any) => {
         if (result.isSuccess) {
-          // dispatch(
-          //   showToastMessage({
-          //     message: "Cập nhật thành công",
-          //     type: toastType.succes,
-          //   })
-          // );
           const res = result?.data;
           setAppointmentList(res);
         } else {
@@ -324,29 +318,29 @@ function Schedule() {
             {renderItemTitleValue(`Địa chỉ:`, getInfoAddress(item))}
           </Col>
         </Col>
-        {selectItem?.doctorId && (
+        {selectItem?.doctor && (
           <DetailsInfo
             title="Thông tin bác sĩ"
             items={[
               {
                 label: "Họ và tên",
-                value: selectItem?.doctor.fullName,
+                value: selectItem?.doctor?.fullName,
               },
               {
                 label: "Khoa",
-                value: selectItem?.doctor.departmentName,
+                value: selectItem?.doctor?.departmentName,
               },
               {
                 label: "Chức vụ",
-                value: Utils.getDoctorPositionText(selectItem?.doctor.position),
+                value: Utils.getDoctorPositionText(selectItem?.doctor?.position),
               },
               {
                 label: "Học vấn",
-                value: Utils.getDoctorRankText(selectItem?.doctor.rank),
+                value: Utils.getDoctorRankText(selectItem?.doctor?.rank),
               },
               {
                 label: "Số điện thoại",
-                value: selectItem?.doctor.phoneNumber,
+                value: selectItem?.doctor?.phoneNumber,
               },
             ]}
           />
@@ -741,9 +735,7 @@ function Schedule() {
             <Title level={4}>Danh sách lịch hẹn</Title>
             <Button
               icon={<UndoOutlined />}
-              onClick={() => {
-                callScheduleList();
-              }}
+              onClick={callScheduleList}
             >
               Làm mới
             </Button>

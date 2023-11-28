@@ -24,7 +24,6 @@ function Routing() {
         <Route path={`${routerString.manageaccountuser}`} element={<UniformLayout page={<ManageUser/>}/>}/>
         <Route path={`${routerString.accountdetail}/:id`} element={<UniformLayout page={<AccountDetails type={AccountType.account}/>}/>}/>
         <Route path={`${routerString.doctordetail}/:id`} element={<UniformLayout page={<AccountDetails type={AccountType.doctor}/>}/>}/>
-        <Route path={`${routerString.managedepartment}`} element={<UniformLayout page={<ManageDepartment/>}/>}/>
         <Route path={`${routerString.schedule}`} element={<UniformLayout page={<Schedule/>} noBackground/>}/>
         <Route path={`${routerString.managedepartments}`} element={<UniformLayout page={<ManageDepartment/>} noBackground/>}/>
         <Route path={`${routerString.manageservice}`} element={<UniformLayout page={<ManageService/>} noBackground/>}/>

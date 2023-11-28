@@ -31,7 +31,7 @@ const path = {
   updateService: "/typeAppointment/update",
 
   userCreateSchedule: "/schedule/usercreate",
-  getSchedule: "/schedule/",
+  getSchedule: "/schedule",
   adminVerify: "/schedule/adminverify",
   doctorVerify: "/schedule/doctorverify",
 }
