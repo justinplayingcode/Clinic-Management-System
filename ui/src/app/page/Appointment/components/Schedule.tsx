@@ -64,6 +64,7 @@ interface IAppointmentInfo {
   typeAppointmentId: string;
   departmentId: string;
   doctorId: string;
+  cancellationReason?: string;
   doctor: {
     rank: RankOfDoctor;
     position: PositionOfDoctor;
@@ -224,7 +225,7 @@ function Schedule() {
               <Text strong>{item.patient.fullName}</Text>
             </Row>
             <Row className="preview-time">
-              <span>{item.patient.dateOfBirth}</span>
+              <span>{item.appointmentDate}</span>
             </Row>
             <Row className="preview-status">
               {renderAppointmentStatus(item.status)}
@@ -289,7 +290,7 @@ function Schedule() {
           <Col className="details-content">
             {renderItemTitleValue(
               `Ngày khám:`,
-              moment(item.appointmentDate).format("DD/MM/YYYY")
+              item.appointmentDate
             )}
             {renderItemTitleValue(
               `Khung giờ khám:`,
@@ -300,7 +301,8 @@ function Schedule() {
               `Trạng thái:`,
               renderAppointmentStatus(item.status)
             )}
-            {/* {renderItemTitleValue(`Mã đặt lịch:`, item.appointmentCode)} */}
+            {renderItemTitleValue(`Mã đặt lịch:`, item._id)}
+            {item.cancellationReason && renderItemTitleValue(`Lý do hủy:`, item.cancellationReason)}
           </Col>
         </Col>
 
@@ -547,15 +549,10 @@ function Schedule() {
     const handleCancel = () => {
       setCurrent(0);
       setSelectDepartment(defaultSelectOption);
-      // setSelectDoctor("");
       setOpenSelectDoctor(false);
     };
 
     const handleOk = () => {
-      // setSelectDoctor({
-      //   doctorId: tableSelectedItem[0].doctorId,
-      //   departmentId: selectDepartment?.value,
-      // });
       setSelectItem({
         ...selectItem,
         doctorId: tableSelectedItem[0].doctorId,
