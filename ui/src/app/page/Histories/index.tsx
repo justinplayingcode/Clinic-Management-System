@@ -1,18 +1,22 @@
+import { useState } from "react";
+import { medicationApi } from "../../../api";
 import Picker from "../components/picker";
+import { IPersonaProps } from "@fluentui/react";
 
 function Histories() {
+  const [medication, setMedication] = useState<IPersonaProps[]>([]);
   return (
     <div>
       <Picker
         label={"Chuẩn đoán bệnh: "}
-        onChangeCallBack={(value) => {console.log(value)}}
-        value={[]}
-        integrateItems={() => Promise.resolve()}
+        onChangeCallBack={(value) => setMedication(value)}
+        value={medication}
+        integrateItems={medicationApi.pickerMedications}
         mappingValues={(datas) => {
           const values = datas.map((e: any) => {
             return {
-              displayName: e.name,
-              text: e.name,
+              displayName: e.displayName,
+              text: e.displayName,
               secondaryText: e.designation,
               id: e._id,
               usage: e.usage
@@ -20,7 +24,7 @@ function Histories() {
           })
           return values
         }}
-        placeholder={"Nhập tên bệnh"}
+        placeholder={"Nhập tên thuốc"}
       />
     </div>
   );
