@@ -32,7 +32,7 @@ const errorHandler = (err, req, res, next) => {
     statusCode: err.statusCode,
     message: err.message
   }
-  logger(err?.actionError, err.message)
+  logger("errorHandler", err.message)
   res.status(err.statusCode).json(_res)
 }
 

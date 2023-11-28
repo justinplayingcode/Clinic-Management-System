@@ -15,15 +15,18 @@ import logger from "../../helper/logger.config";
 import MomentTimezone from "../../helper/timezone.config";
 import { StaticReportRequestFields } from "../../common/model/request";
 import { IRequestGetAllOfStaticReport } from "../user/user.model";
+import DoctorService from "../doctor/doctor.service";
 
 export default class AccountController {
 
   private _accountService;
   private _userService;
+  private _doctorService;
 
   constructor() {
     this._accountService = new AccountService();
     this._userService = new UserService();
+    this._doctorService = new DoctorService();
   }
 
   // POST 
@@ -167,7 +170,7 @@ export default class AccountController {
   }
   // GET
   public getCurrentInfo = async (req, res, next) => {
-    const { accountId } = req.user;
+    const { accountId, role } = req.user;
     try {
       const user = await this._userService.findByKey(fields.accountId, accountId);
       let _data;
@@ -192,6 +195,17 @@ export default class AccountController {
       } else {
         _data = null;
       }
+      if (role === Role.doctor && user) {
+        const doctor = await this._doctorService.findByKey(fields.userId, user._id)
+        const { departmentName } = await this._doctorService.getInfoById(doctor._id);
+        _data = {
+          ..._data,
+          position: doctor.position,
+          rank: doctor.rank,
+          departmentName
+        }
+      }
+
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
         isSuccess: true,
