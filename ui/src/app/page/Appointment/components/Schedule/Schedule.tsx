@@ -23,75 +23,37 @@ import Title from "antd/es/typography/Title";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux";
-import { Role } from "../../../model/enum/auth";
+import { RootState } from "../../../../../redux";
+import { Role } from "../../../../model/enum/auth";
 import "./Schedule.scss";
-import DetailsInfo from "../../components/DetailsInfo";
+import DetailsInfo from "../../../components/DetailsInfo";
 import {
   AppointmentStatus,
   Gender,
+  IAppointmentInfo,
   PositionOfDoctor,
   RankOfDoctor,
   TimeFrame,
   toastType,
-} from "../../../model/enum/common";
-import { Utils } from "../../../../utils";
-import { departmentApi, scheduleApi } from "../../../../api";
-import UniformTable from "../../components/table";
+} from "../../../../model/enum/common";
+import { Utils } from "../../../../../utils";
+import { departmentApi, scheduleApi } from "../../../../../api";
+import UniformTable from "../../../components/table";
 import { AxiosResponse } from "axios";
 import {
   renderAppointmentStatus,
   tooltipPlainText,
-} from "../../../../utils/basicRender";
+} from "../../../../../utils/basicRender";
 import {
   closeLoading,
   openLoading,
   showToastMessage,
-} from "../../../../redux/reducers";
+} from "../../../../../redux/reducers";
+import CureForm from "../CureForm/CureForm";
 
 interface ISelectOption {
   value: string;
   label: string;
-}
-interface IAppointmentInfo {
-  _id: string;
-  patientId: string;
-  accountId: string;
-  appointmentDate: string;
-  appointmentTime: TimeFrame;
-  appointmentReason: string;
-  status: AppointmentStatus;
-  typeAppointmentId: string;
-  departmentId: string;
-  doctorId: string;
-  cancellationReason?: string;
-  doctor: {
-    rank: RankOfDoctor;
-    position: PositionOfDoctor;
-    departmentName: string;
-    departmentId: string;
-    accountId: string;
-    userId: string;
-    email: string;
-    avatar: string;
-    fullName: string;
-    gender: Gender;
-    address: string;
-    dateOfBirth: string;
-    phoneNumber: string;
-  };
-
-  patient: {
-    fullName: string;
-    dateOfBirth: string;
-    address: string;
-    phoneNumber: string;
-    insurance: string;
-    gender: string;
-    guardianName: string;
-    guardianPhoneNumber: string;
-    guardianRelationship: string;
-  };
 }
 
 const columns = [
@@ -288,10 +250,7 @@ function Schedule() {
           <Text strong>Thông tin đặt khám</Text>
 
           <Col className="details-content">
-            {renderItemTitleValue(
-              `Ngày khám:`,
-              item.appointmentDate
-            )}
+            {renderItemTitleValue(`Ngày khám:`, item.appointmentDate)}
             {renderItemTitleValue(
               `Khung giờ khám:`,
               renderTimeFrame(item.appointmentTime)
@@ -302,7 +261,8 @@ function Schedule() {
               renderAppointmentStatus(item.status)
             )}
             {renderItemTitleValue(`Mã đặt lịch:`, item._id)}
-            {item.cancellationReason && renderItemTitleValue(`Lý do hủy:`, item.cancellationReason)}
+            {item.cancellationReason &&
+              renderItemTitleValue(`Lý do hủy:`, item.cancellationReason)}
           </Col>
         </Col>
 
@@ -334,7 +294,9 @@ function Schedule() {
               },
               {
                 label: "Chức vụ",
-                value: Utils.getDoctorPositionText(selectItem?.doctor?.position),
+                value: Utils.getDoctorPositionText(
+                  selectItem?.doctor?.position
+                ),
               },
               {
                 label: "Học vấn",
@@ -498,17 +460,23 @@ function Schedule() {
           </>
         )}
         {status === AppointmentStatus.Confirmed && role === Role.doctor && (
-          <Button
-            disabled={
-              selectItem?.appointmentDate !==
-              moment(new Date()).format("MM/DD/YYYY").toString()
-            }
-            onClick={() => {
+          <Popconfirm
+            title="Bắt đầu khám cho bệnh nhân?"
+            onConfirm={() => {
               setOpenProcess(true);
             }}
+            okText="Yes"
+            cancelText="No"
           >
-            Bắt đầu khám
-          </Button>
+            <Button
+            // disabled={
+            //   selectItem?.appointmentDate !==
+            //   moment(new Date()).format("MM/DD/YYYY").toString()
+            // }
+            >
+              Bắt đầu khám
+            </Button>
+          </Popconfirm>
         )}
       </Row>
     );
@@ -730,10 +698,7 @@ function Schedule() {
         <Col className="list-section">
           <Row style={{ justifyContent: "space-between" }}>
             <Title level={4}>Danh sách lịch hẹn</Title>
-            <Button
-              icon={<UndoOutlined />}
-              onClick={callScheduleList}
-            >
+            <Button icon={<UndoOutlined />} onClick={callScheduleList}>
               Làm mới
             </Button>
           </Row>
@@ -791,7 +756,13 @@ function Schedule() {
           </Col>
         </Col>
         {renderScheduleStepper()}
-        {renderCureProcess()}
+        <CureForm
+          isOpen={isOpenProcess}
+          onDismiss={() => {
+            setOpenProcess(false);
+          }}
+          item={selectItem}
+        />
       </Row>
     </>
   );

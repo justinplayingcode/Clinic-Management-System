@@ -30,7 +30,7 @@ export default class Utils {
       case Gender.Female:
         return "Nữ"  ;
       default:
-        return "";
+        return "-";
     }
   };
 
