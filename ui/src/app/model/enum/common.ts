@@ -136,3 +136,51 @@ export enum TimeFrame {
   Morning,
   Afternoon
 }
+
+export interface IAppointmentInfo {
+  _id: string;
+  patientId: string;
+  accountId: string;
+  appointmentDate: string;
+  appointmentTime: TimeFrame;
+  appointmentReason: string;
+  status: AppointmentStatus;
+  typeAppointmentId: string;
+  departmentId: string;
+  doctorId: string;
+  cancellationReason?: string;
+  doctor: {
+    rank: RankOfDoctor;
+    position: PositionOfDoctor;
+    departmentName: string;
+    departmentId: string;
+    accountId: string;
+    userId: string;
+    email: string;
+    avatar: string;
+    fullName: string;
+    gender: Gender;
+    address: string;
+    dateOfBirth: string;
+    phoneNumber: string;
+  };
+
+  patient: {
+    fullName: string;
+    dateOfBirth: string;
+    address: string;
+    phoneNumber: string;
+    insurance: string;
+    gender: string;
+    guardianName: string;
+    guardianPhoneNumber: string;
+    guardianRelationship: string;
+  };
+}
+
+export interface IServiceInfo {
+  id: string;
+  name: string;
+  type: ServiceType;
+  price: string;
+}

@@ -38,12 +38,13 @@
     flex: 1;
     width: 60%;
     height: 100%;
+    max-width: calc(60% - 24px);
     .top-details {
       border-radius: 12px;
       background: #fff;
       border: 1px solid #ccc;
       padding: 20px 27px;
-      height: 100%;
+      min-height: 100%;
       .details-container {
         margin-top: 24px;
         .details-content {

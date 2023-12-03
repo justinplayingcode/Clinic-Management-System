@@ -1,18 +1,5 @@
-import {
-  EditOutlined,
-  PlusOutlined,
-  RightOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  Empty,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Select,
-} from "antd";
+import { EditOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
+import { Button, Col, Empty, Form, Input, Modal, Row, Select } from "antd";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
@@ -20,17 +7,18 @@ import "./Services.scss";
 import Paragraph from "antd/es/typography/Paragraph";
 import { serviceApi } from "../../../../api";
 import { useDispatch, useSelector } from "react-redux";
-import { closeLoading, openLoading, showToastMessage } from "../../../../redux/reducers";
-import { ServiceType, toastType } from "../../../model/enum/common";
+import {
+  closeLoading,
+  openLoading,
+  showToastMessage,
+} from "../../../../redux/reducers";
+import {
+  IServiceInfo,
+  ServiceType,
+  toastType,
+} from "../../../model/enum/common";
 import { RootState } from "../../../../redux";
 import { Role } from "../../../model/enum/auth";
-
-interface IServiceInfo {
-  id: string;
-  name: string;
-  type: ServiceType;
-  price: string;
-}
 
 type FieldType = {
   name?: string;
@@ -65,11 +53,11 @@ function Services() {
       });
       setAppointmentList(result);
     });
-  }
+  };
 
   useEffect(() => {
     callApiAllService();
-  }, [])
+  }, []);
 
   const renderServiceType = (type: ServiceType) => {
     switch (type) {
@@ -177,37 +165,38 @@ function Services() {
     const basicBody = {
       displayName: values.name,
       cost: values.price,
-      type: values.type
+      type: values.type,
     };
     if (isOpenAddEit.isEdit) {
       api = serviceApi.updateService;
       body = {
         ...basicBody,
-        id: selectItem!.id
-      }
+        id: selectItem!.id,
+      };
     } else {
       api = serviceApi.createlService;
-      body = { ...basicBody }
+      body = { ...basicBody };
     }
-    api(body).then((result: any) => {
-      if (result.isSuccess) {
-        dispatch(
+    api(body)
+      .then((result: any) => {
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Thành công",
+              type: toastType.succes,
+            })
+          );
+          setSelectItem(undefined);
+          callApiAllService();
+          handleCancelAddEdit();
+        } else {
           showToastMessage({
-            message: "Thành công",
-            type: toastType.succes,
-          })
-        );
-        setSelectItem(undefined);
-        callApiAllService();
-        handleCancelAddEdit();
-      } else {
-        showToastMessage({
-          message: "Có lỗi, hãy thử lại",
-          type: toastType.error,
-        })
-      }
-    })
-    .catch(() => {
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          });
+        }
+      })
+      .catch(() => {
         dispatch(
           showToastMessage({
             message: "Có lỗi, hãy thử lại",
@@ -218,7 +207,6 @@ function Services() {
       .finally(() => {
         dispatch(closeLoading());
       });
-    
   };
 
   return (
@@ -312,7 +300,13 @@ function Services() {
             <Form.Item<FieldType>
               label="Giá tiền"
               name="price"
-              rules={[{ required: true, message: "Hãy nhập giá dịch vụ, giá phải là số!", pattern: new RegExp("^[0-9]*$") }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Hãy nhập giá dịch vụ, giá phải là số!",
+                  pattern: new RegExp("^[0-9]*$"),
+                },
+              ]}
             >
               <Input />
             </Form.Item>

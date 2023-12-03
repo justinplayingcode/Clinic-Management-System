@@ -184,7 +184,6 @@ function Appointment() {
   }, [district]);
 
   const onFinish = (values: any) => {
-    console.log("object: ", values);
     values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");
     values.appointmentDate = values["appointmentDate"].format("MM/DD/YYYY");
     values["city"] = values.city?.label ?? values.city;
@@ -204,7 +203,6 @@ function Appointment() {
     scheduleApi
       .userCreateSchedule(body)
       .then((result: any) => {
-        console.log(result);
         if (result.isSuccess) {
           dispatch(
             showToastMessage({

@@ -1,0 +1,17 @@
+.cureModal {
+  .ant-modal-content {
+    max-height: calc(100vh - 60px);
+    .ant-modal-body {
+      overflow-y: auto;
+      max-height: calc(100vh - 60px - 40px - 32px - 44px);
+      .user-info {
+        gap: 24px;
+        margin-bottom: 12px;
+      }
+      .form-info {
+        .static-info {
+        }
+      }
+    }
+  }
+}
