@@ -62,6 +62,7 @@ const CureForm = (props: ICureFormProps) => {
   const [serviceList, setServiceList] = useState<IServiceInfo[]>([]);
   const [serviceOptions, setServiceOptions] = useState<ISelectOption[]>([]);
   const [medication, setMedication] = useState<IPersonaProps[]>([]);
+  const [serviceOptionCount, setServiceOptionCount] = useState<number>(0);
 
   const callApiAllService = () => {
     serviceApi.getAll().then((response) => {
@@ -83,6 +84,7 @@ const CureForm = (props: ICureFormProps) => {
           };
         });
       setServiceOptions(options);
+      setServiceOptionCount(options.length);
     });
   };
 
@@ -109,7 +111,52 @@ const CureForm = (props: ICureFormProps) => {
   };
 
   const onFinish = (values: any) => {
-    console.log("object: ", values);
+    const services = values.items.map((item: any) => {
+      const dataItem = serviceList.find((ser) => ser.id === item.item_service);
+      return {
+        id: dataItem?.id,
+        name: dataItem?.name,
+        price: dataItem?.price,
+        note: item.note,
+      };
+    });
+
+    const medications = medication.map((item: any) => {
+      return {
+        id: item.id,
+        displayName: item.displayName,
+      };
+    });
+
+    const body = {
+      id: item?._id,
+      fullName: item?.patient.fullName,
+      dateOfBirth: Utils.convertDDmmyyyTommDDyyyy(
+        item?.patient.dateOfBirth ?? ""
+      ),
+      gender: item?.patient.gender,
+      reason: item?.appointmentReason,
+
+      indicator: {
+        height: values.height,
+        weight: values.weight,
+        heartRate: values.heartRate,
+        bloodPressure: values.bloodPressure,
+        temperature: values.temperature,
+        glucose: values.glucose,
+      },
+
+      services: services,
+
+      diagnose: values.diagnose,
+      summary: values.summary,
+
+      medication: {
+        list: medications,
+        note: values.note,
+      },
+    };
+    console.log("body", body);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -236,9 +283,9 @@ const CureForm = (props: ICureFormProps) => {
           <Form.List name="items" initialValue={[]}>
             {(fields, { add, remove }) => (
               <>
-                {fields.map((field) => (
+                {fields.map((field, index) => (
                   <Space
-                    key={field.key}
+                    key={`${field.key}_${index}`}
                     style={{ display: "flex", marginBottom: 8 }}
                     align="baseline"
                   >
@@ -251,18 +298,29 @@ const CureForm = (props: ICureFormProps) => {
                     </Form.Item>
                     <Text>Ghi chú: </Text>
                     <Form.Item {...field} name={[field.name, "note"]}>
-                      <Input placeholder="Ghi chú" />
+                      <Input
+                        placeholder="Ghi chú"
+                        style={{ minWidth: "600px" }}
+                      />
                     </Form.Item>
 
-                    <MinusCircleOutlined onClick={() => remove(field.name)} />
+                    <MinusCircleOutlined
+                      onClick={() => {
+                        remove(field.name);
+                        setServiceOptionCount(serviceOptionCount + 1);
+                      }}
+                    />
                   </Space>
                 ))}
                 <Form.Item>
                   <Button
                     type="dashed"
-                    onClick={() => add()}
+                    onClick={() => {
+                      add();
+                      setServiceOptionCount(serviceOptionCount - 1);
+                    }}
                     block
-                    disabled={serviceOptions.length === 0}
+                    disabled={serviceOptionCount === 0}
                     icon={<PlusOutlined />}
                   >
                     Thêm
@@ -280,14 +338,14 @@ const CureForm = (props: ICureFormProps) => {
             <Form.Item<FieldType>
               label="Chẩn đoán"
               name="diagnose"
-              rules={[{ required: true, message: "Hãy nhập đường huyết" }]}
+              rules={[{ required: true, message: "Hãy nhập chẩn đoán" }]}
             >
               <TextArea rows={4} autoSize={{ minRows: 4, maxRows: 4 }} />
             </Form.Item>
             <Form.Item<FieldType>
               label="Tổng quan"
               name="summary"
-              rules={[{ required: true, message: "Hãy nhập đường huyết" }]}
+              rules={[{ required: true, message: "Hãy nhập tổng quan" }]}
             >
               <TextArea rows={4} autoSize={{ minRows: 4, maxRows: 4 }} />
             </Form.Item>
@@ -322,7 +380,7 @@ const CureForm = (props: ICureFormProps) => {
                 <Form.Item<FieldType>
                   label="Ghi chú"
                   name="note"
-                  rules={[{ required: true, message: "Hãy nhập đường huyết" }]}
+                  rules={[{ required: true, message: "Hãy điền ghi chú" }]}
                 >
                   <TextArea rows={4} autoSize={{ minRows: 4, maxRows: 4 }} />
                 </Form.Item>
