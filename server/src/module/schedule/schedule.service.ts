@@ -156,4 +156,25 @@ export default class ScheduleService {
       throw error;
     }
   }
+
+  public getDetailById = async (id) => {
+    try {
+      const schedule = await this._scheduleRepository.getDetailById(id);
+      const { departmentId, typeAppointmentId, patientId } = schedule;
+      return {
+        ...schedule,
+        appointmentDate: MomentTimezone.convertDDMMYYY(schedule.appointmentDate),
+        departmentName: departmentId.displayName,
+        typeAppointment: typeAppointmentId.displayName,
+        typeAppointmentPrice: typeAppointmentId.cost,
+        patient: patientId,
+        departmentId: undefined,
+        typeAppointmentId: undefined,
+        patientId: undefined
+      }
+    } catch (error) {
+      logger("scheduleService-getDetailById", error?.message);
+      throw error;
+    }
+  }
 }

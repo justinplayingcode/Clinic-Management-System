@@ -11,6 +11,10 @@ const billSchema = new Schema({
   cost: {
     type: Number,
   },
+  dateCreated: {
+    type: Date,
+    default: new Date
+  }
 });
 
 const Bill: Model<BillModel> = mongoose.model<BillModel>(

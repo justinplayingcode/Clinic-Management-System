@@ -20,4 +20,13 @@ export default class MedicalRecordService {
     }
   }
 
+  public getInfoByScheduleId = async (scheduleId) => {
+    try {
+      return await this._medicalRecordRepo.findByKey("scheduleId", scheduleId);
+    } catch (error) {
+      logger("getInfoByScheduleId-medicalRecordService", error?.message);
+      throw error;
+    }
+  }
+
 }

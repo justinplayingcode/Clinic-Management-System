@@ -20,4 +20,13 @@ export default class BillService {
     }
   }
 
+  public getInfoByMedicalId = async (id) => {
+    try {
+      return await this._billRepo.findByKey("medicalRecordId", id);
+    } catch (error) {
+      logger("getInfoByMedicalId-billService", error?.message);
+      throw error;
+    }
+  }
+
 }

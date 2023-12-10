@@ -40,4 +40,22 @@ export default class ScheduleRepository extends BaseRepository<ScheduleModel> {
       })
       .lean()
   }
+
+  public getDetailById = async (id) => {
+    return await this.model.findById(id)
+    .select(`-__v -statusUpdateTime -accountId`)
+    .populate({
+      path: "typeAppointmentId",
+      select: `-__v`
+    })
+    .populate({
+      path: "departmentId",
+      select: `-__v`
+    })
+    .populate({
+      path: "patientId",
+      select: `-__v`
+    })
+    .lean()
+  }
 }

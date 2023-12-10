@@ -99,12 +99,6 @@ function ManageUser() {
         onClick: () => setOpenResetPW(true),
       })
     };
-    command.push({
-      key: "export",
-      text: "Xuất file",
-      iconProps: { iconName: 'Installation' },
-      onClick: () => alert("Xuất file excel")
-    })
     return command;
   }
 
