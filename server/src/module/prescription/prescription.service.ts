@@ -19,5 +19,13 @@ export default class PrecriptionService {
       throw error;
     }
   }
+  public getInfoById = async (id) => {
+    try {
+      return await this._precriptionRepo.findById(id);
+    } catch (error) {
+      logger("getInfoById-precriptionService", error?.message);
+      throw error;
+    }
+  }
 
 }

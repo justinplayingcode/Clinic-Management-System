@@ -37,6 +37,7 @@ const path = {
   doctorVerify: "/schedule/doctorverify",
   complete: "/schedule/complete",
   getcomplete: "/schedule/getcomplete",
+  detail: "/schedule/detail",
 }
 
 const authApi = {
@@ -85,6 +86,7 @@ const scheduleApi = {
   doctorVerify: (reqbody: any) => api.post(path.doctorVerify, reqbody),
   complete: (reqbody: any) => api.post(path.complete, reqbody),
   getComplete: (reqbody: any) => api.post(path.getcomplete, reqbody),
+  getDetail: (query: any) => api.get(`${path.detail}?id=${query}`),
 }
 
 export {

@@ -114,12 +114,6 @@ function Medications() {
         });
       }
     }
-    command.push({
-      key: "export",
-      text: "Xuất file",
-      iconProps: { iconName: "Installation" },
-      onClick: () => alert("Xuất file excel"),
-    });
     return command;
   };
 

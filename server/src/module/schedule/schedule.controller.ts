@@ -20,6 +20,7 @@ import typeAppointmentService from "../typeAppointment/typeAppointment.service";
 import { ICreateBill } from "../bill/bill.model";
 import BillService from "../bill/bill.service";
 import { IRequestGetAllOfStaticReport } from "../user/user.model";
+import MomentTimezone from "../../helper/timezone.config";
 
 export default class ScheduleController {
   private _scheduleService: any;
@@ -337,7 +338,40 @@ export default class ScheduleController {
     }
   }
 
-  public getDetailCompleteSchedule = async () => {
-    
+  public getDetailCompleteSchedule = async (req, res, next) => {
+    try {
+      const schedule = await this._scheduleService.getDetailById(req.query.id);
+      const doctor = await this._doctorService.getInfoById(schedule.doctorId);
+      const medicalRecord = await this._medicalRecordService.getInfoByScheduleId(schedule._id);
+      const prescription = await this._precriptionService.getInfoById(medicalRecord.prescriptionId);
+      const bill = await this._billService.getInfoByMedicalId(medicalRecord._id);
+
+      const _res = {
+        status: ApiStatus.succes,
+        isSuccess: true,
+        statusCode: ApiStatusCode.OK,
+        data: {
+          ...schedule,
+          doctor,
+          medicalRecord : {
+            summary: medicalRecord.summary,
+            diagnosis: medicalRecord.diagnosis,
+            healthIndicator: JSON.parse(medicalRecord.healthIndicator),
+            serviceResult: JSON.parse(medicalRecord.serviceResult),
+          },
+          prescription: {
+            medications: JSON.parse(prescription.medications),
+            note: prescription.note
+          },
+          bill: {
+            cost: bill.cost,
+            dateCreated: MomentTimezone.convertDDMMYYY(bill.dateCreated)
+          }
+        },
+      }
+      res.status(ApiStatusCode.OK).json(_res)
+    } catch (error) {
+      next(error)
+    }
   }
 }
