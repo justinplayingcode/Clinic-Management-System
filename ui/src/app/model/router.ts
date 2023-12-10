@@ -5,6 +5,7 @@ export const routerString = {
   login: "/login",
   home: "/home",
   histories: "/histories",
+  historiesdetail: "/histories/detail",
   appointment: "/appointment",
   schedule: "/schedule",
   manageaccount: "/manageaccount",
@@ -20,6 +21,7 @@ export const routerString = {
 export const mappingRouter = {
   [routerString.home]: "Tổng quát",
   [routerString.histories]: "Lịch sử khám bệnh",
+  [routerString.historiesdetail]: "Thông tin chi tiết",
   [routerString.appointment]: "Khám bệnh",
   [routerString.schedule]: "Lịch hẹn",
   [routerString.manageaccount]: "Quản lý tài khoản",

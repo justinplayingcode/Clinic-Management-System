@@ -6,6 +6,7 @@ import logger from "../../helper/logger.config";
 import DoctorService from "../doctor/doctor.service";
 import PatientService from "../patient/patient.service";
 import MomentTimezone from "../../helper/timezone.config";
+import { IRequestGetAllOfStaticReport } from "../user/user.model";
 
 export default class ScheduleService {
   private _scheduleRepository;
@@ -41,9 +42,9 @@ export default class ScheduleService {
     }
   }
 
-  public adminGetSchedule = async () => {
+  public adminGetSchedule = async (condition) => {
     try {
-      const schedules = await this._scheduleRepository.getAll({ appointmentDate: { $gte: MomentTimezone.getCurrentDate() } });
+      const schedules = await this._scheduleRepository.getAll(condition);
       const result = schedules.map( async schedule => {
         let doctor = undefined;
         let patient = undefined;
@@ -66,9 +67,9 @@ export default class ScheduleService {
     }
   }
 
-  public doctorGetSchedule = async (doctorId) => {
+  public doctorGetSchedule = async (condition) => {
     try {
-      const schedules = await this._scheduleRepository.getAll({ doctorId, appointmentDate: { $gte: MomentTimezone.getCurrentDate() } });
+      const schedules = await this._scheduleRepository.getAll(condition);
       const result = schedules.map( async schedule => {
         let patient = undefined;
         if (schedule.patientId) {
@@ -86,9 +87,9 @@ export default class ScheduleService {
     }
   }
 
-  public userGetSchedule = async (accountId) => {
+  public userGetSchedule = async (condition) => {
     try {
-      const schedules = await this._scheduleRepository.getAll({ accountId });
+      const schedules = await this._scheduleRepository.getAll(condition);
       const result = schedules.map( async schedule => {
         let doctor = undefined;
         let patient = undefined;
@@ -121,4 +122,38 @@ export default class ScheduleService {
     }
   }
 
+  public completeSchedule = async (id, session: ClientSession) => {
+    try {
+      const update = {
+        status: StatusAppointment.Complete,
+        statusUpdateTime: new Date,
+      }
+      return await this._scheduleRepository.updateById(id, update, session);
+    } catch (error) {
+      logger("scheduleService-userGetSchedule", error?.message);
+      throw error;
+    }
+  }
+
+  public getCompleteSchedule = async (params: IRequestGetAllOfStaticReport) => {
+    try {
+      const _result = await this._scheduleRepository.getForReport(params.page, params.pageSize, { status: StatusAppointment.Complete, ...params.conditions });
+      const result = _result.map(e => {
+        const { departmentId, typeAppointmentId } = e;
+        return {
+          ...e,
+          appointmentDate: MomentTimezone.convertDDMMYYY(e.appointmentDate),
+          departmentName: departmentId.displayName,
+          typeAppointment: typeAppointmentId.displayName,
+        }
+      })
+      return {
+        values: result,
+        total: result.length
+      }
+    } catch (error) {
+      logger("scheduleService-getCompleteSchedule", error?.message);
+      throw error;
+    }
+  }
 }

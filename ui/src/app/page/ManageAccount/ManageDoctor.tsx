@@ -109,8 +109,6 @@ function ManageDoctor() {
     (state: RootState) => state.currentSeleted
   );
   const navigate = useNavigate();
-
-
   const integrateItems = (reqbody: any): Promise<AxiosResponse<any, any>> => {
     const body = {
       ...reqbody,
@@ -134,12 +132,6 @@ function ManageDoctor() {
         onClick: () => { navigate(`/manageaccount/doctor/detail/${tableSelectedItem[0]?.doctorId}`) },
       });
     }
-    command.push({
-      key: "export",
-      text: "Xuất file",
-      iconProps: { iconName: "Installation" },
-      onClick: () => alert("Xuất file excel"),
-    });
     return command;
   };
 

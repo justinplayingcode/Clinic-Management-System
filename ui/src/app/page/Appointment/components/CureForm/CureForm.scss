@@ -1,4 +1,9 @@
 .cureModal {
+  .ant-modal-title {
+    text-align: center;
+    color: #006A4E;
+    text-decoration: underline;
+  }
   .ant-modal-content {
     max-height: calc(100vh - 60px);
     .ant-modal-body {

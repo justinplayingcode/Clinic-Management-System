@@ -25,6 +25,7 @@ export interface IUniformTableOwnProps {
     searchByColumn: string;
     searchPlaceholder: string;
     noSelected?: boolean;
+    noSearch?: boolean;
 }
 
 export interface  IUniformTablePropsFromState {
@@ -106,8 +107,8 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
       const requestBody = {
         page: page,
         pageSize: this.state.pageSize,
-        searchByColumn: this.props.searchByColumn,
-        searchKey: searchKey.trim()
+        searchByColumn: this.props.noSearch ? "" : this.props.searchByColumn,
+        searchKey: this.props.noSearch ? "" : searchKey.trim()
       }
       this.setState({
         items: [],
@@ -116,8 +117,8 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
       this.props.integrateItems(requestBody).then((data) => {
         if (data.status === ApiStatus.succes) {
           this.setState({
-            items: data.data,
-            total: data.total
+            items: data.data.values,
+            total: data.data.total
           })
         }
       }).catch(() => {
@@ -182,22 +183,24 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
                             />
                         </div>
                         <div className={`${classNames.controlWrapper} details-list-sub-header-item`}>
-                            <TextField 
-                              placeholder={`Tìm kiếm theo ${this.props.searchPlaceholder}`} 
-                              onChange={this._onChangeText as any} 
-                              styles={controlStyles} 
-                              disabled={isLoading}
-                              value={this.state.searchKey}
-                            />
-                            <div 
-                              className={`details-list-sub-header-item-icon ${isLoading ? "disable" : ""}`}
-                              onClick={this.onClickSearch.bind(this)}
-                              ref={this._buttonSearch}
-                            >
-                              <Icon 
-                                iconName={"Search"} 
+                          {this.props.noSearch ? <></> : <>
+                              <TextField 
+                                placeholder={`Tìm kiếm theo ${this.props.searchPlaceholder}`} 
+                                onChange={this._onChangeText as any} 
+                                styles={controlStyles} 
+                                disabled={isLoading}
+                                value={this.state.searchKey}
                               />
-                            </div>
+                              <div 
+                                className={`details-list-sub-header-item-icon ${isLoading ? "disable" : ""}`}
+                                onClick={this.onClickSearch.bind(this)}
+                                ref={this._buttonSearch}
+                              >
+                                <Icon 
+                                  iconName={"Search"} 
+                                />
+                              </div>
+                            </>}
                         </div>
                     </div>
                     <div className={`details-list-wrapper ${this.props.noSelected ? "details-list-no-selection" : ""}`} ref={this._detailListRef}>
@@ -209,6 +212,7 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
                                 columns={columns}
                                 enableShimmer={true}
                                 className='shimmertable'
+                                selectionMode={this.props.noSelected ? SelectionMode.none : SelectionMode.single}
                               />
                             :
                             <DetailsList

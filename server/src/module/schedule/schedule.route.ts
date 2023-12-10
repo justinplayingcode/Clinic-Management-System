@@ -10,5 +10,7 @@ scheduleRoute.route("/").get(middlewares.verifyToken, scheduleController.getSche
 scheduleRoute.route("/usercreate").post(middlewares.verifyToken, middlewares.permission([Role.user]), scheduleController.userCreateSchedule);
 scheduleRoute.route("/adminverify").post(middlewares.verifyToken, middlewares.permission([Role.admin]), scheduleController.adminVerifySchedule);
 scheduleRoute.route("/doctorverify").post(middlewares.verifyToken, middlewares.permission([Role.doctor]), scheduleController.doctorVerifySchedule);
+scheduleRoute.route("/complete").post(middlewares.verifyToken, middlewares.permission([Role.doctor]), scheduleController.completeSchedule);
+scheduleRoute.route("/getcomplete").post(middlewares.verifyToken, scheduleController.getAllCompleteSchedule);
 
 export default scheduleRoute;

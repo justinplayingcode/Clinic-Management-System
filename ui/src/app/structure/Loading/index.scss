@@ -71,6 +71,7 @@
     background: rgba(240, 240, 240, 0.6);
 
     .content {
+      overflow: unset !important;
       height: 140px;
       width: 360px !important;
       background-color: #fff;
@@ -101,6 +102,7 @@
     top: 0;
 
     .content {
+      overflow: unset !important;
       height: 140px;
       width: 360px;
       background-color: #fff;

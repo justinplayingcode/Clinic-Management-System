@@ -24,4 +24,20 @@ export default class ScheduleRepository extends BaseRepository<ScheduleModel> {
       .select(`-__v -statusUpdateTime`)
       .lean();
   }
+
+  public getForReport = async (page: number, pageSize: number, conditions: Partial<ScheduleModel> = {}) => {
+    return await this.model.find({ ...conditions })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .select(`-__v -statusUpdateTime`)
+      .populate({
+        path: "typeAppointmentId",
+        select: `-__v`
+      })
+      .populate({
+        path: "departmentId",
+        select: `-__v`
+      })
+      .lean()
+  }
 }

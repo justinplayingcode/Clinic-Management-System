@@ -26,16 +26,6 @@ export default class UserService {
       throw error;
     }
   };
-  // public createUserWithInfo = async (data, session: ClientSession) => {
-  //   try {
-  //     const newUser = {
-  //       ...data
-  //     };
-  //     return await this._userRepository.create(newUser, session);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // };
 
   public findByKey = async (key, data) => {
     try {
@@ -120,6 +110,7 @@ export default class UserService {
         request.searchByColumn,
         request.searchKey
       )
+      const total = await this._userRepository.getTotalOfStaticReport(request.searchByColumn, request.searchKey);
       const result: any[] = [];
       users.forEach(user => {
         result.push({
@@ -129,7 +120,10 @@ export default class UserService {
           accountId: user.accountId._id,
         })
       })
-      return result;
+      return {
+        values: result,
+        total
+      };
     } catch (error) {
       logger("getall-userservice", error?.message);
       throw error;

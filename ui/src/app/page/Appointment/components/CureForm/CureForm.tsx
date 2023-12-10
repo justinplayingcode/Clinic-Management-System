@@ -15,22 +15,25 @@ import {
   IAppointmentInfo,
   IServiceInfo,
   ServiceType,
+  toastType,
 } from "../../../../model/enum/common";
 import { Utils } from "../../../../../utils";
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 import "./CureForm.scss";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { medicationApi, serviceApi } from "../../../../../api";
+import { medicationApi, scheduleApi, serviceApi } from "../../../../../api";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { IPersonaProps } from "@fluentui/react";
 import Picker from "../../../components/picker";
+import { closeLoading, openLoading, showToastMessage } from "../../../../../redux/reducers";
 
 interface ICureFormProps {
   isOpen: boolean;
   onDismiss: () => void;
   item: IAppointmentInfo | null | undefined;
+  callScheduleList: () => void;
 }
 
 type FieldType = {
@@ -121,22 +124,9 @@ const CureForm = (props: ICureFormProps) => {
       };
     });
 
-    const medications = medication.map((item: any) => {
-      return {
-        id: item.id,
-        displayName: item.displayName,
-      };
-    });
-
     const body = {
       id: item?._id,
-      fullName: item?.patient.fullName,
-      dateOfBirth: Utils.convertDDmmyyyTommDDyyyy(
-        item?.patient.dateOfBirth ?? ""
-      ),
-      gender: item?.patient.gender,
-      reason: item?.appointmentReason,
-
+      typeAppointmentId: item?.typeAppointmentId,
       indicator: {
         height: values.height,
         weight: values.weight,
@@ -145,23 +135,69 @@ const CureForm = (props: ICureFormProps) => {
         temperature: values.temperature,
         glucose: values.glucose,
       },
-
       services: services,
-
       diagnose: values.diagnose,
       summary: values.summary,
-
       medication: {
-        list: medications,
+        list: medication,
         note: values.note,
       },
     };
-    console.log("body", body);
+    dispatch(openLoading());
+    scheduleApi.complete(body)
+    .then((result: any) => {
+      if (result.isSuccess) {
+        dispatch(
+          showToastMessage({
+            message: "Thành công",
+            type: toastType.succes,
+          })
+        );
+        onDismiss();
+        props.callScheduleList();
+      } else {
+        showToastMessage({
+          message: "Có lỗi, hãy thử lại",
+          type: toastType.error,
+        })
+      }
+    })
+    .catch(() => {
+      dispatch(
+        showToastMessage({
+          message: "Có lỗi, hãy thử lại",
+          type: toastType.error,
+        })
+      );
+    })
+    .finally(() => {
+      dispatch(closeLoading());
+    });
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+  const onFinishFailed = (_: any) => {
+    dispatch(
+      showToastMessage({
+        message: "Hãy điền các trường còn trống",
+        type: toastType.error,
+      })
+    );
   };
+
+  const checkVerifyNumber = (_: any, value: any) => {
+    if (value > 0 && value < 1000) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error('Giá trị là số lớn hơn 0!'));
+  }
+
+  const checkVerifyBloodPressure = (_: any, value: any) => {
+    const regex = new RegExp('^\\d+\\/\\d+$')
+    if (regex.test(value)) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error('Giá trị không hợp lệ, ví dụ: 120/80'));
+  }
 
   return (
     <Modal
@@ -186,13 +222,13 @@ const CureForm = (props: ICureFormProps) => {
             <Descriptions.Item label="Giới tính">
               {Utils.getGenderText(Number(item?.patient.gender))}
             </Descriptions.Item>
-            <Descriptions.Item label="Mã khám bệnh">
-              {item?._id || "-"}
-            </Descriptions.Item>
           </Descriptions>
         </Col>
-        <Col style={{ flex: 1, marginTop: "44px" }}>
+        <Col span={12} style={{ flex: 1, marginTop: "44px", paddingRight: "6px" }}>
           <Descriptions bordered>
+            <Descriptions.Item label="Mã lịch khám bệnh" span={12}>
+              {item?._id || "-"}
+            </Descriptions.Item>
             <Descriptions.Item label="Lý do">
               {item?.appointmentReason || "-"}
             </Descriptions.Item>
@@ -204,7 +240,6 @@ const CureForm = (props: ICureFormProps) => {
         name="basic-appointment"
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
-        // layout="vertical"
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -219,7 +254,7 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Chiều cao"
                 name="height"
-                rules={[{ required: true, message: "Hãy nhập chiều cao" }]}
+                rules={[{ required: true, message: "Hãy nhập chiều cao", validator: checkVerifyNumber }]}
               >
                 <Input addonAfter="cm" />
               </Form.Item>
@@ -228,7 +263,7 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Cân nặng"
                 name="weight"
-                rules={[{ required: true, message: "Hãy nhập cân nặng" }]}
+                rules={[{ required: true, message: "Hãy nhập cân nặng", validator: checkVerifyNumber }]}
               >
                 <Input addonAfter="kg" />
               </Form.Item>
@@ -237,7 +272,7 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Nhịp tim"
                 name="heartRate"
-                rules={[{ required: true, message: "Hãy nhập nhịp tim" }]}
+                rules={[{ required: true, message: "Hãy nhập nhịp tim", validator: checkVerifyNumber }]}
               >
                 <Input addonAfter="bpm" />
               </Form.Item>
@@ -248,7 +283,7 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Nhiệt độ"
                 name="temperature"
-                rules={[{ required: true, message: "Hãy nhập nhiệt độ" }]}
+                rules={[{ required: true, message: "Hãy nhập nhiệt độ", validator: checkVerifyNumber }]}
               >
                 <Input addonAfter="&#8451;" />
               </Form.Item>
@@ -257,7 +292,7 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Huyết áp"
                 name="bloodPressure"
-                rules={[{ required: true, message: "Hãy nhập huyết áp" }]}
+                rules={[{ required: true, message: "Giá trị không hợp lệ, ví dụ: 120/80", validator: checkVerifyBloodPressure }]}
               >
                 <Input addonAfter="mmHg" />
               </Form.Item>
@@ -266,7 +301,7 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Đường huyết"
                 name="glucose"
-                rules={[{ required: true, message: "Hãy nhập đường huyết" }]}
+                rules={[{ required: true, message: "Hãy nhập đường huyết", validator: checkVerifyNumber }]}
               >
                 <Input addonAfter="mg/dl" />
               </Form.Item>
@@ -278,7 +313,6 @@ const CureForm = (props: ICureFormProps) => {
             <Text strong style={{ fontSize: "16px" }}>
               Dịch vụ
             </Text>
-            {/* <Button icon={<PlusOutlined />}>Thêm</Button> */}
           </Row>
           <Form.List name="items" initialValue={[]}>
             {(fields, { add, remove }) => (
@@ -369,6 +403,7 @@ const CureForm = (props: ICureFormProps) => {
                         secondaryText: e.designation,
                         id: e._id,
                         usage: e.usage,
+                        price: e.price
                       };
                     });
                     return values;

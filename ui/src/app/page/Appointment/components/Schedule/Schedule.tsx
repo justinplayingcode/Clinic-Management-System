@@ -20,7 +20,6 @@ import {
 import Paragraph from "antd/es/typography/Paragraph";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../redux";
@@ -31,8 +30,6 @@ import {
   AppointmentStatus,
   Gender,
   IAppointmentInfo,
-  PositionOfDoctor,
-  RankOfDoctor,
   TimeFrame,
   toastType,
 } from "../../../../model/enum/common";
@@ -665,32 +662,32 @@ function Schedule() {
     );
   };
 
-  const renderCureProcess = () => {
-    const renderCureProcesFooter = () => {
-      return <> Footer</>;
-    };
+  // const renderCureProcess = () => {
+  //   const renderCureProcesFooter = () => {
+  //     return <> Footer</>;
+  //   };
 
-    const handleCancel = () => {
-      setOpenProcess(false);
-    };
+  //   const handleCancel = () => {
+  //     setOpenProcess(false);
+  //   };
 
-    const handleOk = () => {
-      setOpenProcess(false);
-    };
+  //   const handleOk = () => {
+  //     setOpenProcess(false);
+  //   };
 
-    return (
-      <Modal
-        title="Chỉ định bác sĩ"
-        footer={renderCureProcesFooter}
-        open={isOpenProcess}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        width={900}
-      >
-        Bắt đầu quá trình khám
-      </Modal>
-    );
-  };
+  //   return (
+  //     <Modal
+  //       title="Chỉ định bác sĩ"
+  //       footer={renderCureProcesFooter}
+  //       open={isOpenProcess}
+  //       onOk={handleOk}
+  //       onCancel={handleCancel}
+  //       width={900}
+  //     >
+  //       Bắt đầu quá trình khám
+  //     </Modal>
+  //   );
+  // };
 
   return (
     <>
@@ -762,6 +759,7 @@ function Schedule() {
             setOpenProcess(false);
           }}
           item={selectItem}
+          callScheduleList={callScheduleList}
         />
       </Row>
     </>

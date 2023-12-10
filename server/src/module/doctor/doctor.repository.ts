@@ -23,6 +23,18 @@ export default class DoctorRepository extends BaseRepository<DoctorModel> {
       .lean();
   }
 
+  public getTotalOfStaticReport = async (searchByColumn: string, searchKey: string, conditions: Partial<DoctorModel> = {}) => {
+    return await this.model.find({ ...conditions })
+      .populate({
+        path: fields.userId,
+        select: `-__v`,
+        match: {
+          [searchByColumn]: { $regex: new RegExp(searchKey, 'i') }
+        }
+      })
+      .lean();
+  }
+
   public getInfoByDoctorId = async (id) => {
     return await this.model.findById(id)
       .populate({

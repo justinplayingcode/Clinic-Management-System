@@ -44,11 +44,10 @@ const scheduleSchema = new Schema({
       message: "{VALUE} is not supported in appointmentHour",
     }
   },
-  // array of typeAppoinment id
   typeAppointmentId: {
-    type: String,
-    trim: true,
-    require: [true, "typeAppointmentId must be required"],
+    type: Schema.Types.ObjectId,
+    ref: collection.typeappointment,
+    required: [true, "typeAppointmentId must be required"],
   },
   statusUpdateTime: {
     type: Date,

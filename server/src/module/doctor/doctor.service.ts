@@ -88,10 +88,14 @@ export default class DoctorService {
   public getAll = async (param: IParamForGetAll) => {
     const { page, pageSize, searchByColumn, searchKey, conditions } = param;
     try {
+      const _total = await this._doctorRepository.getTotalOfStaticReport(searchByColumn, searchKey, conditions);
+      const total = _total.map(doctor => {
+        if (doctor.userId) return doctor;
+      })
       const doctors = await this._doctorRepository.getDoctorOfStaticReport(page, pageSize, searchByColumn, searchKey, conditions);
       const result = doctors.map(doctor => {
         if (doctor.userId) {
-          let { accountId, _id: userId, email, avatar, fullName, gender, address, dateOfBirth, phoneNumber  } = doctor.userId;
+          let { accountId, _id: userId, email, avatar, fullName, gender, address, dateOfBirth, phoneNumber } = doctor.userId;
           return {
             doctorId: doctor._id,
             rank: doctor.rank,
@@ -109,7 +113,10 @@ export default class DoctorService {
           }
         }
       })
-      return result.filter(i => i)
+      return {
+        values: result.filter(i => i),
+        total: total.filter(i => i).length
+      }
     } catch (error) {
       logger("getAll-doctorservice", error?.message);
       throw error;

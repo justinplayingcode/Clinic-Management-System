@@ -8,6 +8,7 @@ import { Role } from '../model/enum/auth';
 const breadcrumbNameMap: Record<string, string> = {
   [routerString.home]: mappingRouter[routerString.home],
   [routerString.histories]: mappingRouter[routerString.histories],
+  [routerString.historiesdetail]: mappingRouter[routerString.historiesdetail],
   [routerString.appointment]: mappingRouter[routerString.appointment],
   [routerString.schedule]: mappingRouter[routerString.schedule],
   [routerString.manageaccount]: mappingRouter[routerString.manageaccount],

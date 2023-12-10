@@ -39,6 +39,7 @@ const items = (role: Role): MenuItem[] => {
           getItem(mappingRouter[routerString.manageaccountuser], `${routerString.manageaccountuser}`, <TeamOutlined />),
         ]),
         getItem("Quản lý lịch hẹn", `${routerString.schedule}`, <ScheduleOutlined />),
+        getItem(mappingRouter[routerString.histories], `${routerString.histories}`, <FileSearchOutlined />),
         getItem("Khoa", `${routerString.managedepartments}`, <ApartmentOutlined/>),
         getItem("Dịch vụ", `${routerString.manageservice}`, <MdOutlineMedicalServices />),
         getItem("Thuốc", `${routerString.managemedication}`, <MdOutlineMedication />),
@@ -47,7 +48,6 @@ const items = (role: Role): MenuItem[] => {
       return [
         getItem(mappingRouter[routerString.home], `${routerString.home}`, <HomeOutlined />),
         getItem("Quản lý lịch hẹn", `${routerString.schedule}`, <ScheduleOutlined />),
-        // getItem(mappingRouter[routerString.appointment], `${routerString.appointment}`, <MedicineBoxOutlined />),
         getItem(mappingRouter[routerString.histories], `${routerString.histories}`, <FileSearchOutlined />),
         getItem("Khoa", `${routerString.managedepartments}`, <ApartmentOutlined/>),
         getItem("Dịch vụ", `${routerString.manageservice}`, <MdOutlineMedicalServices />),

@@ -75,7 +75,11 @@
           width: 100%;
           height: 100%;
           overflow: auto;
+          position: relative;
           .details-list-no-content {
+              position: absolute;
+              top: 20px;
+              right: 0;
               width: 100%;
               display: flex;
               flex-direction: column;
@@ -118,6 +122,23 @@
         .ms-DetailsList-contentWrapper {
           .ms-DetailsRow-fields {
             padding-left: 40px;
+          }
+        }
+        &> [class^="root"] {
+          height: 100%;
+          .ms-Viewport {
+            height: 100%;
+            .shimmertable  {
+              height: 100%;
+              .ms-DetailsHeader {
+                padding-left: 40px;
+              }
+              .ms-DetailsList-contentWrapper {
+                .ms-List-surface {
+                  padding-left: 40px;
+                }
+              }
+            }
           }
         }
       }
