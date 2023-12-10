@@ -27,7 +27,11 @@ import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { IPersonaProps } from "@fluentui/react";
 import Picker from "../../../components/picker";
-import { closeLoading, openLoading, showToastMessage } from "../../../../../redux/reducers";
+import {
+  closeLoading,
+  openLoading,
+  showToastMessage,
+} from "../../../../../redux/reducers";
 
 interface ICureFormProps {
   isOpen: boolean;
@@ -113,6 +117,19 @@ const CureForm = (props: ICureFormProps) => {
     onDismiss();
   };
 
+  const validateUnique = (value: any, allValues: any) => {
+    // count the number of occurrences of the value in the list
+    const count = allValues.filter(
+      (item: any) => item["item_service"] === value
+    ).length;
+    // if the count is more than one, return a validation error message
+    if (count > 1) {
+      return Promise.reject(new Error("Hãy chọn dịch vụ khác"));
+    }
+    // otherwise, return a validation success message
+    return Promise.resolve();
+  };
+
   const onFinish = (values: any) => {
     const services = values.items.map((item: any) => {
       const dataItem = serviceList.find((ser) => ser.id === item.item_service);
@@ -144,35 +161,38 @@ const CureForm = (props: ICureFormProps) => {
       },
     };
     dispatch(openLoading());
-    scheduleApi.complete(body)
-    .then((result: any) => {
-      if (result.isSuccess) {
+    scheduleApi
+      .complete(body)
+      .then((result: any) => {
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Thành công",
+              type: toastType.succes,
+            })
+          );
+          onDismiss();
+          props.callScheduleList();
+        } else {
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          });
+        }
+      })
+      .catch(() => {
         dispatch(
           showToastMessage({
-            message: "Thành công",
-            type: toastType.succes,
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
           })
         );
-        onDismiss();
-        props.callScheduleList();
-      } else {
-        showToastMessage({
-          message: "Có lỗi, hãy thử lại",
-          type: toastType.error,
-        })
-      }
-    })
-    .catch(() => {
-      dispatch(
-        showToastMessage({
-          message: "Có lỗi, hãy thử lại",
-          type: toastType.error,
-        })
-      );
-    })
-    .finally(() => {
-      dispatch(closeLoading());
-    });
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
+    // if success, clear form
+    form.resetFields();
   };
 
   const onFinishFailed = (_: any) => {
@@ -188,16 +208,16 @@ const CureForm = (props: ICureFormProps) => {
     if (value > 0 && value < 1000) {
       return Promise.resolve();
     }
-    return Promise.reject(new Error('Giá trị là số lớn hơn 0!'));
-  }
+    return Promise.reject(new Error("Giá trị là số lớn hơn 0!"));
+  };
 
   const checkVerifyBloodPressure = (_: any, value: any) => {
-    const regex = new RegExp('^\\d+\\/\\d+$')
+    const regex = new RegExp("^\\d+\\/\\d+$");
     if (regex.test(value)) {
       return Promise.resolve();
     }
-    return Promise.reject(new Error('Giá trị không hợp lệ, ví dụ: 120/80'));
-  }
+    return Promise.reject(new Error("Giá trị không hợp lệ, ví dụ: 120/80"));
+  };
 
   return (
     <Modal
@@ -224,7 +244,10 @@ const CureForm = (props: ICureFormProps) => {
             </Descriptions.Item>
           </Descriptions>
         </Col>
-        <Col span={12} style={{ flex: 1, marginTop: "44px", paddingRight: "6px" }}>
+        <Col
+          span={12}
+          style={{ flex: 1, marginTop: "44px", paddingRight: "6px" }}
+        >
           <Descriptions bordered>
             <Descriptions.Item label="Mã lịch khám bệnh" span={12}>
               {item?._id || "-"}
@@ -254,7 +277,13 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Chiều cao"
                 name="height"
-                rules={[{ required: true, message: "Hãy nhập chiều cao", validator: checkVerifyNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập chiều cao",
+                    validator: checkVerifyNumber,
+                  },
+                ]}
               >
                 <Input addonAfter="cm" />
               </Form.Item>
@@ -263,7 +292,13 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Cân nặng"
                 name="weight"
-                rules={[{ required: true, message: "Hãy nhập cân nặng", validator: checkVerifyNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập cân nặng",
+                    validator: checkVerifyNumber,
+                  },
+                ]}
               >
                 <Input addonAfter="kg" />
               </Form.Item>
@@ -272,7 +307,13 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Nhịp tim"
                 name="heartRate"
-                rules={[{ required: true, message: "Hãy nhập nhịp tim", validator: checkVerifyNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập nhịp tim",
+                    validator: checkVerifyNumber,
+                  },
+                ]}
               >
                 <Input addonAfter="bpm" />
               </Form.Item>
@@ -283,7 +324,13 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Nhiệt độ"
                 name="temperature"
-                rules={[{ required: true, message: "Hãy nhập nhiệt độ", validator: checkVerifyNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập nhiệt độ",
+                    validator: checkVerifyNumber,
+                  },
+                ]}
               >
                 <Input addonAfter="&#8451;" />
               </Form.Item>
@@ -292,7 +339,13 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Huyết áp"
                 name="bloodPressure"
-                rules={[{ required: true, message: "Giá trị không hợp lệ, ví dụ: 120/80", validator: checkVerifyBloodPressure }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Giá trị không hợp lệ, ví dụ: 120/80",
+                    validator: checkVerifyBloodPressure,
+                  },
+                ]}
               >
                 <Input addonAfter="mmHg" />
               </Form.Item>
@@ -301,7 +354,13 @@ const CureForm = (props: ICureFormProps) => {
               <Form.Item<FieldType>
                 label="Đường huyết"
                 name="glucose"
-                rules={[{ required: true, message: "Hãy nhập đường huyết", validator: checkVerifyNumber }]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập đường huyết",
+                    validator: checkVerifyNumber,
+                  },
+                ]}
               >
                 <Input addonAfter="mg/dl" />
               </Form.Item>
@@ -323,7 +382,18 @@ const CureForm = (props: ICureFormProps) => {
                     style={{ display: "flex", marginBottom: 8 }}
                     align="baseline"
                   >
-                    <Form.Item {...field} name={[field.name, "item_service"]}>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "item_service"]}
+                      rules={[
+                        { required: true, message: "Hãy chọn dịch vụ" },
+                        // use a custom validator function to check uniqueness
+                        {
+                          validator: (_, value) =>
+                            validateUnique(value, form.getFieldValue("items")),
+                        },
+                      ]}
+                    >
                       <Select
                         placeholder="Chọn dịch vụ"
                         options={serviceOptions}
@@ -403,7 +473,7 @@ const CureForm = (props: ICureFormProps) => {
                         secondaryText: e.designation,
                         id: e._id,
                         usage: e.usage,
-                        price: e.price
+                        price: e.price,
                       };
                     });
                     return values;
