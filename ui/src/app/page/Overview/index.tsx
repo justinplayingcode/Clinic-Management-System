@@ -40,6 +40,7 @@ function Overview() {
       setOpen(true);
       setClosable(false);
     }
+    setImageUrl(info.avatar);
   }, []);
 
   const getInfoAddress = () => {
@@ -83,18 +84,21 @@ function Overview() {
   const handleChange: UploadProps["onChange"] = (
     info: UploadChangeParam<UploadFile>
   ) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
+    // if (info.file.status === "uploading") {
+    //   setLoading(true);
+    //   return;
+    // }
+    // if (info.file.status === "done") {
+    // Get this url from response in real world.
+    getBase64(info.file.originFileObj as RcFile, (url) => {
+      setLoading(false);
+      setImageUrl(url);
+    });
+    // }
   };
+
+  const defaultAvatar =
+    "https://res.cloudinary.com/dipiauw0v/image/upload/v1682100699/DATN/unisex_avatar.jpg?fbclid=IwAR0rfobILbtfTZlNoWFiWmHYPH7bPMKFP0ztGnT8CVEXtvgTOEPEBgYtxY8";
 
   return (
     <>
@@ -102,7 +106,7 @@ function Overview() {
         <Col className="personalInfo-container">
           <Row className="avatar-container">
             <Row className="left-container">
-              {/* <Upload
+              <Upload
                 name="avatar"
                 listType="picture-card"
                 className="avatar-uploader"
@@ -111,13 +115,13 @@ function Overview() {
                 beforeUpload={beforeUpload}
                 onChange={handleChange}
               >
-                {imageUrl ? (
+                {imageUrl !== defaultAvatar ? (
                   <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
                 ) : (
                   uploadButton
                 )}
-              </Upload> */}
-              <Avatar shape="square" size={132} src={info.avatar} />
+              </Upload>
+              {/* <Avatar shape="square" size={132} src={info.avatar} /> */}
               <Descriptions style={{ flex: 1 }}>
                 <Descriptions.Item label="Họ và tên" span={12}>
                   {info.fullName || "--"}

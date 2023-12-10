@@ -47,7 +47,7 @@ export default class Utils {
     }
   };
 
-  public static getDoctorRankText = (rank: RankOfDoctor) => {
+  public static getDoctorRankText = (rank: RankOfDoctor| undefined) => {
     switch (rank) {
       case RankOfDoctor.thacSi:
         return "Thạc sĩ";
@@ -64,7 +64,7 @@ export default class Utils {
     }
   }
 
-  public static getDoctorPositionText = (position: PositionOfDoctor) => {
+  public static getDoctorPositionText = (position: PositionOfDoctor | undefined) => {
     switch (position) {
       case PositionOfDoctor.dean:
         return "Trưởng khoa";
@@ -77,7 +77,7 @@ export default class Utils {
     }
   }
 
-  public static getPatientRelationshipText = (relationship: patientRelationship) => {
+  public static getPatientRelationshipText = (relationship: patientRelationship | undefined) => {
     switch (relationship) {
       case patientRelationship.wifeHusband:
         return "Vợ - Chồng";
@@ -98,5 +98,10 @@ export default class Utils {
     const sec = listString?.pop()![0] || "";
     const fir = listString?.pop()![0]  || "";
     return fir + sec;
+  }
+
+  public static convertDatetoddmmyyyy = (input: string | undefined) => {
+    var date = new Date(input || "");
+ return  date.getDate()+ '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
   }
 }
