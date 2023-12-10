@@ -3,10 +3,10 @@ import { PrecriptionModel } from "./prescription.model";
 import collection from "../../common/constant/collection";
 
 const precriptionSchema = new Schema({
-  medicationId: {
+  medications: {
     type: String,
     trim: true,
-    required: [true, "medicationId must be required"],
+    required: [true, "medications must be required"],
   },
   cost: {
     type: Number,

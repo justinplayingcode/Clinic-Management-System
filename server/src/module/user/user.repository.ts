@@ -16,4 +16,9 @@ export default class UserRepository extends BaseRepository<UserModel> {
       .lean();
   }
 
+  public getTotalOfStaticReport = async (searchByColumn: string, searchKey: string) => {
+    return await this.model.find({ [searchByColumn]: { $regex: new RegExp(searchKey, 'i') } })
+      .countDocuments();
+  }
+
 }

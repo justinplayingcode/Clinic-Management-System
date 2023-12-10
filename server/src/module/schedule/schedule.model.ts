@@ -66,3 +66,13 @@ export const doctorVerifyRequestFields = [
   "id",
   "isAccept",
 ]
+
+export const completeScheduleRequest = [
+  "id",
+  "typeAppointmentId",
+  "services",
+  "summary",
+  "diagnose",
+  "indicator",
+  "medication"
+]

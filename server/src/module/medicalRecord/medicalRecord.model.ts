@@ -6,5 +6,14 @@ export interface MedicalRecordModel extends BaseModel {
     healthIndicator: string;
     prescriptionId: string;
     scheduleId: string;
-    tests: string;
+    serviceResult: string;
+}
+
+export interface ICreateMedicalRecord {
+    summary: string;
+    diagnosis: string;
+    healthIndicator: string;
+    prescriptionId: string;
+    scheduleId: string;
+    serviceResult: string;
 }

@@ -43,7 +43,7 @@ const columns = [
     maxWidth: 90,
     isResizable: true,
     onRender: (item: any) => {
-      return <span>{Utils.getDoctorRankText(item.rank)}</span>;
+      return <span>{tooltipPlainText(Utils.getDoctorRankText(item.rank))}</span>;
     },
   },
   {
@@ -53,7 +53,7 @@ const columns = [
     maxWidth: 90,
     isResizable: true,
     onRender: (item: any) => {
-      return <span>{Utils.getDoctorPositionText(item.position)}</span>;
+      return <span>{tooltipPlainText(Utils.getDoctorPositionText(item.position))}</span>;
     },
   },
   {
@@ -197,6 +197,7 @@ function Department() {
         integrateItems={integrateItems}
         searchByColumn={"fullName"}
         searchPlaceholder={"tên"}
+        noSelected
       />
     );
   };

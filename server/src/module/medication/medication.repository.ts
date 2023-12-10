@@ -11,6 +11,10 @@ export default class MedicationRepository extends BaseRepository<MedicationModel
       .lean();
   }
 
+  public getTotalOfStaticReport = async (searchByColumn: string, searchKey: string) => {
+    return await this.model.find({ isActive: true, [searchByColumn]: { $regex: new RegExp(searchKey, 'i') } }).countDocuments();
+  }
+
   public medicationPicker = async (searchKey) => {
     return await this.model.find({ isActive: true, displayName: { $regex: new RegExp(searchKey, 'i') } })
       .select("-__v -isActive")

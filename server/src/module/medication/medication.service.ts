@@ -85,19 +85,23 @@ export default class medicationService {
   };
   public getDataOfStaticReport = async (request: IRequestGetAllOfStaticReport) => {
     try {
+      const total = await this._medicationRepository.getTotalOfStaticReport(request.searchByColumn, request.searchKey);
       const medications = await this._medicationRepository.getDataOfStaticReport(
         request.page,
         request.pageSize,
         request.searchByColumn,
         request.searchKey
-      )
+      );
       const result: any[] = [];
       medications.forEach(medication => {
         result.push({
           ...medication,
         })
       })
-      return result;
+      return {
+        values: result,
+        total
+      };
     } catch (error) {
       logger("getall-mediactionservice", error?.message);
       throw error;

@@ -9,6 +9,7 @@ import ManageDoctor from "./page/ManageAccount/ManageDoctor";
 import ManageUser from "./page/ManageAccount/ManageUser";
 import ManageService from "./page/ManageService";
 import AccountDetails from "./page/ManageAccount/components/AccountDetails/AccountDetails";
+import HistoryDetail from "./page/Histories/HistoryDetail";
 
 function Routing() {
 
@@ -18,6 +19,7 @@ function Routing() {
         <Route path="/" element={<LandingPage/>} />
         <Route path={`${routerString.home}`} element={<UniformLayout page={<Overview/>} noBackground/>}/>
         <Route path={`${routerString.histories}`} element={<UniformLayout page={<Histories/>}/>}/>
+        <Route path={`${routerString.historiesdetail}/:id`} element={<UniformLayout page={<HistoryDetail/>}/>}/>
         <Route path={`${routerString.appointment}`} element={<UniformLayout page={<Appointment/>}/>}/>
         <Route path={`${routerString.manageaccount}`} element={<Navigate to={`${routerString.manageaccountdoctor}`} />}/>
         <Route path={`${routerString.manageaccountdoctor}`} element={<UniformLayout page={<ManageDoctor/>}/>}/>

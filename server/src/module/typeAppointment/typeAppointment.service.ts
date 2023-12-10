@@ -4,6 +4,7 @@ import typeAppointmentRepository from "./typeAppointment.repository";
 import TypeAppointment from "./typeAppointment.schema";
 import ErrorObject from "../../common/model/error";
 import { ApiStatusCode } from "../../common/enum/apiStatusCode";
+import logger from "../../helper/logger.config";
 // import { ClientSession } from "mongoose";
 
 export default class typeAppointmentService {
@@ -106,6 +107,15 @@ export default class typeAppointmentService {
     try {
       return await this._typeAppointmentRepository.getAll();
     } catch (error) {
+      throw error;
+    }
+  }
+
+  public findById = async (id) => {
+    try {
+      return await this._typeAppointmentRepository.findById(id);
+    } catch (error) {
+      logger("findById-typeappointmentService", error);
       throw error;
     }
   }

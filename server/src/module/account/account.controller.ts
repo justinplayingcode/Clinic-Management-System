@@ -234,7 +234,6 @@ export default class AccountController {
         searchKey: req.body.searchKey,
       }
       const result = await this._userService.getDataOfStaticReport(param);
-
       _res = {
         status: ApiStatus.succes,
         isSuccess: true,

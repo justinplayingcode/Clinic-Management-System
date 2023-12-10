@@ -29,14 +29,14 @@ const medicalRecordSchema = new Schema({
         ref: collection.schedule,
         required: [true, 'scheduleId must be required']
     },
-    // tests: string;
-    tests: {
+    // serviceResult: string;
+    serviceResult: {
         type: String,
         trim: true,
     }
     
 });
 
-const MedicalRecord: Model<MedicalRecordModel> = mongoose.model<MedicalRecordModel> (collection.medicalrecord,medicalRecordSchema)
+const MedicalRecord: Model<MedicalRecordModel> = mongoose.model<MedicalRecordModel> (collection.medicalrecord, medicalRecordSchema)
 
 export default MedicalRecord
