@@ -2,5 +2,8 @@
   padding: 24px;
   .info-section {
     padding-top: 24px;
+    .ant-descriptions-item-label {
+      width: 200px;
+    }
   }
 }
