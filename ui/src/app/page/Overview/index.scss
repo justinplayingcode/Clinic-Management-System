@@ -23,6 +23,18 @@
         flex: 1;
         align-items: center;
         gap: 8px;
+
+        position: relative;
+        .change-avatar-btn {
+          position: absolute;
+          bottom: 0;
+          button {
+            opacity: 0.5;
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
       }
     }
     .info-container {
