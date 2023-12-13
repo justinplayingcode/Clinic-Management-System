@@ -175,18 +175,21 @@ function Schedule() {
         }`}
         onClick={() => setSelectItem(item)}
       >
-        <Col className="preview-avatar">
+        {/* <Col className="preview-avatar">
           <Avatar size="large" icon={<UserOutlined />} />
-        </Col>
+        </Col> */}
         <Row className="preview-info">
           <Col>
-            <Row className="preview-name">
+            <Row className="preview-info-container">
+              <Text className="preview-title" >Bệnh nhân: </Text>
               <Text strong>{item.patient.fullName}</Text>
             </Row>
-            <Row className="preview-time">
+            <Row className="preview-info-container">
+              <Text className="preview-title" >Ngày hẹn khám: </Text>
               <span>{item.appointmentDate}</span>
             </Row>
-            <Row className="preview-status">
+            <Row className="preview-info-container">
+              <Text className="preview-title" >Trạng thái: </Text>
               {renderAppointmentStatus(item.status)}
             </Row>
           </Col>

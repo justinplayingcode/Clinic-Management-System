@@ -6,10 +6,7 @@ import {
   Form,
   Modal,
   Row,
-  Upload,
-  UploadFile,
-  UploadProps,
-  message,
+  Upload
 } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEffect, useState } from "react";
@@ -19,35 +16,26 @@ import { Utils } from "../../../utils";
 import { Role } from "../../model/enum/auth";
 import BasicInfoForm from "./components/BasicInfo";
 import "./index.scss";
-import {
-  InboxOutlined,
-  LoadingOutlined,
-  PlusOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import { RcFile, UploadChangeParam } from "antd/es/upload";
-import Dragger from "antd/es/upload/Dragger";
+import { UploadOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { closeLoading, openLoading, setInfoUser, showToastMessage } from "../../../redux/reducers";
+import { toastType } from "../../model/enum/common";
+import { authApi } from "../../../api";
 
 function Overview() {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [imageUrl, setImageUrl] = useState<string>();
-
   const [isOpen, setOpen] = useState<boolean>(false);
   const [closable, setClosable] = useState<boolean>(true);
   const [form] = Form.useForm();
-
   const { role, info, phoneNumber } = useSelector(
     (state: RootState) => state.auth
   );
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!info?.fullName) {
       setOpen(true);
       setClosable(false);
     }
-    setImageUrl(info.avatar);
   }, []);
-
   const getInfoAddress = () => {
     const list = [];
     if (info.address) list.push(info.address);
@@ -55,70 +43,71 @@ function Overview() {
 
     return list.join(", ");
   };
-
   const onCloseModel = () => {
     setOpen(false);
     form.resetFields();
   };
 
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-
-  const getBase64 = (img: RcFile, callback: (url: string) => void) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result as string));
-    reader.readAsDataURL(img);
-  };
-
-  const beforeUpload = (file: RcFile) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG file!");
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error("Image must smaller than 2MB!");
-    }
-    return isJpgOrPng && isLt2M;
-  };
-
-  const handleChange: UploadProps["onChange"] = (
-    info: UploadChangeParam<UploadFile>
-  ) => {
-    // if (info.file.status === "uploading") {
-    //   setLoading(true);
-    //   return;
-    // }
-    // if (info.file.status === "done") {
-    // Get this url from response in real world.
-    getBase64(info.file.originFileObj as RcFile, (url) => {
-      setLoading(false);
-      setImageUrl(url);
+  const getInfo = () => {
+    dispatch(openLoading());
+    authApi.getInfoCurrentUser()
+    .then((result: any) => {
+      if (result.isSuccess) {
+        dispatch(setInfoUser(result.data))
+      }
+    })
+    .finally(() => {
+      dispatch(closeLoading());
     });
-    // }
-  };
+  }
 
   const uploadAvatar = () => {
     const [visible, setVisible] = useState(false);
-    const [fileList, setFileList] = useState([]);
-
-    const handleCancel = () => setVisible(false);
-
+    const [fileList, setFileList] = useState<any>([]);
+    const handleCancel = () => {
+      setVisible(false)
+      setFileList([])
+    };
     const handleOk = () => {
-      // do something with the uploaded file
-      console.log(fileList[0]);
-      setVisible(false);
+      const formData = new FormData();
+      formData.append('avatar', fileList[0].originFileObj);
+      dispatch(openLoading());
+      authApi.updateAvatar(formData)
+        .then((result: any) => {
+          if (result.isSuccess) {
+            dispatch(
+              showToastMessage({
+                message: "Cập nhật ảnh đại diện thành công",
+                type: toastType.succes,
+              })
+            );
+            getInfo();
+            handleCancel();
+          } else {
+            showToastMessage({
+              message: "Có lỗi, hãy thử lại",
+              type: toastType.error,
+            })
+          }
+        })
+        .catch(() => {
+          dispatch(
+            showToastMessage({
+              message: "Có lỗi, hãy thử lại",
+              type: toastType.error,
+            })
+          );
+        })
+        .finally(() => {
+          dispatch(closeLoading());
+        });
     };
 
     return (
       <>
         <Button onClick={() => setVisible(true)}>Đổi ảnh đại diện</Button>
         <Modal
-          title="Upload File"
+          title="Tải ảnh mới"
           visible={visible}
           onOk={handleOk}
           onCancel={handleCancel}
@@ -126,10 +115,19 @@ function Overview() {
           <Upload
             action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
             listType="picture"
-            defaultFileList={[...fileList]}
+            accept="image/png, image/jpeg"
+            maxCount={1}
+            fileList={fileList}
             className="upload-list-inline"
+            onChange={(info) => {
+              setFileList([info.file])
+              if (info.file.status === 'error') {
+                dispatch(showToastMessage({ message: "Có lỗi, vui lòng chọn ảnh khác", type: toastType.error}))
+                setFileList([])
+              }
+            }}
           >
-            <Button icon={<UploadOutlined />}>Upload</Button>
+            <Button icon={<UploadOutlined />}>Tải lên</Button>
           </Upload>
         </Modal>
       </>

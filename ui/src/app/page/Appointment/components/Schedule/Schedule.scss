@@ -32,6 +32,11 @@
           flex: 1;
           justify-content: space-between;
           align-items: center;
+          .preview-info-container {
+            .preview-title {
+              margin-right: 8px;
+            }
+          }
         }
       }
     }

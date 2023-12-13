@@ -19,7 +19,7 @@ const storageAvatar = new (CloudinaryStorage as any)({
   cloudinary,
   allowedFormats: ['jpg', 'png'],
   params: {
-    folder: 'hospital-cloud-avatar',
+    folder: 'clinic',
   },
 });
 
