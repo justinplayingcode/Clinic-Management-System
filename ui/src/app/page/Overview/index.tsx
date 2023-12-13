@@ -19,8 +19,14 @@ import { Utils } from "../../../utils";
 import { Role } from "../../model/enum/auth";
 import BasicInfoForm from "./components/BasicInfo";
 import "./index.scss";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  InboxOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { RcFile, UploadChangeParam } from "antd/es/upload";
+import Dragger from "antd/es/upload/Dragger";
 
 function Overview() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -96,8 +102,39 @@ function Overview() {
     // }
   };
 
-  const defaultAvatar =
-    "https://res.cloudinary.com/dipiauw0v/image/upload/v1682100699/DATN/unisex_avatar.jpg?fbclid=IwAR0rfobILbtfTZlNoWFiWmHYPH7bPMKFP0ztGnT8CVEXtvgTOEPEBgYtxY8";
+  const uploadAvatar = () => {
+    const [visible, setVisible] = useState(false);
+    const [fileList, setFileList] = useState([]);
+
+    const handleCancel = () => setVisible(false);
+
+    const handleOk = () => {
+      // do something with the uploaded file
+      console.log(fileList[0]);
+      setVisible(false);
+    };
+
+    return (
+      <>
+        <Button onClick={() => setVisible(true)}>Đổi ảnh đại diện</Button>
+        <Modal
+          title="Upload File"
+          visible={visible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <Upload
+            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+            listType="picture"
+            defaultFileList={[...fileList]}
+            className="upload-list-inline"
+          >
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
+        </Modal>
+      </>
+    );
+  };
 
   return (
     <>
@@ -105,22 +142,8 @@ function Overview() {
         <Col className="personalInfo-container">
           <Row className="avatar-container">
             <Row className="left-container">
-              <Upload
-                name="avatar"
-                listType="picture-card"
-                className="avatar-uploader"
-                showUploadList={false}
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-              >
-                {imageUrl !== defaultAvatar ? (
-                  <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
-                ) : (
-                  uploadButton
-                )}
-              </Upload>
-              {/* <Avatar shape="square" size={132} src={info.avatar} /> */}
+              <Avatar shape="square" size={132} src={info.avatar} />
+              <Row className="change-avatar-btn">{uploadAvatar()}</Row>
               <Descriptions style={{ flex: 1 }}>
                 <Descriptions.Item label="Họ và tên" span={12}>
                   {info.fullName || "--"}

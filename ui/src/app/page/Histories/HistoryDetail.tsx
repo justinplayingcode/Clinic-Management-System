@@ -162,33 +162,45 @@ function HistoryDetail() {
       <Col className="info-section">
         {/* patient info */}
         <Descriptions bordered title="Thông tin bệnh nhân" column={1}>
-          <Descriptions.Item label="Họ và tên ">
+          <Descriptions.Item label="Họ và tên " labelStyle={{ width: "200px" }}>
             {item?.patient.fullName || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Ngày sinh">
+          <Descriptions.Item label="Ngày sinh" labelStyle={{ width: "200px" }}>
             {Utils.convertDatetoddmmyyyy(item?.patient.dateOfBirth)}
           </Descriptions.Item>
-          <Descriptions.Item label="Giới tính">
+          <Descriptions.Item label="Giới tính" labelStyle={{ width: "200px" }}>
             {Utils.getGenderText(Number(item?.patient.gender))}
           </Descriptions.Item>
-          <Descriptions.Item label="Bảo hiểm ">
+          <Descriptions.Item label="Bảo hiểm " labelStyle={{ width: "200px" }}>
             {item?.patient.insurance || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Số điện thoại ">
+          <Descriptions.Item
+            label="Số điện thoại "
+            labelStyle={{ width: "200px" }}
+          >
             {item?.patient.phoneNumber || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Địa chỉ ">
+          <Descriptions.Item label="Địa chỉ " labelStyle={{ width: "200px" }}>
             {item?.patient.address || "-"}
           </Descriptions.Item>
           {item?.patient.guardianName && (
             <>
-              <Descriptions.Item label="Người giám hộ ">
+              <Descriptions.Item
+                label="Người giám hộ "
+                labelStyle={{ width: "200px" }}
+              >
                 {item?.patient.guardianName || "-"}
               </Descriptions.Item>
-              <Descriptions.Item label="Số điện thoại người giám hộ ">
+              <Descriptions.Item
+                label="Số điện thoại người giám hộ "
+                labelStyle={{ width: "200px" }}
+              >
                 {item?.patient.guardianPhoneNumber || "-"}
               </Descriptions.Item>
-              <Descriptions.Item label="Quan hệ">
+              <Descriptions.Item
+                label="Quan hệ"
+                labelStyle={{ width: "200px" }}
+              >
                 {Utils.getPatientRelationshipText(
                   Number(item?.patient.guardianRelationship)
                 ) || "-"}
@@ -201,25 +213,28 @@ function HistoryDetail() {
       {/* doctor info */}
       <Col className="info-section">
         <Descriptions bordered title="Thông tin bác sĩ" column={1}>
-          <Descriptions.Item label="Họ và tên ">
+          <Descriptions.Item label="Họ và tên " labelStyle={{ width: "200px" }}>
             {item?.doctor.fullName || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Ngày sinh">
+          <Descriptions.Item label="Ngày sinh" labelStyle={{ width: "200px" }}>
             {item?.doctor.dateOfBirth || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Giới tính">
+          <Descriptions.Item label="Giới tính" labelStyle={{ width: "200px" }}>
             {Utils.getGenderText(Number(item?.doctor.gender))}
           </Descriptions.Item>
-          <Descriptions.Item label="Khoa">
+          <Descriptions.Item label="Khoa" labelStyle={{ width: "200px" }}>
             {item?.doctor.departmentName || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Chức vụ">
+          <Descriptions.Item label="Chức vụ" labelStyle={{ width: "200px" }}>
             {Utils.getDoctorPositionText(item?.doctor.position)}
           </Descriptions.Item>
-          <Descriptions.Item label="Học vấn">
+          <Descriptions.Item label="Học vấn" labelStyle={{ width: "200px" }}>
             {Utils.getDoctorRankText(item?.doctor.rank)}
           </Descriptions.Item>
-          <Descriptions.Item label="Số điện thoại">
+          <Descriptions.Item
+            label="Số điện thoại"
+            labelStyle={{ width: "200px" }}
+          >
             {item?.doctor.phoneNumber}
           </Descriptions.Item>
         </Descriptions>
@@ -228,22 +243,25 @@ function HistoryDetail() {
       {/* main info */}
       <Col className="info-section">
         <Descriptions bordered title="Thông tin khám bệnh" column={1}>
-          <Descriptions.Item label="Ngày khám ">
+          <Descriptions.Item label="Ngày khám " labelStyle={{ width: "200px" }}>
             {item?.appointmentDate || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Lý do khám">
+          <Descriptions.Item label="Lý do khám" labelStyle={{ width: "200px" }}>
             {item?.appointmentReason || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Chỉ số">
+          <Descriptions.Item label="Chỉ số" labelStyle={{ width: "200px" }}>
             {renderIndicatorList(item)}
           </Descriptions.Item>
-          <Descriptions.Item label="Dịch vụ khám">
+          <Descriptions.Item
+            label="Dịch vụ khám"
+            labelStyle={{ width: "200px" }}
+          >
             {renderServiceList(item)}
           </Descriptions.Item>
-          <Descriptions.Item label="Chẩn đoán">
+          <Descriptions.Item label="Chẩn đoán" labelStyle={{ width: "200px" }}>
             {item?.medicalRecord.diagnosis || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Kết luận">
+          <Descriptions.Item label="Kết luận" labelStyle={{ width: "200px" }}>
             {item?.medicalRecord.summary || "-"}
           </Descriptions.Item>
         </Descriptions>
@@ -252,10 +270,10 @@ function HistoryDetail() {
       {/* medications info */}
       <Col className="info-section">
         <Descriptions bordered title="Đơn thuốc" column={1}>
-          <Descriptions.Item label="Thuốc">
+          <Descriptions.Item label="Thuốc" labelStyle={{ width: "200px" }}>
             {renderMedicationList(item)}
           </Descriptions.Item>
-          <Descriptions.Item label="Ghi chú">
+          <Descriptions.Item label="Ghi chú" labelStyle={{ width: "200px" }}>
             {item?.prescription.note}
           </Descriptions.Item>
         </Descriptions>
@@ -264,10 +282,13 @@ function HistoryDetail() {
       {/* Bill info */}
       <Col className="info-section">
         <Descriptions bordered title="Hóa đơn" column={1}>
-          <Descriptions.Item label="Giá tiền ">
+          <Descriptions.Item label="Giá tiền " labelStyle={{ width: "200px" }}>
             {item?.bill.cost || "-"}
           </Descriptions.Item>
-          <Descriptions.Item label="Ngày thanh toán">
+          <Descriptions.Item
+            label="Ngày thanh toán"
+            labelStyle={{ width: "200px" }}
+          >
             {item?.bill.dateCreated || "-"}
           </Descriptions.Item>
         </Descriptions>
