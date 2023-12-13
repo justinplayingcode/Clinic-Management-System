@@ -8,7 +8,7 @@ import { tooltipPlainText } from "../../../utils/basicRender";
 import { Utils } from "../../../utils";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Button, Flex, Modal } from "antd";
+import { Avatar, Button, Flex, Modal } from "antd";
 import "./index.scss";
 import { useDispatch } from "react-redux";
 import { closeLoading, openLoading, showToastMessage } from "../../../redux/reducers";
@@ -29,7 +29,10 @@ function ManageUser() {
       maxWidth: 180,
       isResizable: true,
       onRender: (item: any) => {
-          return <span>{tooltipPlainText(item.fullName)}</span>;
+          return <div style={{display: "flex", alignItems: "center"}}>
+          <Avatar shape="square" size="small" src={item.avatar} style={{ marginRight: '6px'}} />
+          <span>{tooltipPlainText(item.fullName)}</span>
+        </div>
       },
     },
     {

@@ -278,19 +278,12 @@ function LandingPage() {
           <div className="top-header">
             <div className="header-container">
               <div style={{ color: "#FFFFFF" }}>
-                Giờ làm việc: Thứ Hai - Thứ Sáu: 8:00 - 17:30 - Thứ Bảy: 8:00 -
-                11:30
+                Giờ làm việc: Thứ Hai - Thứ Sáu: 7:30 - 17:00 - Thứ Bảy: 7:30 - 11:30
               </div>
               <div style={{ color: "#FFFFFF", display: "flex", gap: "4px" }}>
-                <FacebookOutlined
-                  color="#FFFFFF"
-                  style={{ fontSize: "20px" }}
-                />
-                <GooglePlusOutlined
-                  color="#FFFFFF"
-                  style={{ fontSize: "20px" }}
-                />
-                <YoutubeOutlined color="#FFFFFF" style={{ fontSize: "20px" }} />
+                <FacebookOutlined color="#FFFFFF" style={{ fontSize: "20px" }}/>
+                <GooglePlusOutlined color="#FFFFFF" style={{ fontSize: "20px", marginLeft: "8px" }}/>
+                <YoutubeOutlined color="#FFFFFF" style={{ fontSize: "20px", marginLeft: "8px" }}/>
               </div>
             </div>
           </div>
@@ -445,7 +438,7 @@ function LandingPage() {
                 }}
               >
                 <div style={{ marginBottom: "40px", wordBreak: "break-word" }}>
-                  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas
+                  Đội ngũ y bác sĩ giàu kinh nghiệm, bao gồm nhiều giáo sư, tiến sư...được trang bị những thiết bị y tế hiện đại bậc nhất. Riordan cam kết đem lại trải nghiệm khám chữa bệnh đạt tiêu chuẩn ISO|FDA với những kỹ thuật tiên tiến nhất hiện tại.
                 </div>
                 <div className="content-appointment">
                   <div className="appointment">
@@ -454,13 +447,25 @@ function LandingPage() {
                         <CheckCircleOutlined /> Hơn 20 năm kinh nghiệm
                       </div>
                       <div className="top-certificate">
-                        <CheckCircleOutlined /> Hơn 20 năm kinh nghiệm
+                        <CheckCircleOutlined /> Trang thiết bị tiên tiến
                       </div>
                       <div className="top-certificate">
-                        <CheckCircleOutlined /> Hơn 20 năm kinh nghiệm
+                        <CheckCircleOutlined /> Dịch vụ tuyệt hảo
                       </div>
                       <div className="top-certificate">
-                        <CheckCircleOutlined /> Hơn 20 năm kinh nghiệm
+                        <CheckCircleOutlined /> Hơn 30 chi nhánh
+                      </div>
+                      <div className="top-certificate">
+                        <CheckCircleOutlined /> Nhiều giáo sư, tiến sĩ
+                      </div>
+                      <div className="top-certificate">
+                        <CheckCircleOutlined /> Chuyên môn cao
+                      </div>
+                      <div className="top-certificate">
+                        <CheckCircleOutlined /> Tận tâm, tận tình
+                      </div>
+                      <div className="top-certificate">
+                        <CheckCircleOutlined /> Đưa đón tận nhà
                       </div>
                     </div>
                     <div

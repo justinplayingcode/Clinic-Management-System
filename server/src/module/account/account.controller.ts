@@ -279,4 +279,37 @@ export default class AccountController {
       next(error)
     }
   }
+
+  //POST
+  public uploadAvatar = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    const fileAvatar = req.file;
+    let _res: IBaseRespone;
+    try {
+      const { accountId } = req.user;
+      const user = await this._userService.findByKey(fields.accountId, accountId);
+      if(user) {
+        await this._userService.findByIdAndUpdate(user._id, { avatar: fileAvatar?.path }, session);
+        await session.commitTransaction();
+        session.endSession();
+        _res = {
+          status: ApiStatus.succes,
+          isSuccess: true,
+          statusCode: ApiStatusCode.OK,
+        }
+      } else {
+        _res = {
+          status: ApiStatus.fail,
+          isSuccess: false,
+          statusCode: ApiStatusCode.BadRequest,
+        }
+      }
+      res.status(ApiStatusCode.OK).json(_res);
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      next(error);
+    }
+  }
 }

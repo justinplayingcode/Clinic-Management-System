@@ -101,7 +101,7 @@ export default class Utils {
   }
 
   public static convertDatetoddmmyyyy = (input: string | undefined) => {
-    var date = new Date(input || "");
- return  date.getDate()+ '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
+    const date = new Date(input || "");
+    return  date.getDate()+ '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
   }
 }

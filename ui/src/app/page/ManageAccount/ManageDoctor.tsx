@@ -9,6 +9,7 @@ import { ICommandBarItemProps } from "@fluentui/react";
 import { RootState } from "../../../redux";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Avatar } from "antd";
 
 const column = [
   {
@@ -18,7 +19,10 @@ const column = [
     maxWidth: 180,
     isResizable: true,
     onRender: (item: any) => {
-      return <span>{tooltipPlainText(item.fullName)}</span>;
+      return <div style={{display: "flex", alignItems: "center"}}>
+        <Avatar shape="square" size="small" src={item.avatar} style={{ marginRight: '6px'}} />
+        <span>{tooltipPlainText(item.fullName)}</span>
+      </div>
     },
   },
   {
