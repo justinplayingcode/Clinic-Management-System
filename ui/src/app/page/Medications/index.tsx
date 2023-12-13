@@ -278,7 +278,7 @@ function Medications() {
           integrateItems={integrateItems}
           searchByColumn={"displayName"}
           searchPlaceholder={"tên thuốc"}
-          noSelected
+          noSelected={role !== Role.admin}
       />
       <Drawer
         title="Thêm thuốc mới"

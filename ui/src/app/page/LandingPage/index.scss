@@ -111,14 +111,19 @@ $max-width-container: 1400px;
               .appointment-top {
                 display: flex;
                 flex-wrap: wrap;
+                width: 100%;
 
                 .top-certificate {
-                  width: 50%;
+                  width: calc(50% - 20px);
                   color: #ffffff;
                   display: flex;
                   align-items: center;
-                  justify-content: center;
-                  padding: 32px 0;
+                  justify-content: start;
+                  margin-left: 20px;
+                  padding: 20px 0;
+                  .anticon-check-circle {
+                    margin-right: 8px;
+                  }
                 }
               }
             }

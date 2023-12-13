@@ -62,9 +62,9 @@ function Services() {
   const renderServiceType = (type: ServiceType) => {
     switch (type) {
       case ServiceType.Basic:
-        return <Text>Thông thường</Text>;
+        return <Text>Khám bệnh</Text>;
       case ServiceType.Other:
-        return <Text>Khác</Text>;
+        return <Text>Kiểm tra sức khỏe</Text>;
       default:
         return <></>;
     }
@@ -292,7 +292,7 @@ function Services() {
               <Select
                 options={[
                   { value: ServiceType.Basic, label: "Khám bệnh" },
-                  { value: ServiceType.Other, label: "Khác" },
+                  { value: ServiceType.Other, label: "Kiểm tra sức khỏe" },
                 ]}
               ></Select>
             </Form.Item>
