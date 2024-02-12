@@ -10,21 +10,17 @@ import {
 } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import TextArea from "antd/es/input/TextArea";
-import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import {
   ServiceType,
   TimeFrame,
   genderList,
-  host,
   patientRelationshipList,
   toastType,
 } from "../../model/enum/common";
 import "./index.scss";
 import { scheduleApi, serviceApi } from "../../../api";
-import { RootState } from "../../../redux";
-import { useSelector } from "react-redux";
 import {
   closeLoading,
   openLoading,
@@ -33,6 +29,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { routerString } from "../../model/router";
+import ProvincesUtils from "../../../utils/provinces";
 
 const { Text } = Typography;
 interface ISelectOption {
@@ -87,9 +84,6 @@ function Appointment() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const dispatch = useDispatch();
-  const { info } = useSelector((state: RootState) => state.auth);
-
   const [city, setCity] = useState<ISelectOption>({
     value: "",
     label: "",
@@ -114,42 +108,6 @@ function Appointment() {
     label: "",
   });
 
-  const callAPI = (api: any) => {
-    return axios.get(api).then((response) => {
-      const result = response.data.map((item: any) => {
-        return {
-          value: item.code,
-          label: item.name,
-        };
-      });
-      setCityList(result || []);
-    });
-  };
-
-  const callApiDistrict = (api: any) => {
-    return axios.get(api).then((response) => {
-      const result = response.data.districts?.map((item: any) => {
-        return {
-          value: item.code,
-          label: item.name,
-        };
-      });
-      setDistrictList(result || []);
-    });
-  };
-
-  const callApiWard = (api: any) => {
-    return axios.get(api).then((response) => {
-      const result = response.data.wards?.map((item: any) => {
-        return {
-          value: item.code,
-          label: item.name,
-        };
-      });
-      setComuneList(result || []);
-    });
-  };
-
   const disabledDate: RangePickerProps["disabledDate"] = (current) => {
     // Can not select days before today and today
     return current && current < dayjs().endOf("day");
@@ -171,17 +129,23 @@ function Appointment() {
   };
 
   useEffect(() => {
-    callAPI(host);
+    setCityList(ProvincesUtils.getAllCityName());
+    if (city.label !== '') {
+      setDistrictList(ProvincesUtils.getAllDistrictByCity(city.label));
+    }
+    if (district.label !== '') {
+      setDistrictList(ProvincesUtils.getAllWardByCity(district.label));
+    }
     callApiAppointmentType();
   }, []);
 
   useEffect(() => {
-    callApiDistrict(`${host}p/${city.value}?depth=2`);
-  }, [city]);
+    setDistrictList(ProvincesUtils.getAllDistrictByCity(city.label));
+  }, [city.label]);
 
   useEffect(() => {
-    callApiWard(`${host}d/${district.value}?depth=2`);
-  }, [district]);
+    setComuneList(ProvincesUtils.getAllWardByCity(district.label));
+  }, [district.label]);
 
   const onFinish = (values: any) => {
     values.dateOfBirth = values["dateOfBirth"].format("MM/DD/YYYY");

@@ -1,7 +1,5 @@
 import { Utils } from "../../../utils";
 
-export const host = "https://provinces.open-api.vn/api/";
-
 export enum toastType {
   succes,
   error,

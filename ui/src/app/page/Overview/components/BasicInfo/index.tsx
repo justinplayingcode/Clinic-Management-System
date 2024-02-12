@@ -1,5 +1,4 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Utils } from "../../../../../utils";
 import dayjs from "dayjs";
@@ -12,6 +11,7 @@ import {
 } from "../../../../../redux/reducers";
 import { genderList, toastType } from "../../../../model/enum/common";
 import { userApi } from "../../../../../api";
+import ProvincesUtils from "../../../../../utils/provinces";
 
 interface IBasicInfoProps {
   dismissForm: () => void;
@@ -70,7 +70,6 @@ const defaultSelectOption: ISelectOption = {
 const selectStyle = {
   width: "100%",
 };
-const host = "https://provinces.open-api.vn/api/";
 
 const BasicInfoForm = (props: IBasicInfoProps) => {
   const { dismissForm, value, form } = props;
@@ -94,52 +93,23 @@ const BasicInfoForm = (props: IBasicInfoProps) => {
   const [districtList, setDistrictList] = useState<ISelectOption[]>([]);
   const [communeList, setComuneList] = useState<ISelectOption[]>([]);
 
-  const callAPI = (api: any) => {
-    return axios.get(api).then((response) => {
-      const result = response.data.map((item: any) => {
-        return {
-          value: item.code,
-          label: item.name,
-        };
-      });
-      setCityList(result || []);
-    });
-  };
-
-  const callApiDistrict = (api: any) => {
-    return axios.get(api).then((response) => {
-      const result = response.data.districts?.map((item: any) => {
-        return {
-          value: item.code,
-          label: item.name,
-        };
-      });
-      setDistrictList(result || []);
-    });
-  };
-
-  const callApiWard = (api: any) => {
-    return axios.get(api).then((response) => {
-      const result = response.data.wards?.map((item: any) => {
-        return {
-          value: item.code,
-          label: item.name,
-        };
-      });
-      setComuneList(result || []);
-    });
-  };
   useEffect(() => {
-    callAPI(host);
+    setCityList(ProvincesUtils.getAllCityName());
+    if (city.label !== '') {
+      setDistrictList(ProvincesUtils.getAllDistrictByCity(city.label));
+    }
+    if (district.label !== '') {
+      setDistrictList(ProvincesUtils.getAllWardByCity(district.label));
+    }
   }, []);
 
   useEffect(() => {
-    callApiDistrict(`${host}p/${city.value}?depth=2`);
-  }, [city]);
+    setDistrictList(ProvincesUtils.getAllDistrictByCity(city.label));
+  }, [city.label]);
 
   useEffect(() => {
-    callApiWard(`${host}d/${district.value}?depth=2`);
-  }, [district]);
+    setComuneList(ProvincesUtils.getAllWardByCity(district.label));
+  }, [district.label]);
 
   useEffect(() => {
     form.resetFields();
