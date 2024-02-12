@@ -283,8 +283,8 @@ function Department() {
     <>
       <Row className="departmentList-container">
         <Col className="list-section">
-          <Row style={{ justifyContent: "space-between", minWidth: "319px" }}>
-            <Title level={4}>Danh sách khoa</Title>
+          <Row style={{ justifyContent: "space-between", minWidth: "319px", flexWrap: "wrap" }}>
+            <Title style={{ width: "50%" }} level={4}>Danh sách khoa</Title>
             {role === Role.admin && renderManageButton()}
           </Row>
           <Paragraph>

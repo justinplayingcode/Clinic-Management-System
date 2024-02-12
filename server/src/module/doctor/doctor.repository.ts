@@ -5,7 +5,7 @@ import { DoctorModel } from "./doctor.model";
 export default class DoctorRepository extends BaseRepository<DoctorModel> {
 
   public getDoctorOfStaticReport = async (page: number, pageSize: number, searchByColumn: string, searchKey: string, conditions: Partial<DoctorModel> = {}) => {
-    return await this.model.find({ ...conditions })
+    return await this.model.find({ ...conditions, isActive: true })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .select(`-__v -${fields.isActive}`)

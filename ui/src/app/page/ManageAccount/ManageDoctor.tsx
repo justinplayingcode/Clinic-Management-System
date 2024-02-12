@@ -7,9 +7,11 @@ import { tooltipPlainText } from "../../../utils/basicRender";
 import { Utils } from "../../../utils";
 import { ICommandBarItemProps } from "@fluentui/react";
 import { RootState } from "../../../redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Avatar } from "antd";
+import { Avatar, Button, Flex, Modal } from "antd";
+import { closeLoading, openLoading, showToastMessage, tableRefresh } from "../../../redux/reducers";
+import { toastType } from "../../model/enum/common";
 
 const column = [
   {
@@ -109,6 +111,8 @@ const column = [
 
 function ManageDoctor() {
   const [isOpen, setOpen] = useState<boolean>(false);
+  const [openDeleted, setOpenDeleted] = useState<boolean>(false)
+  const dispatch = useDispatch();
   const { tableSelectedCount, tableSelectedItem } = useSelector(
     (state: RootState) => state.currentSeleted
   );
@@ -134,10 +138,62 @@ function ManageDoctor() {
         text: "Thông tin bác sĩ",
         iconProps: { iconName: "ContactInfo" },
         onClick: () => { navigate(`/manageaccount/doctor/detail/${tableSelectedItem[0]?.doctorId}`) },
+      }, {
+        key: "deletedoctor",
+        text: "Xóa bác sĩ",
+        iconProps: { iconName: "Delete" },
+        onClick: () => setOpenDeleted(true),
       });
     }
     return command;
   };
+
+  const onDeletedDoctor = () => {
+    dispatch(openLoading());
+    userApi.deleteDoctor({ accountId: tableSelectedItem[0]?.accountId })
+    .then((result: any) => {
+      if (result.isSuccess) {
+        dispatch(
+          showToastMessage({
+            message: "Xóa tài khoản bác sĩ thành công",
+            type: toastType.succes,
+          })
+        );
+        setOpenDeleted(false);
+        dispatch(tableRefresh());
+      } else {
+        showToastMessage({
+          message: "Có lỗi, hãy thử lại",
+          type: toastType.error,
+        })
+      }
+    })
+    .catch(() => {
+      dispatch(
+        showToastMessage({
+          message: "Có lỗi, hãy thử lại",
+          type: toastType.error,
+        })
+      );
+    })
+    .finally(() => {
+      dispatch(closeLoading());
+    });
+  }
+
+  const renderDeletedModel = (): JSX.Element => {
+    return (
+      <div className="modal-reset-pw">
+        <div className="modal-reset-pw-title">
+          Xóa bác sĩ: <span>{`${tableSelectedItem[0]?.fullName}`}</span>, <span>{`${tableSelectedItem[0]?.departmentName}`}</span>
+        </div>
+        <Flex gap="small" wrap="wrap" className="modal-reset-pw-button" justify="end">
+          <Button type="primary" onClick={onDeletedDoctor}>Xác nhận</Button>
+          <Button onClick={() => setOpenDeleted(false)}>Hủy</Button>
+        </Flex>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -149,6 +205,20 @@ function ManageDoctor() {
         searchPlaceholder={"tên"}
       />
       <CreateDoctor isOpen={isOpen} dismissForm={() => setOpen(false)} />
+      <Modal
+        centered
+        // title="Bạn có muốn xóa tài khoản bác sĩ"
+        width={400}
+        open={openDeleted}
+        onOk={() => setOpenDeleted(false)}
+        onCancel={() => setOpenDeleted(false)}
+        closable={true}
+        keyboard={false}
+        maskClosable={false}
+        footer={() => <></>}
+      >
+        {renderDeletedModel()}
+      </Modal>
     </>
   );
 }

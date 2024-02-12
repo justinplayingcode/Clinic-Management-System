@@ -259,7 +259,7 @@ function Services() {
           </Col>
         </Col>
         <Modal
-          title={isOpenAddEit.isEdit ? "Sửa khoa" : "Thêm khoa"}
+          title={isOpenAddEit.isEdit ? "Sửa dịch vụ" : "Thêm dịch vụ"}
           open={isOpenAddEit.open}
           footer={() => <></>}
           onCancel={handleCancelAddEdit}
@@ -314,7 +314,7 @@ function Services() {
             <Form.Item wrapperCol={{ span: 24 }}>
               <Row style={{ flex: 1, justifyContent: "center" }}>
                 <Button type="primary" htmlType="submit">
-                  Submit
+                  Xác nhận
                 </Button>
               </Row>
             </Form.Item>

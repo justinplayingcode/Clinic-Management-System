@@ -160,27 +160,27 @@ function ManageUser() {
 
   return (  
     <>
-    <UniformTable 
-      columns={column} 
-      commandBarItems={commandBar()} 
-      integrateItems={integrateItems}
-      searchByColumn={"fullName"}
-      searchPlaceholder="tên"
-    />
-    <Modal
-      centered
-      title="Xác nhận"
-      width={400}
-      open={openResetPW}
-      onOk={() => setOpenResetPW(false)}
-      onCancel={() => setOpenResetPW(false)}
-      closable={true}
-      keyboard={false}
-      maskClosable={false}
-      footer={() => <></>}
-    >
-      {renderResetPWModal()}
-    </Modal>
+      <UniformTable 
+        columns={column} 
+        commandBarItems={commandBar()} 
+        integrateItems={integrateItems}
+        searchByColumn={"fullName"}
+        searchPlaceholder="tên"
+      />
+      <Modal
+        centered
+        title="Xác nhận"
+        width={400}
+        open={openResetPW}
+        onOk={() => setOpenResetPW(false)}
+        onCancel={() => setOpenResetPW(false)}
+        closable={true}
+        keyboard={false}
+        maskClosable={false}
+        footer={() => <></>}
+      >
+        {renderResetPWModal()}
+      </Modal>
     </>
   );
 }
