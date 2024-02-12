@@ -15,6 +15,7 @@ const path = {
   getAllDoctor: "/doctor",
   getDoctorInfo: "/doctor/detail",
   updateDoctor: "/doctor/update",
+  deleteDoctor: "/doctor/delete",
   getAllUser: "/user/getall",
   getUserInfo: "/user/detail",
 
@@ -58,6 +59,7 @@ const userApi = {
   manageUser: (reqbody: any) => api.post(path.getAllUser, reqbody),
   manageDoctor: (reqbody: any) => api.post(path.getAllDoctor, reqbody),
   doctorInfo: (query: string) => api.get(`${path.getDoctorInfo}?id=${query}`),
+  deleteDoctor: (reqbody: any) => api.put(path.deleteDoctor, reqbody),
   accoutInfo: (query: string) => api.get(`${path.getUserInfo}?id=${query}`),
 }
 

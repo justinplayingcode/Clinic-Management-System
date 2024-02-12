@@ -64,7 +64,12 @@ export default class DoctorController {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const AccountId = req.body._id;
+      const verifyReq = validateReqBody(req, ["accountId"]);
+      if(!verifyReq.pass) {
+        const err : any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "deleteDoctor - doctor.controller");
+        return next(err);
+      }
+      const AccountId = req.body.accountId;
       await this._accountService.deleteDoctorService(AccountId, session);
       //
       const User = await this._userService.findByKey(fields.accountId, AccountId);

@@ -91,7 +91,7 @@ export default class UserService {
       }
       //check dk isActive = false => ko xoa nua
       let updatedDoctor: UserModel = targetUser;
-      updatedDoctor.fullName = `${targetUser.fullName} - không còn làm việc`;
+      updatedDoctor.fullName = `${targetUser.fullName} (không còn làm việc)`;
       return await this._userRepository.updateById(
         doctorId,
         updatedDoctor,
