@@ -242,8 +242,7 @@ function Medications() {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center"
-                }
-              }>
+            }}>
               <Col span={18}>
                 <Form.Item<FieldType>
                   label="Giá tiền"

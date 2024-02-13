@@ -144,14 +144,14 @@ function HistoryDetail() {
     return (
       <>
         {item?.medicalRecord.serviceResult.map((ser) => (
-          <Col>{`${ser.name}: ${ser.price}`}</Col>
+          <Col>{`${ser.name}: ${ser.price.toLocaleString()} VNĐ`}</Col>
         ))}
       </>
     );
   };
 
   const renderMedicationList = (item: IHistoryDetails | undefined) => {
-    const list = item?.prescription.medications.map((pre) => pre.displayName);
+    const list = item?.prescription.medications.map((pre) => `${pre.displayName} - giá tiền: ${pre.price.toLocaleString()} VNĐ`);
     return (list || []).join(",");
   };
 
@@ -244,6 +244,12 @@ function HistoryDetail() {
           <Descriptions.Item label="Ngày khám " labelStyle={{ width: "200px" }}>
             {item?.appointmentDate || "-"}
           </Descriptions.Item>
+          <Descriptions.Item label="Loại " labelStyle={{ width: "200px" }}>
+            {item?.typeAppointment || "-"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Giá tiền " labelStyle={{ width: "200px" }}>
+            {item?.typeAppointmentPrice.toLocaleString() || "-"} VNĐ
+          </Descriptions.Item>
           <Descriptions.Item label="Lý do khám" labelStyle={{ width: "200px" }}>
             {item?.appointmentReason || "-"}
           </Descriptions.Item>
@@ -281,7 +287,7 @@ function HistoryDetail() {
       <Col className="info-section">
         <Descriptions bordered title="Hóa đơn" column={1}>
           <Descriptions.Item label="Giá tiền " labelStyle={{ width: "200px" }}>
-            {item?.bill.cost || "-"}
+            {item?.bill.cost.toLocaleString() || "-"} VNĐ {`(Đã trừ đi chi phí được giảm nếu có)`}
           </Descriptions.Item>
           <Descriptions.Item
             label="Ngày thanh toán"

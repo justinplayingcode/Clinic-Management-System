@@ -186,4 +186,5 @@ export interface IServiceInfo {
   name: string;
   type: ServiceType;
   price: string;
+  discount: string;
 }

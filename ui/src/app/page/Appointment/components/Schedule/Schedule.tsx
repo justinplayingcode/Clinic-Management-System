@@ -243,6 +243,10 @@ function Schedule() {
               `Khung giờ khám:`,
               renderTimeFrame(item.appointmentTime)
             )}
+            {renderItemTitleValue(
+              `Loại:`,
+              item.typeAppointment?.displayName
+            )}
             {renderItemTitleValue(`Lý do/Triệu chứng:`, item.appointmentReason)}
             {renderItemTitleValue(
               `Trạng thái:`,
@@ -400,8 +404,8 @@ function Schedule() {
                   handleDoctorVerifyDeny(true);
                 }
               }}
-              okText="Yes"
-              cancelText="No"
+              okText="Xác nhận"
+              cancelText="Hủy"
             >
               <Button disabled={!selectItem?.doctorId} type="primary">
                 Xác nhận
@@ -440,8 +444,8 @@ function Schedule() {
               onCancel={() => {
                 setCancelReason("");
               }}
-              okText="Yes"
-              cancelText="No"
+              okText="Xác nhận"
+              cancelText="Hủy"
             >
               <Button>Hủy</Button>
             </Popconfirm>
@@ -453,8 +457,8 @@ function Schedule() {
             onConfirm={() => {
               setOpenProcess(true);
             }}
-            okText="Yes"
-            cancelText="No"
+            okText="Xác nhận"
+            cancelText="Hủy"
           >
             <Button
             // disabled={

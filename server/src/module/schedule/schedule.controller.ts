@@ -269,9 +269,10 @@ export default class ScheduleController {
       // create bill
       const typeAppointment = await this._typeAppointmentService.findById(req.body.typeAppointmentId);
       const priceService = Array.from(req.body.services).reduce((acc, cur: any) => acc + cur?.price, 0);
+      const _discount = typeAppointment?.discount || 0;
       const newBill: ICreateBill = {
         medicalRecordId: medicalrecord._id,
-        cost: Number(typeAppointment.cost) + Number(priceService) + Number(priceNewPrecription)
+        cost: (Number(typeAppointment.cost) + Number(priceService) + Number(priceNewPrecription)) * (1 - (Number(_discount) / 100))
       }
       await this._billService.createBill(newBill, session);
       await session.commitTransaction();

@@ -235,8 +235,8 @@ function LandingPage() {
         navigate(`${routerString.home}`);
       })
       .catch((err) => {
-        const { message } = err.response.data;
-        setError(message);
+        const errorArr = (err.message as string)?.split(":");
+        setError(errorArr[errorArr.length - 1]?.trim());
       })
       .finally(() => dispatch(closeLoading()));
   };
