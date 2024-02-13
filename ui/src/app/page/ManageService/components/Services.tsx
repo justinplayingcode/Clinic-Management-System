@@ -1,4 +1,4 @@
-import { EditOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Col, Empty, Form, Input, Modal, Row, Select } from "antd";
 import Text from "antd/es/typography/Text";
 import Title from "antd/es/typography/Title";
@@ -37,6 +37,7 @@ function Services() {
     open: false,
     isEdit: false,
   });
+  const [isOpenDeleted, setOpenDeleted] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const { role } = useSelector((state: RootState) => state.auth);
@@ -79,9 +80,6 @@ function Services() {
         }`}
         onClick={() => setSelectItem(item)}
       >
-        {/* <Col className="preview-avatar">
-          <Avatar size="large" icon={<UserOutlined />} />
-        </Col> */}
         <Row className="preview-info">
           <Col>
             <Row className="preview-name">
@@ -113,8 +111,6 @@ function Services() {
     return (
       <>
         <Col className="details-container">
-          {/* <Text strong>Thông tin dịch vụ</Text> */}
-
           <Col className="details-content">
             {renderItemTitleValue(`Tên dịch vụ:`, item.name)}
             {renderItemTitleValue(`Loại:`, renderServiceType(item.type))}
@@ -128,8 +124,15 @@ function Services() {
   const renderManageButton = () => {
     return (
       <Row>
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => setAddEit({ open: true, isEdit: false })}
+          >
+          Thêm
+        </Button>
         {selectItem && (
           <Button
+            style={{ marginLeft: 8 }}
             icon={<EditOutlined />}
             onClick={() => {
               setAddEit({ open: true, isEdit: true });
@@ -143,13 +146,15 @@ function Services() {
             Sửa
           </Button>
         )}
-        <Button
-          style={{ marginLeft: 8 }}
-          icon={<PlusOutlined />}
-          onClick={() => setAddEit({ open: true, isEdit: false })}
-        >
-          Thêm
-        </Button>
+        {selectItem && (
+          <Button
+            style={{ marginLeft: 8 }}
+            icon={<DeleteOutlined />}
+            onClick={() => setOpenDeleted(true)}
+          >
+            Xóa
+          </Button>
+        )}
       </Row>
     );
   };
@@ -208,6 +213,40 @@ function Services() {
         dispatch(closeLoading());
       });
   };
+
+  const handleDeleteService = () => {
+    dispatch(openLoading());
+    serviceApi.deletedService({ id: selectItem?.id })
+      .then((result: any) => {
+        if (result.isSuccess) {
+          dispatch(
+            showToastMessage({
+              message: "Thành công",
+              type: toastType.succes,
+            })
+          );
+          setSelectItem(undefined);
+          callApiAllService();
+          setOpenDeleted(false);
+        } else {
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          });
+        }
+      })
+      .catch(() => {
+        dispatch(
+          showToastMessage({
+            message: "Có lỗi, hãy thử lại",
+            type: toastType.error,
+          })
+        );
+      })
+      .finally(() => {
+        dispatch(closeLoading());
+      });
+  }
 
   return (
     <>
@@ -320,6 +359,21 @@ function Services() {
             </Form.Item>
           </Form>
         </Modal>
+        <Modal
+          title={`Xóa dịch vụ: ${selectItem?.name} ?`}
+          open={isOpenDeleted}
+          width={400}
+          footer={() => <>
+            <Button onClick={() => setOpenDeleted(false)}>
+              Huỷ
+            </Button>
+            <Button type="primary" onClick={handleDeleteService}>
+              Xác nhận
+            </Button>
+          </>}
+          centered
+          onCancel={() => setOpenDeleted(false)}
+        ></Modal>
       </Row>
     </>
   );

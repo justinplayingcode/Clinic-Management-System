@@ -205,9 +205,16 @@ function Department() {
   const renderManageButton = () => {
     return (
       <Row>
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => setAddEit({ open: true, isEdit: false })}
+          >
+          Thêm
+        </Button>
         {selectItem && (
           <Button
             icon={<EditOutlined />}
+            style={{ marginLeft: 8 }}
             onClick={() => {
               setAddEit({ open: true, isEdit: true });
               setInputValue(selectItem.label);
@@ -216,13 +223,6 @@ function Department() {
             Sửa
           </Button>
         )}
-        <Button
-          icon={<PlusOutlined />}
-          style={{ marginLeft: 8 }}
-          onClick={() => setAddEit({ open: true, isEdit: false })}
-        >
-          Thêm
-        </Button>
       </Row>
     );
   };
@@ -283,7 +283,7 @@ function Department() {
     <>
       <Row className="departmentList-container">
         <Col className="list-section">
-          <Row style={{ justifyContent: "space-between", minWidth: "319px", flexWrap: "wrap" }}>
+          <Row style={{ justifyContent: "space-between", flexWrap: "wrap" }}>
             <Title style={{ width: "50%" }} level={4}>Danh sách khoa</Title>
             {role === Role.admin && renderManageButton()}
           </Row>

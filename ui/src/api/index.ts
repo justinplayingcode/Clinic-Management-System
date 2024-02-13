@@ -32,6 +32,7 @@ const path = {
   getAllService: "/typeAppointment/getall",
   createService: "/typeAppointment/create",
   updateService: "/typeAppointment/update",
+  deleteService: "/typeAppointment/delete",
 
   userCreateSchedule: "/schedule/usercreate",
   getSchedule: "/schedule",
@@ -81,6 +82,7 @@ const serviceApi = {
   getAll: () => api.get(path.getAllService),
   createlService: (reqbody: any) => api.post(path.createService, reqbody),
   updateService: (reqbody: any) => api.post(path.updateService, reqbody),
+  deletedService: (reqbody: any) => api.put(path.deleteService, reqbody),
 }
 
 const scheduleApi = {

@@ -43,8 +43,13 @@ export const CreateScheduleRequestFields = [
 ]
 
 export enum TimeFrame {
-  morning,
-  afternoon
+  from8AMto9AM,
+  from9AMto10AM,
+  from10AMto11AM,
+  from1PMto2PM,
+  from2PMto3PM,
+  from3PMto4PM,
+  from4PMto5PM,
 }
 
 export enum StatusAppointment {

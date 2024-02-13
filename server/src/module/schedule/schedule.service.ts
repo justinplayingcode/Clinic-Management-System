@@ -7,16 +7,19 @@ import DoctorService from "../doctor/doctor.service";
 import PatientService from "../patient/patient.service";
 import MomentTimezone from "../../helper/timezone.config";
 import { IRequestGetAllOfStaticReport } from "../user/user.model";
+import typeAppointmentService from "../typeAppointment/typeAppointment.service";
 
 export default class ScheduleService {
   private _scheduleRepository;
   private _doctorService;
   private _patientService;
+  private _typeAppointmentService;
 
   constructor() {
     this._scheduleRepository = new ScheduleRepository(Schedule);
     this._doctorService = new DoctorService();
     this._patientService = new PatientService();
+    this._typeAppointmentService = new typeAppointmentService();
   }
 
   public createSchedule = async (data: ICreateSchedule, session: ClientSession) => {
@@ -48,17 +51,22 @@ export default class ScheduleService {
       const result = schedules.map( async schedule => {
         let doctor = undefined;
         let patient = undefined;
+        let typeAppointment = undefined;
         if (schedule.doctorId) {
           doctor = await this._doctorService.getInfoById(schedule.doctorId);
         }
         if (schedule.patientId) {
           patient = await this._patientService.getInfoById(schedule.patientId);
         }
+        if (schedule.typeAppointmentId) {
+          typeAppointment = await this._typeAppointmentService.findById(schedule.typeAppointmentId)
+        }
         return {
           ...schedule,
           appointmentDate: MomentTimezone.convertDDMMYYY(schedule.appointmentDate),
           doctor: doctor,
-          patient: patient
+          patient: patient,
+          typeAppointment: typeAppointment
         };
       })
       return await Promise.all(result);

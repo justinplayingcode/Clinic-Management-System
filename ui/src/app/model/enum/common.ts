@@ -131,8 +131,13 @@ export enum AppointmentStatus{
 }
 
 export enum TimeFrame {
-  Morning,
-  Afternoon
+  from8AMto9AM,
+  from9AMto10AM,
+  from10AMto11AM,
+  from1PMto2PM,
+  from2PMto3PM,
+  from3PMto4PM,
+  from4PMto5PM,
 }
 
 export interface IAppointmentInfo {
@@ -162,7 +167,6 @@ export interface IAppointmentInfo {
     dateOfBirth: string;
     phoneNumber: string;
   };
-
   patient: {
     fullName: string;
     dateOfBirth: string;
@@ -174,6 +178,7 @@ export interface IAppointmentInfo {
     guardianPhoneNumber: string;
     guardianRelationship: string;
   };
+  typeAppointment?: any;
 }
 
 export interface IServiceInfo {

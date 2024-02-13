@@ -20,15 +20,18 @@ export const tooltipPlainText = (content: string, extraClassName?: string, id?: 
   )
 }
 
+export const TimeFrameString = {
+  [TimeFrame.from8AMto9AM]: "8h - 9h",
+  [TimeFrame.from9AMto10AM]: "9h - 10h",
+  [TimeFrame.from10AMto11AM]: "10h - 11h",
+  [TimeFrame.from1PMto2PM]: "13h - 14h",
+  [TimeFrame.from2PMto3PM]: "14h - 15h",
+  [TimeFrame.from3PMto4PM]: "15h - 16h",
+  [TimeFrame.from4PMto5PM]: "16h - 17h"
+}
+
 export const renderTimeFrame = (value: TimeFrame) => {
-  switch (value) {
-    case TimeFrame.Morning:
-      return <>7h30 - 11h30</>;
-    case TimeFrame.Afternoon:
-      return <>14h-16h</>;
-    default:
-      return <></>;
-  }
+  return TimeFrameString[value];
 };
 
 export const renderAppointmentStatus = (status: AppointmentStatus) => {
