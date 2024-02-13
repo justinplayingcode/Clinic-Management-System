@@ -7,11 +7,11 @@ import { Icon } from "@fluentui/react";
 interface PagingProps {
 	pageTotal: number;
 	postPerPage?: number;
-	callback: any;
   disable?: boolean;
+  currentPage: number;
+  onChangeCurrentPage: any;
 }
 interface PagingState {
-	currentPage: number;
 	arrPageNumbers: any[];
 }
 
@@ -19,33 +19,15 @@ export default class Pagination extends React.Component<PagingProps, PagingState
 	constructor(props: PagingProps) {
 		super(props);
 		this.state = {
-			currentPage: 1,
 			arrPageNumbers: [],
 		};
 	}
 
-	handleCurrentPage = (value: number) => {
-		this.setState({
-			currentPage: value,
-		});
-		this.props.callback(value);
+  handleChange = (value: number) => {
+		this.props.onChangeCurrentPage(value);
 	};
-	handleNextPage = (value: number) => {
-		if (this.state.currentPage >= this.state.arrPageNumbers.length + 1) {
-			this.setState({
-				currentPage: this.state.currentPage + 1,
-			});
-		}
-		this.props.callback(value);
-	};
-	handlePrevPage = (value: number) => {
-		if (this.state.currentPage >= this.state.arrPageNumbers.length - 1) {
-			this.setState({
-				currentPage: this.state.currentPage - 1,
-			});
-		}
-		this.props.callback(value);
-	};
+
+
 	handleNumberOfPage = () => {
 		const numberOfPages: any[] = [];
 		for (let i = 1; i <= this.props.pageTotal; i++) {
@@ -54,15 +36,15 @@ export default class Pagination extends React.Component<PagingProps, PagingState
 		if (this.props.pageTotal < 7) {
 			return numberOfPages;
 		} else {
-			if (this.state.currentPage >= 1 && this.state.currentPage <= 3) {
+			if (this.props.currentPage >= 1 && this.props.currentPage <= 3) {
 				return [1, 2, 3, 4, "...", numberOfPages.length - 1, numberOfPages.length];
-			} else if (this.state.currentPage > 3 && this.state.currentPage < numberOfPages.length - 2) {
+			} else if (this.props.currentPage > 3 && this.props.currentPage < numberOfPages.length - 2) {
 				return [
 					1,
 					"...",
-					this.state.currentPage - 1,
-					this.state.currentPage,
-					this.state.currentPage + 1,
+					this.props.currentPage - 1,
+					this.props.currentPage,
+					this.props.currentPage + 1,
 					"...",
 					numberOfPages.length,
 				];
@@ -88,25 +70,25 @@ export default class Pagination extends React.Component<PagingProps, PagingState
 		return (
 			<div className={`pagination-container ${disableComponent ? "disable" : ""} ${pageTotal > 1 ? "" : "hidden"}`}>
 				<div
-					className={`pagination-button ${this.state.currentPage === 1 ? "disabled" : ""}`}
+					className={`pagination-button ${this.props.currentPage === 1 ? "disabled" : ""}`}
 					onClick={
-						this.state.currentPage !== 1 ? () => this.handlePrevPage(this.state.currentPage - 1) : () => {}
+						this.props.currentPage !== 1 ? () => this.handleChange(this.props.currentPage - 1) : () => {}
 					}>
           <Icon className="pagination-icon" iconName={"ChevronLeftSmall"} />
 				</div>
 				{arrPage.map((value, index) => (
 					<div
-						className={`pagination-button ${this.state.currentPage === value ? "active" : ""} ${value === "..." ? "none" : ""}`}
+						className={`pagination-button ${this.props.currentPage === value ? "active" : ""} ${value === "..." ? "none" : ""}`}
 						key={index}
-						onClick={() => this.handleCurrentPage(value)}>
+						onClick={() => this.handleChange(value)}>
 						{value}
 					</div>
 				))}
 				<div
-					className={`pagination-button ${this.state.currentPage === this.props.pageTotal ? "disabled" : ""}`}
+					className={`pagination-button ${this.props.currentPage === this.props.pageTotal ? "disabled" : ""}`}
 					onClick={
-						this.state.currentPage !== this.props.pageTotal
-							? () => this.handleNextPage(this.state.currentPage + 1)
+						this.props.currentPage !== this.props.pageTotal
+							? () => this.handleChange(this.props.currentPage + 1)
 							: () => {}
 					}>
 					<Icon className="pagination-icon" iconName={"ChevronRightSmall"} />

@@ -63,10 +63,9 @@ export default class typeAppointmentService {
       throw error;
     }
   };
-  public delteteDepartmentService = async (Id: any, session: ClientSession) => {
+  public deleteDepartmentService = async (Id: any, session: ClientSession) => {
     try {
-      const currentTime = new Date().toISOString(); // Lấy thời gian hiện tại và chuyển thành chuỗi
-      const displayNameSuffix = " - delete";
+      const displayNameSuffix = " (Không còn hỗ trợ)";
       const TargetTypeAppointment =
         (await this._typeAppointmentRepository.findById(
           Id
@@ -91,9 +90,8 @@ export default class typeAppointmentService {
       }
       let UpdatedMedication: typeAppointmentModel = TargetTypeAppointment;
 
-      UpdatedMedication.displayName = `${TargetTypeAppointment.displayName} ${displayNameSuffix} ${currentTime}`;
+      UpdatedMedication.displayName = `${TargetTypeAppointment.displayName} ${displayNameSuffix}`;
       UpdatedMedication.isActive = false;
-
       return await this._typeAppointmentRepository.updateById(
         Id,
         UpdatedMedication,

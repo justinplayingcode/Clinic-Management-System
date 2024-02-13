@@ -240,13 +240,14 @@ class UniformTable extends React.Component<IUniformTableProps, IUniformTableStat
                             </div>
                         }
                     </div>
-                    {(total > pageSize && !isLoading) ? 
+                    {(total > pageSize) ? 
                       <div className='details-list-paging'>
                           <Pagination
                             pageTotal={Math.ceil(total/pageSize)}
                             postPerPage={10}
-                            callback={this.onChangePaging.bind(this)}
+                            onChangeCurrentPage={this.onChangePaging.bind(this)}
                             disable={isLoading}
+                            currentPage={this.state.page}
                           />
                       </div>
                     : <></>}

@@ -3,10 +3,8 @@ import {
   InfoCircleFilled,
   RightOutlined,
   UndoOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
   Col,
   Empty,
@@ -30,7 +28,6 @@ import {
   AppointmentStatus,
   Gender,
   IAppointmentInfo,
-  TimeFrame,
   toastType,
 } from "../../../../model/enum/common";
 import { Utils } from "../../../../../utils";
@@ -39,6 +36,7 @@ import UniformTable from "../../../components/table";
 import { AxiosResponse } from "axios";
 import {
   renderAppointmentStatus,
+  renderTimeFrame,
   tooltipPlainText,
 } from "../../../../../utils/basicRender";
 import {
@@ -175,9 +173,6 @@ function Schedule() {
         }`}
         onClick={() => setSelectItem(item)}
       >
-        {/* <Col className="preview-avatar">
-          <Avatar size="large" icon={<UserOutlined />} />
-        </Col> */}
         <Row className="preview-info">
           <Col>
             <Row className="preview-info-container">
@@ -187,6 +182,10 @@ function Schedule() {
             <Row className="preview-info-container">
               <Text className="preview-title" >Ngày hẹn khám: </Text>
               <span>{item.appointmentDate}</span>
+            </Row>
+            <Row className="preview-info-container">
+              <Text className="preview-title" >Loại: </Text>
+              <span>{item.typeAppointment?.displayName}</span>
             </Row>
             <Row className="preview-info-container">
               <Text className="preview-title" >Trạng thái: </Text>
@@ -211,17 +210,6 @@ function Schedule() {
         <Text>{value}</Text>
       </Row>
     );
-  };
-
-  const renderTimeFrame = (value: TimeFrame) => {
-    switch (value) {
-      case TimeFrame.Morning:
-        return <>7h30 - 11h30</>;
-      case TimeFrame.Afternoon:
-        return <>14h-16h</>;
-      default:
-        return <></>;
-    }
   };
 
   const renderGenderInfo = (gender: Gender) => {
@@ -556,9 +544,9 @@ function Schedule() {
             setSelectDepartment(item);
           }}
         >
-          <Col className="preview-avatar">
-            {/* <Avatar size="large" icon={<UserOutlined />} /> */}
-          </Col>
+          {/* <Col className="preview-avatar">
+            <Avatar size="large" icon={<UserOutlined />} />
+          </Col> */}
           <Row className="preview-info">
             <Col>
               <Row className="preview-name">
@@ -664,33 +652,6 @@ function Schedule() {
       </Modal>
     );
   };
-
-  // const renderCureProcess = () => {
-  //   const renderCureProcesFooter = () => {
-  //     return <> Footer</>;
-  //   };
-
-  //   const handleCancel = () => {
-  //     setOpenProcess(false);
-  //   };
-
-  //   const handleOk = () => {
-  //     setOpenProcess(false);
-  //   };
-
-  //   return (
-  //     <Modal
-  //       title="Chỉ định bác sĩ"
-  //       footer={renderCureProcesFooter}
-  //       open={isOpenProcess}
-  //       onOk={handleOk}
-  //       onCancel={handleCancel}
-  //       width={900}
-  //     >
-  //       Bắt đầu quá trình khám
-  //     </Modal>
-  //   );
-  // };
 
   return (
     <>

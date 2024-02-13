@@ -91,8 +91,17 @@ export default class TypeAppointmentController {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const Id = req.body._id;
-      await this._TypeAppointmentService.delteteDepartmentService(Id, session);
+      const verifyReq = validateReqBody(req, ['id']);
+      if (!verifyReq) {
+        const err: any = new ErrorObject(
+          verifyReq.message,
+          ApiStatusCode.BadRequest,
+          "DeleteTypeAppointment.controller"
+        );
+        return next(err);
+      }
+      const Id = req.body.id;
+      await this._TypeAppointmentService.deleteDepartmentService(Id, session);
       await session.commitTransaction();
       session.endSession();
       const _res: IBaseRespone = {

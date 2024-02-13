@@ -30,6 +30,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { routerString } from "../../model/router";
 import ProvincesUtils from "../../../utils/provinces";
+import { TimeFrameString } from "../../../utils/basicRender";
 
 const { Text } = Typography;
 interface ISelectOption {
@@ -59,16 +60,12 @@ type FieldType = {
   relationship?: string;
 };
 
-const appointmentTimeOptions = [
-  {
-    value: TimeFrame.Morning,
-    label: "Sáng (8h - 11h30)",
-  },
-  {
-    value: TimeFrame.Afternoon,
-    label: "Chiều (13h - 16h30)",
-  },
-];
+const appointmentTimeOptions = () => {
+  return Object.keys(TimeFrameString).map(e => ({
+    value: e,
+    label: TimeFrameString[e as unknown as TimeFrame]
+  }))
+}
 
 const selectStyle = {
   width: "100%",
@@ -425,7 +422,7 @@ function Appointment() {
                   >
                     <Select
                       placeholder="Chọn khung giờ khám"
-                      options={appointmentTimeOptions}
+                      options={appointmentTimeOptions()}
                     ></Select>
                   </Form.Item>
                 </Col>

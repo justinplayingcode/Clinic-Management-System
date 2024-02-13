@@ -15,10 +15,9 @@ import {
   TimeFrame,
   toastType,
 } from "../../model/enum/common";
-import { Col, Descriptions, Typography } from "antd";
+import { Col, Descriptions } from "antd";
 import { Utils } from "../../../utils";
 import "./HistoryDetails.scss";
-const { Text } = Typography;
 
 interface IHistoryDetails {
   _id: string;
@@ -158,7 +157,6 @@ function HistoryDetail() {
 
   return (
     <Col className="history-detail-container">
-      <Text strong>Lịch sử khám</Text>
       <Col className="info-section">
         {/* patient info */}
         <Descriptions bordered title="Thông tin bệnh nhân" column={1}>
