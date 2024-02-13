@@ -193,7 +193,8 @@ export default class AccountController {
           accountId
         }
       } else {
-        _data = null;
+        const err: any = new ErrorObject("Forbidden", ApiStatusCode.Forbidden, "login error");
+        return next(err)
       }
       if (role === Role.doctor && user) {
         const doctor = await this._doctorService.findByKey(fields.userId, user._id)
@@ -206,6 +207,10 @@ export default class AccountController {
         }
       }
 
+      if (_data === null) {
+        const err: any = new ErrorObject("Forbidden", ApiStatusCode.Forbidden, "login error");
+        return next(err)
+      }
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
         isSuccess: true,

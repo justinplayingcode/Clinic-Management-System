@@ -13,6 +13,10 @@ const typeAppointmentSchema = new Schema({
   cost: {
     type: Number,
   },
+  discount: {
+    type: Number,
+    default: 0
+  },
   type: {
     type: Number,
     enum: {

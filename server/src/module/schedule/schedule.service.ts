@@ -80,13 +80,18 @@ export default class ScheduleService {
       const schedules = await this._scheduleRepository.getAll(condition);
       const result = schedules.map( async schedule => {
         let patient = undefined;
+        let typeAppointment = undefined;
         if (schedule.patientId) {
           patient = await this._patientService.getInfoById(schedule.patientId);
+        }
+        if (schedule.typeAppointmentId) {
+          typeAppointment = await this._typeAppointmentService.findById(schedule.typeAppointmentId)
         }
         return {
           ...schedule,
           appointmentDate: MomentTimezone.convertDDMMYYY(schedule.appointmentDate),
-          patient: patient
+          patient: patient,
+          typeAppointment: typeAppointment
         };
       })
       return await Promise.all(result);
@@ -101,17 +106,22 @@ export default class ScheduleService {
       const result = schedules.map( async schedule => {
         let doctor = undefined;
         let patient = undefined;
+        let typeAppointment = undefined;
         if (schedule.doctorId) {
           doctor = await this._doctorService.getInfoById(schedule.doctorId);
         }
         if (schedule.patientId) {
           patient = await this._patientService.getInfoById(schedule.patientId);
         }
+        if (schedule.typeAppointmentId) {
+          typeAppointment = await this._typeAppointmentService.findById(schedule.typeAppointmentId)
+        }
         return {
           ...schedule,
           appointmentDate: MomentTimezone.convertDDMMYYY(schedule.appointmentDate),
           doctor: doctor,
-          patient: patient
+          patient: patient,
+          typeAppointment: typeAppointment
         };
       })
       return await Promise.all(result);

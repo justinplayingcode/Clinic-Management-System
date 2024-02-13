@@ -29,12 +29,10 @@ export default class TypeAppointmentController {
       const newTypeAppointment = {
         displayName: req.body.displayName,
         cost: req.body.cost,
-        type: req.body.type
+        type: req.body.type,
+        discount: req.body.discount || 0,
       };
-      await this._TypeAppointmentService.createTypeAppointmentService(
-        newTypeAppointment,
-        session
-      );
+      await this._TypeAppointmentService.createTypeAppointmentService(newTypeAppointment, session);
       await session.commitTransaction();
       session.endSession();
       const _res: IBaseRespone = {
@@ -53,7 +51,7 @@ export default class TypeAppointmentController {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const verifyReq = validateReqBody(req, ['id', 'displayName', 'cost', 'type']);
+      const verifyReq = validateReqBody(req, ['id', ...typeAppointmentRequest]);
       if (!verifyReq) {
         const err: any = new ErrorObject(
           verifyReq.message,
@@ -65,7 +63,8 @@ export default class TypeAppointmentController {
       const newTypeAppointment = {
         displayName: req.body.displayName,
         cost: req.body.cost,
-        type: req.body.type
+        type: req.body.type,
+        discount: req.body.discount || 0,
       };
       const Id = req.body.id;
       await this._TypeAppointmentService.updateTypeAppointmentService(

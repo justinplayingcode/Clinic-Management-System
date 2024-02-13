@@ -24,6 +24,7 @@ type FieldType = {
   name?: string;
   type?: string;
   price?: string;
+  discount?: string
 };
 
 function Services() {
@@ -50,6 +51,7 @@ function Services() {
           name: item?.displayName,
           type: item?.type,
           price: item?.cost,
+          discount: item?.discount,
         };
       });
       setAppointmentList(result);
@@ -115,6 +117,7 @@ function Services() {
             {renderItemTitleValue(`Tên dịch vụ:`, item.name)}
             {renderItemTitleValue(`Loại:`, renderServiceType(item.type))}
             {renderItemTitleValue(`Giá tiền (VNĐ):`, item.price)}
+            {renderItemTitleValue(`Giảm giá (%):`, item.discount)}
           </Col>
         </Col>
       </>
@@ -140,6 +143,7 @@ function Services() {
                 name: selectItem.name,
                 type: selectItem.type,
                 price: selectItem.price,
+                discount: selectItem.discount,
               });
             }}
           >
@@ -171,6 +175,7 @@ function Services() {
       displayName: values.name,
       cost: values.price,
       type: values.type,
+      discount: Number(values.discount)
     };
     if (isOpenAddEit.isEdit) {
       api = serviceApi.updateService;
@@ -336,19 +341,61 @@ function Services() {
               ></Select>
             </Form.Item>
 
-            <Form.Item<FieldType>
-              label="Giá tiền"
-              name="price"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập giá dịch vụ, giá phải là số!",
-                  pattern: new RegExp("^[0-9]*$"),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+            <Col 
+              span={24} 
+              style={{ 
+                  display: "flex", 
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+            }}>
+              <Col span={18}>
+                <Form.Item<FieldType>
+                  label="Giá tiền"
+                  name="price"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập giá dịch vụ, giá phải là số!",
+                      pattern: new RegExp("^[0-9]*$"),
+                    },
+                  ]}
+                >
+                  <Input/>
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+              <span style={{ fontSize: 16 }}>VNĐ</span>
+              </Col>
+            </Col>
+
+            <Col 
+              span={24} 
+              style={{ 
+                  display: "flex", 
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+            }}>
+              <Col span={18}>
+                <Form.Item<FieldType>
+                  label="Giảm giá"
+                  name="discount"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy nhập tỉ giá, giá trị phải là số từ 0 đến 100!",
+                      pattern: new RegExp("^(100|[1-9]?[0-9])$"),
+                    },
+                  ]}
+                >
+                  <Input/>
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+              <span style={{ fontSize: 16 }}>%</span>
+              </Col>
+            </Col>
 
             <Form.Item wrapperCol={{ span: 24 }}>
               <Row style={{ flex: 1, justifyContent: "center" }}>
