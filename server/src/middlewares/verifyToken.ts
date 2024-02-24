@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
   } else {
       const token = authorization.replace('Bearer ', '');
       try {
-          const payload = jwToken.getPayLoadInAccessToken(token);
+          const payload = jwToken.getPayLoadInAccessToken(token); // xác minh token
           req.user = payload;
           next();
       } catch (err) {

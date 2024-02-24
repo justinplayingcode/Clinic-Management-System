@@ -9,6 +9,7 @@ export interface IStaticReportRequest {
   searchByColumn: string;
   searchKey: string;
 }
+// struct
 
 export const StaticReportRequestFields = [
   "page", 

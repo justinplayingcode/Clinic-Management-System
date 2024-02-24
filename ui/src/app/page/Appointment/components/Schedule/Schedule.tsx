@@ -309,7 +309,7 @@ function Schedule() {
     const body = {
       id: selectItem?._id ?? "",
       doctorId: selectItem?.doctorId ?? "",
-      departmentId: selectItem?.doctor.departmentId ?? "",
+      departmentId: selectItem?.doctor?.departmentId ?? "",
       isAccept: isAccept,
       cancellationReason: cancelReason ?? "",
     };

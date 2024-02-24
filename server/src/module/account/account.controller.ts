@@ -32,12 +32,13 @@ export default class AccountController {
   // POST 
   public Login = async (req, res, next) => {
     try {
-      let _res: IBaseRespone;
-        const verifyReq = validateReqBody(req, LoginRequest);
+        let _res: IBaseRespone;
+        const verifyReq = validateReqBody(req, LoginRequest); // nếu UI gửi thiếu trường nào trong request body => gửi về lỗi thiếu trường đó
         if (!verifyReq.pass) {
           const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "Login verify reqbody");
           return next(err)
         }
+        // findByKey: tìm bản ghi theo trường
         const account = await this._accountService.findByKey(fields.phoneNumber, req.body.phoneNumber);
         if (!account) {
           const err: any = new ErrorObject('Số điện thoại không chính xác', ApiStatusCode.BadRequest, "35-account.controller");
@@ -66,8 +67,9 @@ export default class AccountController {
 
   //POST
   public CreateAccount = (role: Role) => async (req, res, next) => {
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    // những action mà liên quan đến ghi hay update vào database thì sẽ tạo session phục vụ cho việc transaction
+    const session = await mongoose.startSession(); // phiên làm việc
+    session.startTransaction(); // bắt đầu phiên làm việc
     try {
       const verifyReq = validateReqBody(req, LoginRequest);
       if (!verifyReq.pass) {
@@ -81,8 +83,8 @@ export default class AccountController {
       const _account = await this._accountService.createAccount(newAccount, role, session);
       const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role, phoneNumber: _account.phoneNumber });
       await this._userService.createUser({ accountId: _account._id, phoneNumber: req.body.phoneNumber }, session);
-      await session.commitTransaction();
-      session.endSession();
+      await session.commitTransaction(); // chấp nhận
+      session.endSession(); // kết thúc phiên làm việc, lưu vào database
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
         isSuccess: true,
@@ -95,8 +97,9 @@ export default class AccountController {
       }
       res.status(ApiStatusCode.OK).json(_res)
     } catch (error) {
-      await session.abortTransaction();
-      session.endSession();
+      // nếu như có lỗi
+      await session.abortTransaction(); // rollback (abort) quay lại lúc ban đầu khi chưa tạo mới data
+      session.endSession(); // kết thúc phiên làm việc
       next(error)
     }
   }

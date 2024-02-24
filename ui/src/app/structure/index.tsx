@@ -99,10 +99,6 @@ function UniformLayout({ ...props }: IUniformLayoutProps) {
           <div className="main-header">
             <UniformBreadcrumb/>
             <div style={{ paddingRight: "24px"}}>
-              {/* <Avatar shape="square" icon={<CalendarOutlined />} style={{ marginRight: 12, verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large"></Avatar>
-              <Tooltip title="Đổi mật khẩu" key="#changepw" color="#fff" overlayClassName="common-tooltip">
-                <Avatar shape="square" icon={<LockOutlined />} style={{ marginRight: 12, verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large" onClick={() => setOpenCPW(true)}></Avatar>
-              </Tooltip> */}
               <Dropdown menu={{ items }} placement="bottomLeft" arrow>
                 <Avatar shape="square" style={{ backgroundColor: "#002244", verticalAlign: 'middle', cursor: "pointer", marginTop: "8px" }} size="large">
                   {Utils.convertUserNameIconText(info?.fullName) || userList[role!]}

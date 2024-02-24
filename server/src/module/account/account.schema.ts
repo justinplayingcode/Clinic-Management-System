@@ -39,8 +39,10 @@ const accountSchema = new Schema({
   },
 });
 
+// trước khi tạo dữ liệu vào db
 accountSchema.pre("save", function (next) {
   let user = this;
+  // mã hóa mật khẩu để lưu vào db
   bcrypt.hash(user.password, 10, (error, hashPassword) => {
     if (error) {
       return next(error);

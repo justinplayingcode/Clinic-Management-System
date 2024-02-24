@@ -12,7 +12,7 @@ accountRoute.route("/register").post(accountController.CreateAccount(Role.user))
 accountRoute.route("/changepassword").post(middlewares.verifyToken, accountController.changePassword);
 accountRoute.route("/").get(middlewares.verifyToken, accountController.checkCurrentUser);
 accountRoute.route("/user").get(middlewares.verifyToken, accountController.getCurrentInfo);
-accountRoute.route("/resetpw").put(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.resetPassword);
+accountRoute.route("/resetpw").put(middlewares.verifyToken, middlewares.permission([Role.admin]), accountController.resetPassword); // role có thể dùng api này là admin
 accountRoute.route("/uploadavatar").post(middlewares.verifyToken, middlewares.upload(IsUploadFor.avatar, "avatar"), accountController.uploadAvatar);
 
 export default accountRoute;

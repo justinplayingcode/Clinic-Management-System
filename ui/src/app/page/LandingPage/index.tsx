@@ -35,6 +35,7 @@ import { toastType } from "../../model/enum/common";
 
 const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
 
+// component
 function LandingPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -271,7 +272,8 @@ function LandingPage() {
   };
 
   return (
-    <>
+    // ở mỗi component, phần return sẽ là return ra html
+    <> 
       {loading ? <LoadingLogin /> : <React.Fragment />}
       <Layout className="landing-page">
         <Header className="header">
