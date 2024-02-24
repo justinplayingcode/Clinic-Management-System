@@ -1,3 +1,4 @@
+// tên bảng
 const collection = {
   account: "account",
   user: "user",

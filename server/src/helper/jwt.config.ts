@@ -2,12 +2,13 @@ import  jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { Role } from "../common/enum/permission";
 
-
 export interface IPayLoad {
   accountId: mongoose.Types.ObjectId,
   role: Role,
   phoneNumber: string
 }
+
+// 2 loại token, accessToken
 export default class jwToken {
     public static createAccessToken = (payload: IPayLoad) => {
         return jwt.sign(payload, process.env.APP_SECRET, {
