@@ -8,7 +8,6 @@ import mongoose from "mongoose";
 
 export default class TypeAppointmentController {
   private _TypeAppointmentService;
-
   constructor() {
     this._TypeAppointmentService = new typeAppointmentService();
   }
@@ -47,6 +46,7 @@ export default class TypeAppointmentController {
       next(error);
     }
   };
+
   public UpdateTypeAppointment = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -86,6 +86,7 @@ export default class TypeAppointmentController {
       next(error);
     }
   };
+
   public DeleteTypeAppointment = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -115,6 +116,7 @@ export default class TypeAppointmentController {
       next(error);
     }
   };
+  
   public getAllTypeAppointment = async (req, res, next) => {
     try {
       const result = await this._TypeAppointmentService.getAllTypeAppointmentService();

@@ -5,11 +5,9 @@ import TypeAppointment from "./typeAppointment.schema";
 import ErrorObject from "../../common/model/error";
 import { ApiStatusCode } from "../../common/enum/apiStatusCode";
 import logger from "../../helper/logger.config";
-// import { ClientSession } from "mongoose";
 
 export default class typeAppointmentService {
   private _typeAppointmentRepository;
-
   constructor() {
     this._typeAppointmentRepository = new typeAppointmentRepository(
       TypeAppointment
@@ -32,6 +30,7 @@ export default class typeAppointmentService {
       throw error;
     }
   };
+
   public updateTypeAppointmentService = async (
     Id: any,
     basic: typeAppointmentModel,
@@ -45,7 +44,6 @@ export default class typeAppointmentService {
         (await this._typeAppointmentRepository.findById(
           Id
         )) as typeAppointmentModel;
-      //check lai ho toi, chac ko can lam :))
       if (!TargetTypeAppointment) {
         const err: any = new ErrorObject(
           "Không có dữ liệu với ID đã cho",
@@ -63,6 +61,7 @@ export default class typeAppointmentService {
       throw error;
     }
   };
+
   public deleteDepartmentService = async (Id: any, session: ClientSession) => {
     try {
       const displayNameSuffix = " (Không còn hỗ trợ)";
@@ -70,7 +69,6 @@ export default class typeAppointmentService {
         (await this._typeAppointmentRepository.findById(
           Id
         )) as typeAppointmentModel;
-      //check lai ho toi, chac ko can lam :))
       if (!TargetTypeAppointment) {
         const err: any = new ErrorObject(
           "Không có dữ liệu với ID đã cho",
@@ -79,7 +77,6 @@ export default class typeAppointmentService {
         );
         throw err;
       }
-      //check dk isActive = false => ko xoa nua
       if (!TargetTypeAppointment.isActive) {
         const err: any = new ErrorObject(
           "đã xóa thành công",
@@ -101,6 +98,7 @@ export default class typeAppointmentService {
       throw error;
     }
   };
+  
   public getAllTypeAppointmentService = async () => {
     try {
       return await this._typeAppointmentRepository.getAll();

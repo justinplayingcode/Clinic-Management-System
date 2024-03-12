@@ -34,5 +34,4 @@ export const curentSelectedSlice = createSlice({
 });
 
 export const {setCurentId, setCurrentSidebar, setTableSelectedCount, setTableSelectedItem } = curentSelectedSlice.actions;
-
 export default curentSelectedSlice.reducer;

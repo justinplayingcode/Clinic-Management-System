@@ -6,7 +6,6 @@ import logger from "../../helper/logger.config";
 
 export default class PrecriptionService {
   private _precriptionRepo;
-
   constructor() {
     this._precriptionRepo = new PrecriptionRepository(Precription)
   }

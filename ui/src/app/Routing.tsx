@@ -30,7 +30,6 @@ function Routing() {
         <Route path={`${routerString.managedepartments}`} element={<UniformLayout page={<ManageDepartment/>} noBackground/>}/>
         <Route path={`${routerString.manageservice}`} element={<UniformLayout page={<ManageService/>} noBackground/>}/>
         <Route path={`${routerString.managemedication}`} element={<UniformLayout page={<Medications/>}/>}/>
-        {/*  */}
         <Route path={`${routerString.Forbidden}`} element={<ErrorPage pageType={ErrorPageEnum.Forbidden}/>}/>
         <Route path={`${routerString.Unauthorized}`} element={<ErrorPage pageType={ErrorPageEnum.Unauthorized}/>}/>
         <Route path={`${routerString.ServerError}`} element={<ErrorPage pageType={ErrorPageEnum.ServerError}/>}/>

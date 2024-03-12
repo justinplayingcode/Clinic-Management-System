@@ -37,7 +37,6 @@ export const Toast = () => {
   const { message, type } = useSelector((state: RootState) => state.toast);
   const dispatch = useDispatch();
   const { icon } = toastTypes[type];
-
   const timerID = useRef<number | null>(null);
   const handleDismiss = useCallback(() => dispatch(closeToastMessage()), [dispatch]);
 

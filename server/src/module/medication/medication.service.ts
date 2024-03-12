@@ -8,10 +8,10 @@ import logger from "../../helper/logger.config";
 
 export default class medicationService {
   private _medicationRepository;
-
   constructor() {
     this._medicationRepository = new MedicationRepository(Medication);
   }
+
   public createMedicationService = async (
     basic: MedicationModel,
     session: ClientSession
@@ -22,6 +22,7 @@ export default class medicationService {
       throw error;
     }
   };
+
   public updateMedicationService = async (
     Id: any,
     basic: MedicationModel,
@@ -32,7 +33,6 @@ export default class medicationService {
         Id
       )) as MedicationModel;
       let UpdatedMedication: MedicationModel = TargetMedication;
-      //check lai ho toi, chac ko can lam :))
       if (!UpdatedMedication) {
         const err: any = new ErrorObject(
           "Không có dữ liệu với ID đã cho",
@@ -46,15 +46,15 @@ export default class medicationService {
       throw error;
     }
   };
+
   public delteteMedicationService = async (Id: any, session: ClientSession) => {
     try {
-      const currentTime = new Date().toString(); // Lấy thời gian hiện tại và chuyển thành chuỗi
+      const currentTime = new Date().toString();
       const displayNameSuffix = " - delete";
       const TargetMedication = (await this._medicationRepository.findById(
         Id
       )) as MedicationModel;
       let UpdatedMedication: MedicationModel = TargetMedication;
-      //check lai ho toi, chac ko can lam :))
       if (!UpdatedMedication) {
         const err: any = new ErrorObject(
           "Không có dữ liệu với ID đã cho",
@@ -73,7 +73,6 @@ export default class medicationService {
       }
       UpdatedMedication.displayName = `${TargetMedication.displayName} ${displayNameSuffix} ${currentTime}`;
       UpdatedMedication.isActive = false;
-
       return await this._medicationRepository.updateById(
         Id,
         UpdatedMedication,
@@ -83,6 +82,7 @@ export default class medicationService {
       throw error;
     }
   };
+  
   public getDataOfStaticReport = async (request: IRequestGetAllOfStaticReport) => {
     try {
       const total = await this._medicationRepository.getTotalOfStaticReport(request.searchByColumn, request.searchKey);

@@ -2,12 +2,11 @@ import { ClientSession, Model } from "mongoose";
 import { BaseModel } from "../../common/model/common";
 
 export default class BaseRepository<T extends BaseModel> {
-  protected model: Model<T>; // thuộc tính, đại diện cho bảng T
+  protected model: Model<T>;
 
   constructor(model: Model<T>) {
     this.model = model;
   }
-  // phương thức
   public create = async (data: Partial<T>, session: ClientSession): Promise<T> => {
       const newcreate = new this.model(data);
       return await newcreate.save({ session });

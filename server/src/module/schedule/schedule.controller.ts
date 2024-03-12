@@ -43,7 +43,6 @@ export default class ScheduleController {
     this._billService = new BillService();
   }
 
-  //POST
   public userCreateSchedule = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -72,7 +71,6 @@ export default class ScheduleController {
     if(req.body.district) addressArr.push(req.body.district);
     if(req.body.city) addressArr.push(req.body.city);
     try {
-      // create patient
       const newPatient: ICreatePatient = {
         fullName: req.body.fullName,
         dateOfBirth: new Date(req.body.dateOfBirth),
@@ -85,7 +83,6 @@ export default class ScheduleController {
         guardianRelationship: req.body.relationship,
       }
       const patient = await this._patientService.create(newPatient, session);
-      // create schedule
       const newSchedule: ICreateSchedule = {
         patientId: patient._id,
         accountId: accountId,
@@ -111,7 +108,6 @@ export default class ScheduleController {
     }
   }
 
-  //GET
   public getSchedule = async (req, res, next) => {
     const { accountId, role } = req.user;
     let response: IBaseRespone;
@@ -142,7 +138,6 @@ export default class ScheduleController {
     }
   }
 
-  //POST
   public adminVerifySchedule = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -188,7 +183,6 @@ export default class ScheduleController {
     }
   }
 
-  //POST
   public doctorVerifySchedule = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -245,9 +239,7 @@ export default class ScheduleController {
       return next(err);
     }
     try {
-      // update schedule
       await this._scheduleService.completeSchedule(req.body.id, session);
-      //create prescription
       const medicationInRequest = req.body.medication;
       const priceNewPrecription = Array.from(medicationInRequest?.list).reduce((acc, cur: any) => acc + cur?.price, 0);
       const newPrecription: ICreatePrecription = {
@@ -256,7 +248,6 @@ export default class ScheduleController {
         cost: Number(priceNewPrecription) || 0
       }
       const precription = await this._precriptionService.createNewPrecription(newPrecription, session);
-      // create medicalrecord
       const newMedicalrecord: ICreateMedicalRecord = {
         summary: req.body.summary,
         diagnosis: req.body.diagnose,
@@ -266,7 +257,6 @@ export default class ScheduleController {
         serviceResult: JSON.stringify(req.body.services),
       }
       const medicalrecord = await this._medicalRecordService.createMedicalRecord(newMedicalrecord, session);
-      // create bill
       const typeAppointment = await this._typeAppointmentService.findById(req.body.typeAppointmentId);
       const priceService = Array.from(req.body.services).reduce((acc, cur: any) => acc + cur?.price, 0);
       const _discount = typeAppointment?.discount || 0;
@@ -346,7 +336,6 @@ export default class ScheduleController {
       const medicalRecord = await this._medicalRecordService.getInfoByScheduleId(schedule._id);
       const prescription = await this._precriptionService.getInfoById(medicalRecord.prescriptionId);
       const bill = await this._billService.getInfoByMedicalId(medicalRecord._id);
-
       const _res = {
         status: ApiStatus.succes,
         isSuccess: true,

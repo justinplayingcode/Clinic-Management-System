@@ -14,7 +14,6 @@ export default class ScheduleService {
   private _doctorService;
   private _patientService;
   private _typeAppointmentService;
-
   constructor() {
     this._scheduleRepository = new ScheduleRepository(Schedule);
     this._doctorService = new DoctorService();

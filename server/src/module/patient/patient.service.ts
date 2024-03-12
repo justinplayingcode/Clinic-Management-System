@@ -7,7 +7,6 @@ import MomentTimezone from "../../helper/timezone.config";
 
 export default class PatientService {
   private _patientRepository;
-
   constructor() {
     this._patientRepository = new PatientRepository(Patient);
   }

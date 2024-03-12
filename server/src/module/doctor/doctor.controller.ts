@@ -59,7 +59,6 @@ export default class DoctorController {
     }
   }
 
-  //PUT
   public deleteDoctor = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -71,15 +70,12 @@ export default class DoctorController {
       }
       const AccountId = req.body.accountId;
       await this._accountService.deleteDoctorService(AccountId, session);
-      //
       const User = await this._userService.findByKey(fields.accountId, AccountId);
       const userId = User._id;
       await this._userService.deleteDoctor(userId, session);
-      //
       const Doctor = await this._doctorService.findByKey(doctorField.userId, userId);
       const doctorId = Doctor._id;
       await this._doctorService.deleteDoctor(doctorId, session);
-      //
       await session.commitTransaction();
       session.endSession();
       const _res: IBaseRespone = {

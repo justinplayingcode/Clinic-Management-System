@@ -8,7 +8,6 @@ export interface IPayLoad {
   phoneNumber: string
 }
 
-// 2 loại token, accessToken
 export default class jwToken {
     public static createAccessToken = (payload: IPayLoad) => {
         return jwt.sign(payload, process.env.APP_SECRET, {

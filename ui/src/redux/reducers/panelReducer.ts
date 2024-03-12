@@ -35,5 +35,4 @@ export const panelSlice = createSlice({
 });
 
 export const { openPanel, closePanel, openPanelLoading, closePanelLoading } = panelSlice.actions;
-
 export default panelSlice.reducer;

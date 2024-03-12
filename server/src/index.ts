@@ -13,7 +13,7 @@ app.use(helmet());
 app.use(json());
 app.use('/api', routes);
 app.all('*', (req, res, next) => {
-    const err: any = new ErrorObject('The route can not be found', ApiStatusCode.BadRequest, 'Duong dan sai');
+    const err: any = new ErrorObject('The route can not be found', ApiStatusCode.BadRequest, 'Router issue');
     return next(err);
 })
 app.use(middlewares.errorHandler);

@@ -11,13 +11,11 @@ import AccountService from "../account/account.service";
 export default class UserController {
   private _userService;
   private _accountService;
-
   constructor() {
     this._userService = new UserService();
     this._accountService = new AccountService();
   }
 
-  //POST
   public updateInfo = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();

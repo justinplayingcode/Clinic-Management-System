@@ -49,6 +49,7 @@ export default class DepartmentController {
       next(error);
     }
   };
+
   public updateDepartment = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -73,7 +74,6 @@ export default class DepartmentController {
       );
       await session.commitTransaction();
       session.endSession();
-
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
         isSuccess: true,
@@ -86,6 +86,7 @@ export default class DepartmentController {
       next(error);
     }
   };
+
   public deleteDepartment = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -98,7 +99,6 @@ export default class DepartmentController {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {

@@ -18,7 +18,6 @@ import { IRequestGetAllOfStaticReport } from "../user/user.model";
 import DoctorService from "../doctor/doctor.service";
 
 export default class AccountController {
-
   private _accountService;
   private _userService;
   private _doctorService;
@@ -29,16 +28,14 @@ export default class AccountController {
     this._doctorService = new DoctorService();
   }
 
-  // POST 
   public Login = async (req, res, next) => {
     try {
         let _res: IBaseRespone;
-        const verifyReq = validateReqBody(req, LoginRequest); // nếu UI gửi thiếu trường nào trong request body => gửi về lỗi thiếu trường đó
+        const verifyReq = validateReqBody(req, LoginRequest);
         if (!verifyReq.pass) {
           const err: any = new ErrorObject(verifyReq.message, ApiStatusCode.BadRequest, "Login verify reqbody");
           return next(err)
         }
-        // findByKey: tìm bản ghi theo trường
         const account = await this._accountService.findByKey(fields.phoneNumber, req.body.phoneNumber);
         if (!account) {
           const err: any = new ErrorObject('Số điện thoại không chính xác', ApiStatusCode.BadRequest, "35-account.controller");
@@ -65,11 +62,9 @@ export default class AccountController {
     }
   }
 
-  //POST
   public CreateAccount = (role: Role) => async (req, res, next) => {
-    // những action mà liên quan đến ghi hay update vào database thì sẽ tạo session phục vụ cho việc transaction
-    const session = await mongoose.startSession(); // phiên làm việc
-    session.startTransaction(); // bắt đầu phiên làm việc
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
       const verifyReq = validateReqBody(req, LoginRequest);
       if (!verifyReq.pass) {
@@ -83,8 +78,8 @@ export default class AccountController {
       const _account = await this._accountService.createAccount(newAccount, role, session);
       const accessToken = jwToken.createAccessToken({ accountId: _account._id, role: _account.role, phoneNumber: _account.phoneNumber });
       await this._userService.createUser({ accountId: _account._id, phoneNumber: req.body.phoneNumber }, session);
-      await session.commitTransaction(); // chấp nhận
-      session.endSession(); // kết thúc phiên làm việc, lưu vào database
+      await session.commitTransaction();
+      session.endSession();
       const _res: IBaseRespone = {
         status: ApiStatus.succes,
         isSuccess: true,
@@ -97,14 +92,12 @@ export default class AccountController {
       }
       res.status(ApiStatusCode.OK).json(_res)
     } catch (error) {
-      // nếu như có lỗi
-      await session.abortTransaction(); // rollback (abort) quay lại lúc ban đầu khi chưa tạo mới data
-      session.endSession(); // kết thúc phiên làm việc
+      await session.abortTransaction();
+      session.endSession();
       next(error)
     }
   }
 
-  // POST
   public changePassword = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -151,7 +144,6 @@ export default class AccountController {
     }
   }
 
-  // GET
   public checkCurrentUser = async (req, res, next) => {
     const { accountId } = req.user;
     try {
@@ -171,7 +163,7 @@ export default class AccountController {
       next(error)
     }
   }
-  // GET
+
   public getCurrentInfo = async (req, res, next) => {
     const { accountId, role } = req.user;
     try {
@@ -209,7 +201,6 @@ export default class AccountController {
           departmentName
         }
       }
-
       if (_data === null) {
         const err: any = new ErrorObject("Forbidden", ApiStatusCode.Forbidden, "login error");
         return next(err)
@@ -226,7 +217,6 @@ export default class AccountController {
     }
   }
 
-  //POST
   public getAllUser = async (req, res, next) => {
     const verifyReq = validateReqBody(req, StaticReportRequestFields);
     let _res: IBaseRespone;
@@ -254,7 +244,6 @@ export default class AccountController {
     }
   }
 
-  //POST
   public resetPassword = async (req, res, next) => {
     const verifyReq = validateReqBody(req, ["id"]);
     if (!verifyReq.pass) {
@@ -288,7 +277,6 @@ export default class AccountController {
     }
   }
 
-  //POST
   public uploadAvatar = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();

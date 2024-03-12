@@ -7,9 +7,7 @@ import departmentRouter from "../module/department/department.route";
 import doctorRoute from "../module/doctor/doctor.route";
 import scheduleRoute from "../module/schedule/schedule.route";
 
-
 const routes = Router();
-
 routes.use("/auth", accountRoute);
 routes.use("/user", userRoute);
 routes.use("/typeAppointment", typeAppointmentRoute);

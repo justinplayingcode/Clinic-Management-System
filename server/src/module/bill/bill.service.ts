@@ -6,7 +6,6 @@ import Bill from "./bill.schema";
 
 export default class BillService {
   private _billRepo;
-
   constructor() {
     this._billRepo = new BillRepository(Bill);
   }
@@ -28,5 +27,4 @@ export default class BillService {
       throw error;
     }
   }
-
 }

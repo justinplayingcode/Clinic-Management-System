@@ -11,7 +11,6 @@ import MomentTimezone from "../../helper/timezone.config";
 
 export default class UserService {
   private _userRepository;
-
   constructor() {
     this._userRepository = new UserRepository(User);
   }
@@ -89,7 +88,6 @@ export default class UserService {
         );
         throw err;
       }
-      //check dk isActive = false => ko xoa nua
       let updatedDoctor: UserModel = targetUser;
       updatedDoctor.fullName = `${targetUser.fullName} (không còn làm việc)`;
       return await this._userRepository.updateById(

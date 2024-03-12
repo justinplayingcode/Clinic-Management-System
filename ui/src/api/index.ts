@@ -66,7 +66,7 @@ const userApi = {
 
 const departmentApi = {
   getDepartmentList: () => api.get(path.getDepartment),
-  manageDepartment: (reqbody: any) => api.post(path.manageDepartment, reqbody), // api get doctor of department
+  manageDepartment: (reqbody: any) => api.post(path.manageDepartment, reqbody),
   createDepartment: (reqbody: any) => api.post(path.createDepartment, reqbody),
   updateDepartment: (reqbody: any) => api.post(path.updateDepartment, reqbody),
 }

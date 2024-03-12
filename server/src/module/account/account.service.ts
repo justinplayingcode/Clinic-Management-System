@@ -7,9 +7,7 @@ import logger from "../../helper/logger.config";
 
 
 export default class AccountService {
-  
   private _accountRepository;
-
   constructor() {
     this._accountRepository = new AccountRepository(Account);
   }
@@ -53,6 +51,7 @@ export default class AccountService {
       throw error
     }
   }
+  
   public deleteDoctorService = async (id: any, session: ClientSession) => {
     try {
       const targetAccount = await this._accountRepository.findById(id,session);

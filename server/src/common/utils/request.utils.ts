@@ -1,4 +1,3 @@
-// import { ApiStatusCode } from "../enum/apiStatusCode";
 import { IValidateReqBody } from "../model/request";
 
 const validateReqBody = (req, requiredFields: string[]): IValidateReqBody => {

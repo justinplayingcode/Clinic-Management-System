@@ -8,7 +8,7 @@ const permission = (acceptedRoles: Role[]) => {
       const payload = req.user;
         if (!acceptedRoles.includes(payload.role)) {
             const error: any = new Error(message.NoPermission());
-            error.statusCode = ApiStatusCode.Forbidden; // lỗi 403 là lỗi không có quyền
+            error.statusCode = ApiStatusCode.Forbidden;
             return next(error)
         } else {
           next();

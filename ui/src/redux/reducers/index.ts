@@ -24,5 +24,4 @@ export {
   openPanel, closePanel, openPanelLoading, closePanelLoading,
   setCurentId, setCurrentSidebar, setTableSelectedCount, setTableSelectedItem,
   tableRefresh,
-  
 }

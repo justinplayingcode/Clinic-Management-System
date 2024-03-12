@@ -11,5 +11,4 @@ departmentRouter.route('/update').post(middlewares.verifyToken, middlewares.perm
 departmentRouter.route('/delete').put(middlewares.verifyToken, middlewares.permission([Role.admin]), departmentController.deleteDepartment)
 departmentRouter.route('/').get(middlewares.verifyToken, departmentController.getAll)
 departmentRouter.route('/doctors').post(middlewares.verifyToken, departmentController.getDoctorInDepartment)
-
 export default departmentRouter

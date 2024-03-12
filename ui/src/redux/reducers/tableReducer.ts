@@ -20,5 +20,4 @@ export const tableSlice = createSlice({
 });
 
 export const { tableRefresh } = tableSlice.actions;
-
 export default tableSlice.reducer;

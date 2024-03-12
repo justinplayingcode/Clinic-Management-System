@@ -18,12 +18,10 @@ export default class Validate {
       return regex.test(value);
   }
   public static identification = (value) => {
-      // 12 so, cac so tu 0 den 9 
       const regex = new RegExp('^[0-9]{12}$');
       return regex.test(value) || value === "";
   }
   public static insurance = (value) => {
-      // 10 ki tu
       return value.length === 10;
   }
   public static dateOfBirth = (value: string) => {

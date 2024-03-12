@@ -6,7 +6,6 @@ import logger from "../../helper/logger.config";
 
 export default class MedicalRecordService {
   private _medicalRecordRepo;
-
   constructor() {
     this._medicalRecordRepo = new MedicalRecordRepository(MedicalRecord)
   }

@@ -9,12 +9,10 @@ import { StaticReportRequestFields } from "../../common/model/request";
 
 export default class MedicationController {
   private _MedicationService;
-
   constructor() {
     this._MedicationService = new medicationService();
   }
 
-  //POST
   public CreateMedication = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -52,6 +50,7 @@ export default class MedicationController {
       next(error);
     }
   };
+
   public UpdateMedication = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -72,7 +71,6 @@ export default class MedicationController {
         price: req.body.price,
       };
       const Id = req.body.id;
-
       await this._MedicationService.updateMedicationService(
         Id,
         newMedication,
@@ -84,7 +82,6 @@ export default class MedicationController {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
@@ -93,6 +90,7 @@ export default class MedicationController {
       next(error);
     }
   };
+
   public DeleteMedication = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -105,7 +103,6 @@ export default class MedicationController {
         status: ApiStatus.succes,
         isSuccess: true,
         statusCode: ApiStatusCode.OK,
-        //khong biet co can data khong
       };
       res.status(ApiStatusCode.OK).json(_res);
     } catch (error) {
@@ -114,6 +111,7 @@ export default class MedicationController {
       next(error);
     }
   };
+  
   public getAllMedication = async (req, res, next) => {
     const verifyReq = validateReqBody(req, StaticReportRequestFields);
     let _res: IBaseRespone;

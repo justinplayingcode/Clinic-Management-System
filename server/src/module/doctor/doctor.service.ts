@@ -8,9 +8,7 @@ import logger from "../../helper/logger.config";
 import MomentTimezone from "../../helper/timezone.config";
 
 export default class DoctorService {
-  
   private _doctorRepository;
-
   constructor() {
     this._doctorRepository = new DoctorRepository(Doctor);
   }
@@ -50,7 +48,6 @@ export default class DoctorService {
         );
         throw err;
       }
-      //check dk isActive = false => ko xoa nua
       if (!TargetDoctor.isActive) {
         const err: any = new ErrorObject(
           "đã xóa thành công",

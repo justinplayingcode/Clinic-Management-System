@@ -12,7 +12,6 @@ import { RootState } from '../../redux';
 import { Role } from '../model/enum/auth';
 
 type MenuItem = Required<MenuProps>['items'][number];
-
 function getItem(
   label: React.ReactNode,
   key?: React.Key | null,
@@ -84,9 +83,8 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const arrpath = location.pathname.split('/').filter((i) => i);
-
   const [current, setCurrent] = useState<string>(location.pathname);
-
+  
   useEffect(() => {
     setCurrent(location.pathname);
   }, [location.pathname])

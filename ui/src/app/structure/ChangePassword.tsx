@@ -17,7 +17,6 @@ type FieldType = {
 
 function ChangePassword(props: IChangePasswordProps) {
   const dispatch = useDispatch();
-
   const onFinish = (values: any) => {
     dispatch(openLoading());
     const body = {

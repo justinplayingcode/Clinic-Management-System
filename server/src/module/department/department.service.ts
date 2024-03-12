@@ -44,14 +44,14 @@ export default class departmentService {
       throw error;
     }
   };
+
   public delteteDepartmentService = async (Id: any, session: ClientSession) => {
     try {
-      const currentTime = new Date().toString(); // Lấy thời gian hiện tại và chuyển thành chuỗi
+      const currentTime = new Date().toString();
       const displayNameSuffix = " - delete";
       const TargetDepartment = (await this._departmentRepository.findById(
         Id
       )) as DepartmentModel;
-      //check lai ho toi, chac ko can lam :))
       if (!TargetDepartment) {
         const err: any = new ErrorObject(
           "Không có dữ liệu với ID đã cho",
@@ -60,7 +60,6 @@ export default class departmentService {
         );
         throw err;
       }
-      //check dk isActive = false => ko xoa nua
       if (!TargetDepartment.isActive) {
         const err: any = new ErrorObject(
           "đã xóa thành công",
@@ -70,10 +69,8 @@ export default class departmentService {
         throw err;
       }
       let UpdatedDepartment: DepartmentModel = TargetDepartment;
-
       UpdatedDepartment.displayName = `${TargetDepartment.displayName} ${displayNameSuffix} ${currentTime}`;
       UpdatedDepartment.isActive = false;
-
       return await this._departmentRepository.updateById(
         Id,
         UpdatedDepartment,

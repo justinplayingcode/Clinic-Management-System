@@ -16,7 +16,6 @@ const billSchema = new Schema({
     default: new Date
   }
 });
-
 const Bill: Model<BillModel> = mongoose.model<BillModel>(
   collection.bill,
   billSchema
